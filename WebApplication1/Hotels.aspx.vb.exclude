@@ -1,0 +1,70 @@
+﻿
+Partial Class test
+    Inherits System.Web.UI.Page
+
+    Protected Sub upTest_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles upTest.Load
+        If Page.IsPostBack Then
+            BindHotels()
+        End If
+    End Sub
+
+    Protected Sub rptHotels_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptHotels.ItemDataBound
+        If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+            Dim rptRooms As Repeater = e.Item.FindControl("rptRooms")
+            Dim drv As DataRowView = TryCast(e.Item.DataItem, DataRowView)
+            AddHandler rptRooms.ItemDataBound, AddressOf rptRooms_ItemDataBound
+            rptRooms.DataSource = drv.CreateChildView("hotel_hotel_rooms")
+            rptRooms.DataBind()
+        End If
+    End Sub
+
+    Protected Sub rptRooms_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs)
+        If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+            Dim rptNights As Repeater = e.Item.FindControl("rptNights")
+            Dim drv As DataRowView = TryCast(e.Item.DataItem, DataRowView)
+            rptNights.DataSource = drv.CreateChildView("hotel_rooms_rate")
+            rptNights.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnRefresh_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnRefresh.Click
+        BindHotels()
+    End Sub
+
+    Sub BindHotels()
+        Dim ds As New DataSet()
+        ds.ReadXml("http://xmlfeed.laterooms.com/index.aspx?aid=3453&rtype=6&geolon=-2.215371&geolat=53.470445&orderby=distance&radius=5&lim=10&nights=3&sortorder=asc&sdate=" & FormatDateTime(DateTime.Now, 2))
+
+        'For Each sdsd As DataRelation In ds.Relations
+        '    litTest.Text &= sdsd.RelationName & "<br />"
+        'Next
+
+        gvResultsOverview.DataSource = ds.Tables(0)
+        gvResultsOverview.DataBind()
+        gvHotelDetails.DataSource = ds.Tables(1)
+        gvHotelDetails.DataBind()
+        gvLatLong.DataSource = ds.Tables(2)
+        gvLatLong.DataBind()
+        gvHotelRoomsID.DataSource = ds.Tables(3)
+        gvHotelRoomsID.DataBind()
+        gvNights.DataSource = ds.Tables(4)
+        gvNights.DataBind()
+        gvAcceptCreditCardsID.DataSource = ds.Tables(5)
+        gvAcceptCreditCardsID.DataBind()
+        gvAcceptedCreditCards.DataSource = ds.Tables(6)
+        gvAcceptedCreditCards.DataBind()
+        gvTest8.DataSource = ds.Tables(7)
+        gvTest8.DataBind()
+        gvTest9.DataSource = ds.Tables(8)
+        gvTest9.DataBind()
+        gvTest10.DataSource = ds.Tables(9)
+        gvTest10.DataBind()
+        gvTest11.DataSource = ds.Tables(10)
+        gvTest11.DataBind()
+        gvTest12.DataSource = ds.Tables(11)
+        gvTest12.DataBind()
+
+        rptHotels.DataSource = ds.Tables(1)
+        rptHotels.DataBind()
+    End Sub
+End Class

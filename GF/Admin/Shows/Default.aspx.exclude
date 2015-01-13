@@ -1,0 +1,16 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/admin/masterpages/MasterPage.master"
+    AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="admin_events_Default" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cph_main" runat="Server">
+    <a href="Artists.aspx">Artists</a><br />
+    <a href="DuplicateEventsOnArtist.aspx">Duplicate Events On Artist</a><br />
+    <a href="DuplicateEventsOnPostcode.aspx">Duplicate Events On Postcode</a><br />
+    <a href="DuplicateEventsOnVenue.aspx">Duplicate Events On Venue</a><br />
+    <a href="EditEvent.aspx">Edit Event</a><br />
+    <a href="ImportArtists.aspx">Import Artists</a><br />
+    <a href="ImportEvents.aspx">Import Events</a><br />
+    <a href="ImportVenues.aspx">Import Venues</a><br />
+    <a href="Venues.aspx">Venues</a><br />
+</asp:Content>

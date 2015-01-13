@@ -1,0 +1,93 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Hotels.aspx.vb" Inherits="test" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body onload="__doPostBack('<%= upTest.UniqueID %>', '');">
+    <form id="form1" runat="server">
+    <div>
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager>
+        <asp:Button runat="server" ID="btnRefresh" Text="Refresh" />
+        <asp:UpdateProgress runat="server" ID="uprTest" AssociatedUpdatePanelID="upTest"
+            DisplayAfter="0">
+            <ProgressTemplate>
+                Loading.......
+            </ProgressTemplate>
+        </asp:UpdateProgress>
+        <asp:UpdatePanel runat="server" ID="upTest">
+            <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="btnRefresh" />
+            </Triggers>
+            <ContentTemplate>
+                <asp:Literal runat="server" ID="litTest"></asp:Literal>
+                <asp:GridView runat="server" ID="gvResultsOverview" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvHotelDetails" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvLatLong" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvHotelRoomsID" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvNights" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvAcceptCreditCardsID" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvAcceptedCreditCards" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvTest8" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvTest9" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvTest10" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvTest11" Visible="True">
+                </asp:GridView>
+                <asp:GridView runat="server" ID="gvTest12" Visible="True">
+                </asp:GridView>
+                <asp:Repeater runat="server" ID="rptHotels">
+                    <ItemTemplate>
+                        <%#Eval("hotel_name")%> - <%#Eval("hotel_distance") %><br />
+                        <asp:Repeater runat="server" ID="rptRooms">
+                            <ItemTemplate>
+                                <asp:Repeater runat="server" ID="rptNights">
+                                    <ItemTemplate>
+                                        <%#Eval("Date") %>
+                                        -
+                                        <%#Eval("Price")%><br />
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </div>
+
+    <script type="text/javascript">
+
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_initializeRequest(InitializeRequest);
+        prm.add_endRequest(EndRequest);
+        var postBackElement;
+        function InitializeRequest(sender, args) {
+            if (prm.get_isInAsyncPostBack())
+                args.set_cancel(true);
+            postBackElement = args.get_postBackElement();
+
+            if (postBackElement.id == 'upTest' || postBackElement.id == 'btnRefresh')
+                $get('uprTest').style.display = 'block';
+        }
+        function EndRequest(sender, args) {
+            if (postBackElement.id == 'upTest' || postBackElement.id == 'btnRefresh')
+                $get('uprTest').style.display = 'none';
+        }
+    
+    </script>
+
+    </form>
+</body>
+</html>

@@ -10,6 +10,17 @@ using System.Data.Entity.Validation;
 
 namespace GigsFirstBLL
 {
+    public interface IShowImporter
+    {
+        int AddShowsToGF();
+        int AddVenues();
+        int AddArtists();
+        int UpdateVenues();
+        int UpdateArtists();
+        int RetrieveNewShowsFromVendor();
+        IQueryable<ImportShow> GetShowsAwaitingImport();
+    }
+
     public abstract class ShowImporter : IShowImporter
     {
 

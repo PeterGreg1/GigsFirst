@@ -1,0 +1,92 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/admin/masterpages/MasterPage.master"
+    AutoEventWireup="false" CodeFile="DuplicateEventsOnVenue.aspx.vb" Inherits="admin_events_DuplicateEventsOnVenue" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cph_main" runat="Server">
+    <div>
+        Date From:
+        <asp:TextBox runat="server" ID="tbDateFrom"></asp:TextBox>
+        Date To:
+        <asp:TextBox runat="server" ID="tbDateTo"></asp:TextBox>
+        <br />
+        <br />
+        <asp:Button runat="server" ID="btnSearch" Text="Search" /><br />
+        <br />
+        <asp:GridView runat="server" ID="gvDuplicates" AutoGenerateColumns="false" AllowPaging="true"
+            PageSize="20" AllowSorting="true">
+            <Columns>
+                <asp:BoundField DataField="EventDate" SortExpression="EventDate" HeaderText="Date" />
+                <asp:BoundField DataField="VenueName" SortExpression="VenueName" HeaderText="Venue" />
+                <asp:BoundField DataField="Total" SortExpression="Total" HeaderText="Duplicates" />
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:Button runat="server" ID="btnView" Text="View Events" CommandName="view" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+        <br />
+        <br />
+        <asp:Button runat="server" ID="btnMerge" Text="Merge Events" />
+        <br />
+        <br />
+        <asp:GridView runat="server" ID="gvEvents" AutoGenerateColumns="false" AllowPaging="true"
+            PageSize="20" AllowSorting="true">
+            <Columns>
+                <asp:TemplateField HeaderText="Add">
+                    <ItemTemplate>
+                        <asp:HiddenField runat="server" ID="hfEventID" Value='<%#Eval("EventID") %>' />
+                        <asp:HiddenField runat="server" ID="hfEventName" Value='<%#Eval("EventName") %>' />
+                        <asp:CheckBox runat="server" ID="cbAdd" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:HyperLinkField DataNavigateUrlFields="EventID" DataTextField="EventID" DataNavigateUrlFormatString="EditEvent.aspx?eventid={0}"
+                    Target="_blank" />
+                <asp:BoundField DataField="EventDate" SortExpression="EventDate" HeaderText="Date" />
+                <asp:TemplateField HeaderText="Event Name">
+                    <ItemTemplate>
+                        <asp:TextBox runat="server" ID="tbEventName" Text='<%#Eval("EventName") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:HyperLinkField DataNavigateUrlFields="VenueName" DataTextField="VenueName" DataNavigateUrlFormatString="Venues.aspx?keywords={0}" />
+                <asp:BoundField DataField="VenueID" SortExpression="VenueID" HeaderText="Venue ID" />
+                <asp:TemplateField HeaderText="Artists">
+                    <ItemTemplate>
+                        <asp:Repeater runat="server" ID="rptArtists">
+                            <ItemTemplate>
+                                <%#Eval("ArtistName") %>
+                                (<%# Eval("ArtistID")%>)
+                                <br />
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Vendors">
+                    <ItemTemplate>
+                        <asp:Repeater runat="server" ID="rptVendors">
+                            <ItemTemplate>
+                                <%#Eval("VendorCode")%>
+                                (<%#Eval("Reference")%>)
+                                <br />
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Merge With Event ID:">
+                    <ItemTemplate>
+                        <asp:DropDownList runat="server" ID="ddlEventMerge" AppendDataBoundItems="true">
+                            <asp:ListItem Value="0" Selected="True">Ignore</asp:ListItem>
+                        </asp:DropDownList>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Delete">
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" ID="lbtnDelete" Text="delete" CommandName="deleteme"
+                            CommandArgument='<%#Eval("EventID") %>'></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+    </div>
+</asp:Content>

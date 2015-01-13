@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  <siteMapNode url="~/Admin/Default.aspx" title="Admin Home" description="Admin Home">
+
+      <siteMapNode url="~/Admin/Events/ImportEvents.aspx" title="Import Events"  description="Import Events"></siteMapNode>
+
+      <siteMapNode url="~/Admin/Users/Membership/Default.aspx" title="Users"  description="Users">
+      <siteMapNode url="~/Admin/Users/Membership/Edit.aspx" title="Add/Edit User"  description="add/edit User" />
+      <siteMapNode url="~/Admin/Users/Groups/Default.aspx" title="User Groups"  description="User Groups">
+        <siteMapNode url="~/Admin/Users/Groups/Edit.aspx" title="Add/Edit Group"  description="add/edit group" />
+      </siteMapNode>
+    </siteMapNode>
+    <siteMapNode url="~/Admin/Logout.aspx" title="Logout" description="Logout" />
+  </siteMapNode>
+</siteMap>

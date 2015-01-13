@@ -1,0 +1,63 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/admin/masterpages/MasterPage.master"
+    AutoEventWireup="false" CodeFile="ImportArtists.aspx.vb" Inherits="admin_events_ImportArtists" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+
+    <script type="text/javascript" src="/javascript/jquery-1.6.2.js"></script>
+
+    <script type="text/javascript">
+        function toggleChecked(status) {
+            $(".checkbox input").each(function () {
+                $(this).attr("checked", status);
+            })
+        }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cph_main" runat="Server">
+    <div>
+        <asp:TextBox runat="server" ID="tbKeywords" MaxLength="250"></asp:TextBox>
+        <asp:DropDownList runat="server" ID="ddlVendor">
+            <asp:ListItem Selected="True">SEE</asp:ListItem>
+            <asp:ListItem>TM</asp:ListItem>
+        </asp:DropDownList>
+        <asp:Button runat="server" ID="btnSearch" Text="Search" />
+        <br />
+        <br />
+        <asp:Literal runat="server" ID="litResults" />
+        <br />
+        <br />
+        <input type="checkbox" onclick="toggleChecked(this.checked)">
+        Select / Deselect All
+        <br />
+        <br />
+        <asp:GridView runat="server" ID="gvArtists" AutoGenerateColumns="false" AllowPaging="true"
+            PageSize="50" AllowSorting="true">
+            <Columns>
+                <asp:TemplateField HeaderText="Add">
+                    <ItemTemplate>
+                        <asp:HiddenField runat="server" ID="hfVendorArtistName" Value='<%#Eval("VendorArtistName") %>' />
+                        <asp:CheckBox runat="server" ID="cbAdd" CssClass="checkbox" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:TextBox runat="server" ID="tbVendorArtistName" Text='<%#Eval("VendorArtistname") %>'
+                            Width="300px"></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Map To Artist:">
+                    <ItemTemplate>
+                        <asp:Literal runat="server" ID="litSimilarArtistsCount" />
+                        <asp:DropDownList runat="server" ID="ddlArtist" AppendDataBoundItems="true">
+                            <asp:ListItem Value="0" Selected="True">Add As New Artist</asp:ListItem>
+                        </asp:DropDownList>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+        <br />
+        <br />
+        <asp:Button runat="server" ID="btnAddArtists" Text="Add Artists" />
+    </div>
+</asp:Content>

@@ -1,0 +1,90 @@
+﻿Imports CommonFunctions
+
+Partial Class admin_events_ImportArtists
+    Inherits System.Web.UI.Page
+    Private DBCallsEventsAdmin As New DBCallsEventsAdmin()
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+
+        End If
+    End Sub
+
+    Sub BindData()
+        ViewState("dtExistingArtists") = DBCallsEventsAdmin.GetArtists
+        Dim dtNewArtists As DataTable
+        Select Case ddlVendor.SelectedValue
+            Case "SEE"
+                dtNewArtists = DBCallsEventsAdmin.GetNewArtistsSeeTickets(tbKeywords.Text)
+            Case "TM"
+                dtNewArtists = DBCallsEventsAdmin.GetNewArtistsTicketmaster(tbKeywords.Text)
+            Case Else
+                dtNewArtists = DBCallsEventsAdmin.GetNewArtistsSeeTickets(tbKeywords.Text)
+        End Select
+        litResults.Text = dtNewArtists.Rows.Count
+        gvArtists.DataSource = dtNewArtists
+        gvArtists.DataBind()
+        ViewState("gvArtists") = gvArtists.DataSource '// put into viewstate to allow sorting
+    End Sub
+
+    Protected Sub gvArtists_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvArtists.RowDataBound
+        If e.Row.RowType = ListItemType.Item Or e.Row.RowType = ListItemType.AlternatingItem Then
+            Dim ddlArtist As DropDownList = e.Row.FindControl("ddlArtist")
+            Dim litSimilarArtistsCount As Literal = e.Row.FindControl("litSimilarArtistsCount")
+            Dim dtSimiliarArtists As DataTable = DBCallsEventsAdmin.GetSimiliarArtists(nullToStr(e.Row.DataItem("VendorArtistName")))
+            litSimilarArtistsCount.Text = dtSimiliarArtists.Rows.Count & " similiar sounding artists<br />"
+            dtSimiliarArtists.Merge(ViewState("dtExistingArtists"))
+            ddlArtist.DataSource = dtSimiliarArtists
+            ddlArtist.DataValueField = "ArtistID"
+            ddlArtist.DataTextField = "ArtistName"
+            ddlArtist.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnAddEvents_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddArtists.Click
+        For Each gvRow As GridViewRow In gvArtists.Rows
+            Dim cbAdd As CheckBox = gvRow.FindControl("cbAdd")
+            Dim hfVendorArtistName As HiddenField = gvRow.FindControl("hfVendorArtistName")
+            Dim tbVendorArtistName As TextBox = gvRow.FindControl("tbVendorArtistName")
+            Dim ddlArtist As DropDownList = gvRow.FindControl("ddlArtist")
+            If cbAdd.Checked Then
+                If ddlArtist.SelectedValue = 0 Then
+                    DBCallsEventsAdmin.AddArtist(tbVendorArtistName.Text)
+                Else
+                    DBCallsEventsAdmin.AddArtistAlias(ddlArtist.SelectedValue, hfVendorArtistName.Value)
+                End If
+            End If
+        Next
+        BindData()
+        DoSort(gvArtists.PageIndex, ViewState("sortcolumn"), ViewState("sortdirection"))
+    End Sub
+
+    Protected Sub gvArtists_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvArtists.PageIndexChanging
+        gvArtists.PageIndex = e.NewPageIndex
+        DoSort(e.NewPageIndex, ViewState("sortcolumn"), ViewState("sortdirection"))
+    End Sub
+
+    Protected Sub gvArtists_Sorting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewSortEventArgs) Handles gvArtists.Sorting
+        ViewState("sortdirection") = GetSortdirection(ViewState("sortdirection"))
+        DoSort(0, e.SortExpression, ViewState("sortdirection"))
+    End Sub
+
+    Sub DoSort(ByVal intPage As Integer, ByVal strSortColumn As String, ByVal strSortDirection As String)
+        ViewState("sortcolumn") = strSortColumn
+        ViewState("sortdirection") = strSortDirection
+        Dim dtVenues As DataTable = ViewState("gvArtists")
+        If dtVenues IsNot Nothing Then
+            Dim dataView As New DataView(dtVenues)
+            If ViewState("sortcolumn") <> "" Then
+                dataView.Sort = strSortColumn & " " & ViewState("sortdirection")
+            End If
+            gvArtists.PageIndex = intPage
+            gvArtists.DataSource = dataView
+            gvArtists.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        BindData()
+    End Sub
+End Class

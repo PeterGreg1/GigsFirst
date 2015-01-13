@@ -1,0 +1,87 @@
+﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="PageComments.ascx.vb"
+    Inherits="Admin_Users_controls_PageComments" %>
+<asp:UpdatePanel runat="server" ID="updpnlResults">
+    <ContentTemplate>
+        <div style="float: left; margin-right: 20px; width: 370px;">
+            <asp:Literal runat="server" ID="litResults"></asp:Literal><br />
+            <br />
+            <asp:GridView ID="gvResults" runat="server" Width="370px" AutoGenerateColumns="False"
+                BorderWidth="1px" BorderColor="#DFDFDF" CssClass="ListView" CellPadding="3" AllowSorting="True"
+                AllowPaging="True" PageSize="20" GridLines="None">
+                <Columns>
+                    <asp:TemplateField>
+                        <ItemStyle Width="35px" HorizontalAlign="Center" />
+                        <ItemTemplate>
+                            <asp:ImageButton ID="imgbtn_edit" runat="server" CommandName="editme" CommandArgument='<%#Eval("ResultSetID") %>'
+                                ImageUrl="../../images/editicon01.gif" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:BoundField DataField="displaytitle" HeaderText="form title" ItemStyle-Width="150px"
+                        SortExpression="displaytitle" />
+                    <asp:BoundField DataField="SendDateTime" HeaderText="date/time" ItemStyle-Width="150px"
+                        SortExpression="SendDateTime" />
+                    <asp:TemplateField HeaderText="delete">
+                        <ItemStyle Width="35px" />
+                        <ItemTemplate>
+                            <asp:ImageButton ID="imgbtn_delete" runat="server" CommandName="deleteme" CommandArgument='<%#Eval("ResultSetID") %>'
+                                ImageUrl="../../images/deleteicon.gif" OnClientClick="return confirm('Are you sure you want to delete this result?')" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                <HeaderStyle CssClass="FormDesciptionBoxListings" />
+            </asp:GridView>
+        </div>
+        <div style="float: left;">
+            <table width="450" border="0" cellpadding="5" cellspacing="1" runat="server" id="tblResultDetails"
+                visible="false">
+                <tr>
+                    <td valign="baseline" bgcolor="#ebebeb" class="FormDesciptionBox" style="width: 210px;">
+                        Username
+                    </td>
+                    <td bgcolor="#f8f8f8" class="FormContentBox">
+                        <asp:Literal runat="server" ID="litUsername"></asp:Literal>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="baseline" bgcolor="#ebebeb" class="FormDesciptionBox">
+                        DateTimeSent
+                    </td>
+                    <td bgcolor="#f8f8f8" class="FormContentBox">
+                        <asp:Literal runat="server" ID="litDateTimeSent"></asp:Literal>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="baseline" bgcolor="#ebebeb" class="FormDesciptionBox">
+                        IP Address
+                    </td>
+                    <td bgcolor="#f8f8f8" class="FormContentBox">
+                        <asp:Literal runat="server" ID="litIPAddress"></asp:Literal>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <asp:GridView ID="gvAnswers" runat="server" Width="450px" AutoGenerateColumns="False"
+                BorderWidth="1px" BorderColor="#DFDFDF" CssClass="FormContentBox" CellPadding="3">
+                <HeaderStyle CssClass="FormDesciptionBoxListings" />
+                <Columns>
+                    <asp:BoundField DataField="Question" HeaderText="Question" ItemStyle-CssClass="FormDesciptionBox"
+                        ItemStyle-Width="225px" />
+                    <asp:TemplateField HeaderText="Answer" ItemStyle-CssClass="FormContentBox" ItemStyle-Width="225px">
+                        <ItemTemplate>
+                            <asp:Literal runat="server" ID="litAnswer"></asp:Literal>
+                            <asp:GridView runat="server" ID="gvAnswerOptions" AutoGenerateColumns="false" Width="225px"
+                                BorderWidth="1px" BorderColor="#DFDFDF" CssClass="FormContentBox" CellPadding="3"
+                                ShowHeader="false">
+                                <Columns>
+                                    <asp:BoundField DataField="Value" />
+                                </Columns>
+                            </asp:GridView>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+        </div>
+        <div class="break">
+        </div>
+    </ContentTemplate>
+</asp:UpdatePanel>

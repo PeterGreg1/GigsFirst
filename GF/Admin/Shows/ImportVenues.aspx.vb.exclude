@@ -1,0 +1,104 @@
+﻿Imports CommonFunctions
+
+Partial Class admin_events_ImportVenues
+    Inherits System.Web.UI.Page
+    Private DBCallsEventsAdmin As New DBCallsEventsAdmin()
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+
+        End If
+    End Sub
+
+    Sub BindData()
+        Dim dtExistingVenues As DataTable = DBCallsEventsAdmin.GetVenues()
+        ViewState("dtExistingVenues") = dtExistingVenues
+        Dim dtNewVenues As DataTable
+        Select Case ddlVendor.SelectedValue
+            Case "SEE"
+                dtNewVenues = DBCallsEventsAdmin.GetNewVenuesSeeTickets(tbKeywords.Text)
+            Case "TM"
+                dtNewVenues = DBCallsEventsAdmin.GetNewVenuesTicketmaster(tbKeywords.Text)
+            Case Else
+                dtNewVenues = DBCallsEventsAdmin.GetNewVenuesSeeTickets(tbKeywords.Text)
+        End Select
+        litResults.Text = dtNewVenues.Rows.Count
+        gvVenues.DataSource = dtNewVenues
+        gvVenues.DataBind()
+        ViewState("gvVenues") = gvVenues.DataSource '// put into viewstate to allow sorting
+    End Sub
+
+    Protected Sub gvVenues_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvVenues.RowDataBound
+        If e.Row.RowType = ListItemType.Item Or e.Row.RowType = ListItemType.AlternatingItem Then
+            Dim ddlVenue As DropDownList = e.Row.FindControl("ddlVenue")
+            Dim litSimilarVenuesCount As Literal = e.Row.FindControl("litSimilarVenuesCount")
+            Dim dtSimiliarVenues As DataTable = DBCallsEventsAdmin.GetSimiliarVenues(nullToStr(e.Row.DataItem("VendorVenue")), nullToStr(e.Row.DataItem("VendorTown")))
+            litSimilarVenuesCount.Text = dtSimiliarVenues.Rows.Count & " similiar sounding venues<br />"
+            Dim dvExistingVenues As New DataView(ViewState("dtExistingVenues"))
+            dvExistingVenues.RowFilter = "Town = '" & Replace(nullToStr(e.Row.DataItem("VendorTown")), "'", "''") & "'"
+            dtSimiliarVenues.Merge(dvExistingVenues.ToTable)
+            ddlVenue.DataSource = dtSimiliarVenues
+            ddlVenue.DataValueField = "VenueID"
+            ddlVenue.DataTextField = "venueandtown"
+            ddlVenue.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnAddEvents_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddVenues.Click
+        Dim table As New DataTable()
+        table.Columns.Add("VenueID")
+        table.Columns.Add("VenueName")
+        table.Columns.Add("Town")
+        For Each gvRow As GridViewRow In gvVenues.Rows
+            Dim cbAdd As CheckBox = gvRow.FindControl("cbAdd")
+            Dim hfVenueName As HiddenField = gvRow.FindControl("hfVendorVenueName")
+            Dim hfVendorTown As HiddenField = gvRow.FindControl("hfVendorTown")
+            Dim hfVendorStreet As HiddenField = gvRow.FindControl("hfVendorStreet")
+            Dim hfVendorPostcode As HiddenField = gvRow.FindControl("hfVendorPostcode")
+            Dim ddlVenue As DropDownList = gvRow.FindControl("ddlVenue")
+            Dim tbVendorVenue As TextBox = gvRow.FindControl("tbVendorVenue")
+            Dim tbVendorTown As TextBox = gvRow.FindControl("tbVendorTown")
+            If cbAdd.Checked Then
+                Dim dtRow As DataRow = table.NewRow
+                If ddlVenue.SelectedValue = 0 Then
+                    Dim intVenueID As Integer = DBCallsEventsAdmin.AddVenue(tbVendorVenue.Text, tbVendorTown.Text, hfVendorPostcode.Value, hfVendorStreet.Value)
+                    DBCallsEventsAdmin.AddVenueAlias(intVenueID, hfVenueName.Value, hfVendorTown.Value)
+                Else
+                    DBCallsEventsAdmin.AddVenueAlias(ddlVenue.SelectedValue, hfVenueName.Value, hfVendorTown.Value)
+                End If
+                table.Rows.Add(dtRow)
+            End If
+        Next
+        BindData()
+        DoSort(gvVenues.PageIndex, ViewState("sortcolumn"), ViewState("sortdirection"))
+    End Sub
+
+    Protected Sub gvVenues_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvVenues.PageIndexChanging
+        gvVenues.PageIndex = e.NewPageIndex
+        DoSort(e.NewPageIndex, ViewState("sortcolumn"), ViewState("sortdirection"))
+    End Sub
+
+    Protected Sub gvVenues_Sorting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewSortEventArgs) Handles gvVenues.Sorting
+        ViewState("sortdirection") = GetSortdirection(ViewState("sortdirection"))
+        DoSort(0, e.SortExpression, ViewState("sortdirection"))
+    End Sub
+
+    Sub DoSort(ByVal intPage As Integer, ByVal strSortColumn As String, ByVal strSortDirection As String)
+        ViewState("sortcolumn") = strSortColumn
+        ViewState("sortdirection") = strSortDirection
+        Dim dtVenues As DataTable = ViewState("gvVenues")
+        If dtVenues IsNot Nothing Then
+            Dim dataView As New DataView(dtVenues)
+            If ViewState("sortcolumn") <> "" Then
+                dataView.Sort = strSortColumn & " " & ViewState("sortdirection")
+            End If
+            gvVenues.PageIndex = intPage
+            gvVenues.DataSource = dataView
+            gvVenues.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        BindData()
+    End Sub
+End Class

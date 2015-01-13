@@ -1,0 +1,307 @@
+﻿Imports System.Data.SqlClient
+Imports System.Security.Cryptography
+Imports CommonFunctions
+
+
+Partial Class Admin_User_Edit
+    Inherits System.Web.UI.Page
+    Private DBCalls As New DBCalls()
+
+    Private guidUserID As Guid
+    Private userid As String
+
+    '// This overrides the viewstate to save it on the server side rather than the client side
+    Protected Overrides ReadOnly Property PageStatePersister() As PageStatePersister
+        Get
+            Return New SessionPageStatePersister(Me)
+        End Get
+    End Property
+
+    Private Sub Page_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        userid = Request.QueryString("userid")
+        If IsGuid(userid, guidUserID) Then
+            PagePermissions1.UserID = guidUserID
+            PagePermissions1.WebOrAdmin = 1
+            PagePermissions2.UserID = guidUserID
+            PagePermissions2.WebOrAdmin = 2
+        End If
+        If Not Page.IsPostBack Then
+            BindRegions()
+            If IsGuid(userid, guidUserID) Then
+                BindData()
+                btnAdd.Text = "Update User"
+                tbUsername.ReadOnly = True
+                trPassword.Visible = False
+                trPasswordRepeat.Visible = False
+                trUpdatePassword.Visible = True
+            Else
+                btnAdd.Text = "Add New User"
+                tbUsername.ReadOnly = False
+                rfvPassword.Enabled = True
+                rfvPassword2.Enabled = True
+            End If
+            BindRoles()
+            BindGroups()
+        End If
+        '// CMS SETTINGS
+        lbtn2.Visible = System.Configuration.ConfigurationManager.AppSettings("PagesTabAccessWeb") '// Access tab (web)
+        lbtn3.Visible = System.Configuration.ConfigurationManager.AppSettings("PagesTabAccessAdmin") '// Access tab (admin)
+    End Sub
+
+    Sub BindRoles()
+        ddlRoles.Items.Clear()
+        Dim roleNames() As String = Roles.GetAllRoles()
+        For Each roleName As String In roleNames
+            If roleName = "Webmaster" And Not User.IsInRole("Webmaster") Then
+                '// do not add
+            Else
+                Dim roleListItem As New ListItem
+                roleListItem.Text = roleName
+                roleListItem.Selected = Roles.IsUserInRole(tbUsername.Text, roleName)
+                ddlRoles.Items.Add(roleListItem)
+            End If
+        Next
+        CheckTabs()
+    End Sub
+
+    Sub CheckTabs()
+        Select Case ddlRoles.SelectedValue
+            Case "Webmaster"
+                liAdminAccess.Visible = False '// role is not defined by permissions as roles has universal access
+                liWebAccess.Visible = False '// role is not defined by permissions as roles has universal access
+            Case "User"
+                liAdminAccess.Visible = False '// role does not have any admin access
+                liWebAccess.Visible = True '// role defined by permissions
+            Case "SuperAdmin"
+                liAdminAccess.Visible = False '// role is not defined by permissions as roles has universal access
+                liWebAccess.Visible = False '// role is not defined by permissions as roles has universal access
+            Case "Publisher"
+                liAdminAccess.Visible = True '// role defined by permissions
+                liWebAccess.Visible = True '// role defined by permissions
+            Case "Admin"
+                liAdminAccess.Visible = True '// role defined by permissions
+                liWebAccess.Visible = True '// role defined by permissions
+        End Select
+    End Sub
+
+    Sub BindGroups()
+        lbGroups.DataSource = DBCalls.GetGroups(0)
+        lbGroups.DataTextField = "DisplayTitle"
+        lbGroups.DataValueField = "GroupID"
+        lbGroups.DataBind()
+        Dim dtUserGroups As DataTable = DBCalls.GetUser(guidUserID).Tables(1)
+        For Each lItem As ListItem In lbGroups.Items
+            For Each dtRow As DataRow In dtUserGroups.Rows
+                If dtRow("GroupID") = lItem.Value Then
+                    lItem.Selected = True
+                End If
+            Next
+        Next
+    End Sub
+
+    Sub BindRegions()
+        ddlRegion.DataSource = DBCalls.GetRegions(0)
+        ddlRegion.DataTextField = "DisplayTitle"
+        ddlRegion.DataValueField = "RegionID"
+        ddlRegion.DataBind()
+    End Sub
+
+    Sub BindData()
+        Dim dtUser As DataTable = DBCalls.GetUser(guidUserID).Tables(0)
+        If dtUser.Rows.Count > 0 Then
+            Dim dtRow As DataRow = dtUser.Rows(0)
+            tbUsername.Text = nullToStr(dtRow("username"))
+            tbEmail.Text = nullToStr(dtRow("Email"))
+            tbFirstname.Text = nullToStr(dtRow("Firstname"))
+            tbLastname.Text = nullToStr(dtRow("Lastname"))
+            tbJobTitle.Text = nullToStr(dtRow("JobTitle"))
+            tbGPODepartment.Text = nullToStr(dtRow("GPODepartment"))
+            tbTelephone.Text = nullToStr(dtRow("TelephoneNumber"))
+            tbAlias.Text = nullToStr(dtRow("Alias"))
+            tbMobile.Text = nullToStr(dtRow("MobileNumber"))
+            ddlLocation.SelectedValue = nullToStr(dtRow("Location"))
+            tbAreasOfInterest.Text = nullToStr(dtRow("AreasOfInterest"))
+            tbSpecialisms.Text = nullToStr(dtRow("Specialisms"))
+            tbGroupsAndAssociations.Text = nullToStr(dtRow("GroupsAndAssociations"))
+            tbProfile.Text = nullToStr(dtRow("Profile"))
+            rblUserUpdated.SelectedValue = boolToInt(dtRow("UserUpdated"))
+            rblShowInDirectory.SelectedValue = boolToInt(dtRow("ShowInDirectory"))
+            If CheckFileExists(Server.MapPath("/uploads/profiles/main/" & nullToStr(dtRow("ProfilePicture")))) Then
+                hfFilename.Value = nullToStr(dtRow("ProfilePicture"))
+                imgProfile.ImageUrl = nullToStr("/uploads/profiles/main/" & dtRow("ProfilePicture"))
+                imgProfile.Visible = True
+            Else
+                litProfilePicture.Text = "no image uploaded"
+                imgProfile.Visible = False
+            End If
+            ddlRegion.SelectedValue = dtRow("RegionID")
+        End If
+    End Sub
+
+    Sub btnAdd_click(ByVal sender As Object, ByVal e As System.EventArgs)
+        If Page.IsValid Then
+            If IsGuid(userid, guidUserID) Then
+                UpdateUser()
+            Else
+                AddUser()
+            End If
+            Response.Redirect("../default.aspx")
+        End If
+    End Sub
+
+    Sub AddUser()
+        Dim status As MembershipCreateStatus
+        Dim user As MembershipUser = Membership.CreateUser(tbUsername.Text, tbPassword1.Text, tbEmail.Text, Nothing, Nothing, True, status)
+        If user Is Nothing Then
+            Response.Write(GetErrorMessage(status))
+        Else
+            Dim userId As Guid = user.ProviderUserKey
+            guidUserID = userId
+            DBCalls.AddUser(userId, 0, tbEmail.Text, tbFirstname.Text, tbLastname.Text, tbJobTitle.Text, tbGPODepartment.Text, tbGPODepartment.Text, tbTelephone.Text, hfFilename.Value, tbAlias.Text, tbMobile.Text, ddlLocation.SelectedValue, tbAreasOfInterest.Text, tbSpecialisms.Text, tbGroupsAndAssociations.Text, tbProfile.Text, 0, 0)
+            UpdateRolesFromList()
+            UpdateGroupsFromList()
+            PagePermissions1.AddRowsToDatabase(userId)
+            PagePermissions2.AddRowsToDatabase(userId)
+        End If
+    End Sub
+
+    Sub UpdateUser()
+        Dim user As MembershipUser = Membership.GetUser(tbUsername.Text)
+        user.Email = tbEmail.Text
+        If cbUpdatePassword.Checked Then
+            user.ChangePassword(user.GetPassword, tbPassword1.Text)
+        End If
+        Membership.UpdateUser(user)
+        DBCalls.UpdateUser(guidUserID, 0, tbEmail.Text, tbFirstname.Text, tbLastname.Text, tbJobTitle.Text, tbGPODepartment.Text, tbGPODepartment.Text, tbTelephone.Text, hfFilename.Value, tbAlias.Text, tbMobile.Text, ddlLocation.SelectedValue, tbAreasOfInterest.Text, tbSpecialisms.Text, tbGroupsAndAssociations.Text, tbProfile.Text, 0, 0)
+        UpdateRolesFromList()
+        UpdateGroupsFromList()
+        PagePermissions1.AddRowsToDatabase(guidUserID)
+        PagePermissions2.AddRowsToDatabase(guidUserID)
+    End Sub
+
+    Sub UpdateRolesFromList()
+        Dim roleListItem As ListItem
+        For Each roleListItem In ddlRoles.Items
+            Dim roleName As String = roleListItem.Value
+            Dim userName As String = tbUsername.Text
+            Dim enableRole As Boolean = roleListItem.Selected
+            If (enableRole = True) And (Roles.IsUserInRole(userName, roleName) = False) Then
+                Roles.AddUserToRole(userName, roleName)
+            ElseIf (enableRole = False) And (Roles.IsUserInRole(userName, roleName) = True) Then
+                Roles.RemoveUserFromRole(userName, roleName)
+            End If
+        Next
+    End Sub
+
+    Sub UpdateGroupsFromList()
+        DBCalls.DeleteUserFromGroups(guidUserID)
+        For Each lItem As ListItem In lbGroups.Items
+            If lItem.Selected Then
+                DBCalls.AddUserToGroup(guidUserID, lItem.Value)
+            End If
+        Next
+    End Sub
+
+    Function GetErrorMessage(ByVal status As MembershipCreateStatus) As String
+        Select Case status
+            Case MembershipCreateStatus.DuplicateUserName
+                GetErrorMessage = "Username already exists. Please enter a different user name."
+            Case MembershipCreateStatus.DuplicateEmail
+                GetErrorMessage = "A username for that e-mail address already exists. Please enter a different e-mail address."
+            Case MembershipCreateStatus.InvalidPassword
+                GetErrorMessage = "The password provided is invalid. Please enter a valid password value."
+            Case MembershipCreateStatus.InvalidEmail
+                GetErrorMessage = "The e-mail address provided is invalid. Please check the value and try again."
+            Case MembershipCreateStatus.InvalidAnswer
+                GetErrorMessage = "The password retrieval answer provided is invalid. Please check the value and try again."
+            Case MembershipCreateStatus.InvalidQuestion
+                GetErrorMessage = "The password retrieval question provided is invalid. Please check the value and try again."
+            Case MembershipCreateStatus.InvalidUserName
+                GetErrorMessage = "The user name provided is invalid. Please check the value and try again."
+            Case MembershipCreateStatus.ProviderError
+                GetErrorMessage = "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator."
+            Case MembershipCreateStatus.UserRejected
+                GetErrorMessage = "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator."
+            Case Else
+                GetErrorMessage = "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator."
+        End Select
+    End Function
+
+    Protected Sub CustomValidator1_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs) Handles cvUsername.ServerValidate
+        Dim booIsValid = True
+        If IsGuid(userid, guidUserID) Then
+            Dim dtUser As DataTable = DBCalls.GetUserByUsername(tbUsername.Text).Tables(0)
+            If dtUser.Rows.Count > 0 Then
+                If dtUser.Rows(0)("UserID").ToString <> userid.ToString Then
+                    booIsValid = False
+                End If
+            End If
+        Else
+            Dim dtUser As DataTable = DBCalls.GetUserByUsername(tbUsername.Text).Tables(0)
+            If dtUser.Rows.Count > 0 Then
+                booIsValid = False
+            End If
+        End If
+        args.IsValid = booIsValid
+    End Sub
+
+    Function IsGuid(ByVal candidate As String, ByRef output As Guid) As Boolean
+        Dim regexGuid As New Regex("^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled)
+        Dim isValid As Boolean = False
+        output = Guid.Empty
+        If candidate IsNot Nothing Then
+            If regexGuid.IsMatch(candidate) Then
+                output = New Guid(candidate)
+                isValid = True
+            End If
+        End If
+        Return isValid
+    End Function
+
+    Protected Sub lbtn1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtn1.Click
+        lbtn1.CssClass = "tab active"
+        lbtn2.CssClass = "tab"
+        lbtn3.CssClass = "tab"
+        divContent1.Attributes("class") = "tabcontent"
+        divContent2.Attributes("class") = "tabcontenthidden"
+        divContent3.Attributes("class") = "tabcontenthidden"
+    End Sub
+
+    Protected Sub lbtn2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtn2.Click
+        lbtn1.CssClass = "tab"
+        lbtn2.CssClass = "tab active"
+        lbtn3.CssClass = "tab"
+        divContent1.Attributes("class") = "tabcontenthidden"
+        divContent2.Attributes("class") = "tabcontent"
+        divContent3.Attributes("class") = "tabcontenthidden"
+        PagePermissions1.LoadPages()
+    End Sub
+
+    Protected Sub lbtn3_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbtn3.Click
+        lbtn1.CssClass = "tab"
+        lbtn2.CssClass = "tab"
+        lbtn3.CssClass = "tab active"
+        divContent1.Attributes("class") = "tabcontenthidden"
+        divContent2.Attributes("class") = "tabcontenthidden"
+        divContent3.Attributes("class") = "tabcontent"
+        PagePermissions2.LoadPages()
+    End Sub
+
+    Protected Sub ddlRoles_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlRoles.SelectedIndexChanged
+        CheckTabs()
+    End Sub
+
+    Protected Sub cbUpdatePassword_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cbUpdatePassword.CheckedChanged
+        If cbUpdatePassword.Checked Then
+            trPassword.Visible = True
+            trPasswordRepeat.Visible = True
+            rfvPassword.Enabled = True
+            rfvPassword2.Enabled = True
+        Else
+            trPassword.Visible = False
+            trPasswordRepeat.Visible = False
+            rfvPassword.Enabled = False
+            rfvPassword2.Enabled = False
+        End If
+    End Sub
+End Class

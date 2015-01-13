@@ -1,0 +1,901 @@
+Imports Microsoft.VisualBasic
+Imports System.IO
+
+Public Class CommonFunctions
+
+    'Public Shared ReadOnly Property DBConnection() As String
+    '    Get
+    '        Return System.Configuration.ConfigurationManager.ConnectionStrings("dbconn").ConnectionString
+    '    End Get
+    'End Property
+
+    Public Shared Function FormatFormValue(ByVal str As String) As String
+
+        FormatFormValue = Replace(str, "'", "''")
+
+    End Function
+
+    '** Doubles up single quotes to stop breakouts from SQL strings **
+    Public Shared Function SQLSafe(ByVal strRawText As String) As String
+
+        Dim strCleanedText As String = ""
+        Dim iCharPos As Integer = 1
+
+        Do While iCharPos <= Len(strRawText)
+            '** Double up single quotes, but only if they aren't already doubled **
+            If Mid(strRawText, iCharPos, 1) = "'" Then
+                strCleanedText = strCleanedText & "''"
+                If iCharPos <> Len(strRawText) Then
+                    If Mid(strRawText, iCharPos + 1, 1) = "'" Then iCharPos = iCharPos + 1
+                End If
+            Else
+                strCleanedText = strCleanedText & Mid(strRawText, iCharPos, 1)
+            End If
+
+            iCharPos = iCharPos + 1
+        Loop
+
+        Return Trim(strCleanedText)
+
+    End Function
+
+    Public Shared Function RemoveHTML(ByVal strText As String) As String
+
+        Dim TAGLIST As String
+        TAGLIST = ";!--;!DOCTYPE;A;a;ACRONYM;ADDRESS;APPLET;AREA;B;BASE;BASEFONT;" & _
+                  "BGSOUND;BIG;BLOCKQUOTE;BODY;BR;BUTTON;CAPTION;CENTER;CITE;CODE;" & _
+                  "COL;COLGROUP;COMMENT;DD;DEL;DFN;DIR;DIV;DL;DT;EM;EMBED;FIELDSET;" & _
+                  "FONT;FORM;FRAME;FRAMESET;HEAD;H1;H2;H3;H4;H5;H6;HR;HTML;I;IFRAME;IMG;" & _
+                  "INPUT;INS;ISINDEX;KBD;LABEL;LAYER;LAGEND;LI;LINK;LISTING;MAP;MARQUEE;" & _
+                  "MENU;META;NOBR;NOFRAMES;NOSCRIPT;OBJECT;OL;OPTION;P;PARAM;PLAINTEXT;" & _
+                  "PRE;Q;S;SAMP;SCRIPT;SELECT;SMALL;SPAN;STRIKE;STRONG;STYLE;SUB;SUP;" & _
+                  "TABLE;TBODY;TD;TEXTAREA;TFOOT;TH;THEAD;TITLE;TR;TT;U;UL;VAR;WBR;XMP;"
+
+        Const BLOCKTAGLIST As String = ";APPLET;EMBED;FRAMESET;HEAD;NOFRAMES;NOSCRIPT;OBJECT;SCRIPT;STYLE;"
+
+        Dim nPos1 As Integer
+        Dim nPos2 As Integer
+        Dim nPos3 As Integer
+        Dim strResult As String = ""
+        Dim strTagName As String
+        Dim bRemove As Boolean
+        Dim bSearchForBlock As Boolean
+
+        nPos1 = InStr(strText, "<")
+        Do While nPos1 > 0
+            nPos2 = InStr(nPos1 + 1, strText, ">")
+            If nPos2 > 0 Then
+                strTagName = Mid(strText, nPos1 + 1, nPos2 - nPos1 - 1)
+                strTagName = Replace(Replace(strTagName, vbCr, " "), vbLf, " ")
+
+                nPos3 = InStr(strTagName, " ")
+                If nPos3 > 0 Then
+                    strTagName = Left(strTagName, nPos3 - 1)
+                End If
+
+                If Left(strTagName, 1) = "/" Then
+                    strTagName = Mid(strTagName, 2)
+                    bSearchForBlock = False
+                Else
+                    bSearchForBlock = True
+                End If
+
+                If InStr(1, TAGLIST, ";" & strTagName & ";", vbTextCompare) > 0 Then
+                    bRemove = True
+                    If bSearchForBlock Then
+                        If InStr(1, BLOCKTAGLIST, ";" & strTagName & ";", vbTextCompare) > 0 Then
+                            nPos2 = Len(strText)
+                            nPos3 = InStr(nPos1 + 1, strText, "</" & strTagName, vbTextCompare)
+                            If nPos3 > 0 Then
+                                nPos3 = InStr(nPos3 + 1, strText, ">")
+                            End If
+
+                            If nPos3 > 0 Then
+                                nPos2 = nPos3
+                            End If
+                        End If
+                    End If
+                Else
+                    bRemove = False
+                End If
+
+                If bRemove Then
+                    strResult = strResult & Left(strText, nPos1 - 1)
+                    strText = Mid(strText, nPos2 + 1)
+                Else
+                    strResult = strResult & Left(strText, nPos1)
+                    strText = Mid(strText, nPos1 + 1)
+                End If
+            Else
+                strResult = strResult & strText
+                strText = ""
+            End If
+
+            nPos1 = InStr(strText, "<")
+        Loop
+        strResult = strResult & strText
+
+        RemoveHTML = strResult
+
+    End Function
+
+    ' // Function count characters up to a certain limit and replace excedding 
+    ' // characters with '...'
+    Public Shared Function charcount(ByVal str As String, ByVal charnumber As Integer) As String
+
+        If Len(str) > charnumber Then
+            charcount = Mid(str, 1, charnumber) & "..."
+        Else
+            charcount = str
+        End If
+
+    End Function
+
+    ' // Function remove 'bad' words from string
+    Public Shared Function killChars(ByVal strWords As String) As String
+
+        Dim newChars As String
+
+        Dim badChars As New ArrayList()
+        badChars.Add("fetch next")
+        badChars.Add("table_cursor")
+        badChars.Add("deallocate")
+        badChars.Add("select")
+        badChars.Add("drop")
+
+        newChars = strWords
+
+        Dim i As Integer
+        For i = 0 To badChars.Count - 1
+
+            newChars = Replace(LCase(newChars), badChars(i), "")
+        Next
+
+        killChars = newChars
+
+    End Function
+
+    Public Shared Function FormatInvalidChars(ByVal strCopy As String) As String
+
+        strCopy = Replace(strCopy, " & ", " &amp; ")
+        FormatInvalidChars = strCopy
+
+    End Function
+
+    Public Shared Function fFindNthOccur(ByVal pStr As String, ByVal pFind As String, ByVal pNth As Integer) As Integer
+        '------------------------------------------------------------------
+        ' Purpose:   Return location of nth occurence of item in a string.
+        ' Coded by:  raskew
+        ' Arguments: pStr: The string to be searched.
+        '            pFind: The item to search for.
+        '            pNth:  The occurence of the item in string.
+        ' Input:     From the debug (immediate) window:
+        '            x = "The quick brown fox jumped over the lazy dog"
+        '            1) ? fFindNthOccur(x, " ", 3)
+        '            2) ? left(x, fFindNthOccur(x, " ", 3))
+        '            3) ? mid(x, fFindNthOccur(x, " ", 3)+1)
+        ' Output:    1) 16
+        '            2) The quick brown
+        '            3) fox jumped over the lazy dog
+        '------------------------------------------------------------------
+        Dim strHold As String
+        Dim strFind As String
+        Dim intHold As Integer
+        Dim intSay As Integer
+        Dim intKeep As Integer
+        Dim n As Integer
+
+        strHold = pStr
+        strFind = pFind
+        intHold = pNth
+        intKeep = 0
+        n = 0
+
+        Do While n < intHold
+            If InStr(strHold, strFind) = 0 Then
+                fFindNthOccur = 0
+                Exit Do
+            Else
+                intSay = InStr(1, strHold, strFind)
+                intKeep = intKeep + intSay
+                n = n + 1
+                strHold = Mid(strHold, intSay + Len(strFind))
+                fFindNthOccur = intKeep
+            End If
+        Loop
+
+    End Function
+
+    ' // Function format line breaks (chr13) into a html break (<br>)          
+    Public Shared Function formatlinebreaks(ByVal textname As String) As String
+        Dim strText As String = ""
+        Dim arrParagraphs As Array = Split(textname, Chr(13))
+        For i As Integer = LBound(arrParagraphs) To UBound(arrParagraphs)
+            strText &= "<p>" & arrParagraphs(i) & "</p>"
+        Next
+        Return strText
+    End Function
+
+    Public Shared Function GetPostBackControl(ByVal page As Page) As Control
+        Dim control As Control = Nothing
+
+        Dim ctrlname As String = page.Request.Params.[Get]("__EVENTTARGET")
+        If ctrlname IsNot Nothing AndAlso ctrlname <> String.Empty Then
+            control = page.FindControl(ctrlname)
+        Else
+            For Each ctl As String In page.Request.Form
+                Dim c As Control = page.FindControl(ctl)
+                If TypeOf c Is System.Web.UI.WebControls.Button Then
+                    control = c
+                    Exit For
+                End If
+            Next
+        End If
+        Return control
+    End Function
+
+    Public Shared Function SendEmail(ByVal subject As String, ByVal fromemail As String, ByVal toemail As String, ByVal body As String, Optional ByVal attachment As String = "", Optional ByVal emailtype As String = "text") As Boolean
+
+        Dim objMail As Object
+        objMail = CreateObject("CDO.Message")
+
+        Dim objCDOSYSCon As Object = HttpContext.Current.Server.CreateObject("CDO.Configuration")
+
+        objMail.Configuration = objCDOSYSCon
+
+        objMail.Subject = subject
+        objMail.From = fromemail
+
+        objMail.To = toemail
+
+        If emailtype = "text" Then
+            objMail.TextBody = body
+        Else
+            objMail.HTMLBody = body
+        End If
+
+        If attachment <> "" Then
+            If CheckFileExists(attachment) Then
+                objMail.AddAttachment(HttpContext.Current.Server.MapPath(attachment))
+            End If
+        End If
+        Try
+            objMail.Send()
+            SendEmail = True
+        Catch ex As Exception
+            SendEmail = False
+        Finally
+            objMail = Nothing
+        End Try
+
+    End Function
+
+    Public Shared Function IsValidFile(ByVal allowedlist As String, ByVal type As String) As Boolean
+
+        Dim arrAllowedlist As Array = Split(allowedlist, ",")
+
+        Dim i As Integer
+        For i = LBound(arrAllowedlist) To UBound(arrAllowedlist)
+            If LCase(arrAllowedlist(i)) = LCase(type) Then
+                IsValidFile = True
+                Exit Function
+            End If
+        Next
+
+        IsValidFile = False
+
+    End Function
+
+    Public Shared Sub PhysicalImageResize(ByVal opath As String, ByVal newpath As String, ByVal filename As String, ByVal destinationWidth As Integer, ByVal destinationHeight As Integer)
+
+        Using originalBitmap As Bitmap = Bitmap.FromFile(opath & filename)
+            Dim newheight As Integer
+
+            newheight = (destinationWidth / originalBitmap.Width) * originalBitmap.Height
+
+            Using newBitmap As Bitmap = New Bitmap(destinationWidth, newheight)
+                Using newg As Graphics = Graphics.FromImage(newBitmap)
+                    newg.DrawImage(originalBitmap, 0, 0, destinationWidth, newheight)
+                    originalBitmap.Dispose()
+                    newg.Save()
+                End Using
+
+                If destinationHeight > 0 Then
+                    If newheight > destinationHeight Then
+                        Dim newnewBitmap As Bitmap = CropImage(newBitmap, New Point(0, 0), New Point(destinationHeight, destinationWidth))
+                        Dim newfilename As String = newpath & filename
+                        newnewBitmap.Save(newfilename)
+                    Else
+                        Dim newfilename As String = newpath & filename
+                        newBitmap.Save(newfilename)
+                    End If
+                Else
+                    Dim newfilename As String = newpath & filename
+                    newBitmap.Save(newfilename)
+                End If
+
+            End Using
+
+        End Using
+
+    End Sub
+
+    Public Shared Function CropImage(ByVal OriginalImage As Bitmap, ByVal TopLeft As Point, ByVal BottomRight As Point) As Bitmap
+        Dim btmCropped As New Bitmap((BottomRight.Y - TopLeft.Y), (BottomRight.X - TopLeft.X))
+        Dim grpOriginal As Graphics = Graphics.FromImage(btmCropped)
+
+        grpOriginal.DrawImage(OriginalImage, New Rectangle(0, 0, btmCropped.Width, btmCropped.Height), _
+            TopLeft.X, TopLeft.Y, btmCropped.Width, btmCropped.Height, GraphicsUnit.Pixel)
+        grpOriginal.Dispose()
+
+        Return btmCropped
+    End Function
+
+    Public Shared Function BadWordsFilter(ByVal Tag_String_Insert As String) As String
+
+        ' Create a filesystem object
+        Dim FSO As Object = HttpContext.Current.Server.CreateObject("Scripting.FileSystemObject")
+
+        ' Map the logical path to the physical system path
+        Dim Filepath As String = HttpContext.Current.Server.MapPath("/uploads/badwords.txt")
+
+        If FSO.FileExists(Filepath) Then
+
+            ' Get a handle to the file
+            Dim file As Object = FSO.GetFile(Filepath)
+
+            ' Open the file
+            Dim TextStream As Object
+            TextStream = file.OpenAsTextStream(1, -2)
+
+            ' Read the file line by line
+            Do While Not TextStream.AtEndOfStream
+                Dim Line As Array
+                Line = Split(TextStream.readline, " - ")
+                Dim CENSOR As Integer = InStr(1, " " & Tag_String_Insert & " ", " " & Line(0) & " ", 1)
+                If CInt(CENSOR) > 0 Then
+                    Dim censorlength As Integer = Len(Line(0))
+                    Dim i As Integer = 1
+                    Dim filter As String = ""
+                    For i = 1 To censorlength
+                        filter = filter & "*"
+                    Next
+                    Tag_String_Insert = Replace(Tag_String_Insert, Line(0), filter, 1, -1, 1)
+                End If
+            Loop
+
+            TextStream = Nothing
+
+        End If
+
+        BadWordsFilter = Tag_String_Insert
+
+    End Function
+
+    Public Shared Function DownloadFile(ByVal path As String) As Boolean
+        '--declare variables
+        Dim strAbsFile As String
+        Dim objFSO As Object
+        Dim objFile As Object
+        Dim objStream As Object
+        '-- set absolute file location
+        strAbsFile = HttpContext.Current.Server.MapPath(path)
+        '-- create FSO object to check if file exists and get properties
+        objFSO = HttpContext.Current.Server.CreateObject("Scripting.FileSystemObject")
+        '-- check to see if the file exists
+        If objFSO.FileExists(strAbsFile) Then
+            objFile = objFSO.GetFile(strAbsFile)
+            Dim ext As String
+            ext = objFSO.GetExtensionName(objFile)
+            Dim contype As String
+            Select Case ext
+                Case "htm", "html"
+                    contype = "text/HTML"
+                Case "txt"
+                    contype = "text/plain"
+                Case "doc", "rtf", "docx"
+                    contype = "Application/msword"
+                Case "csv", "xls"
+                    contype = "Application/x-msexcel"
+                Case "pdf"
+                    contype = "application/pdf"
+                Case Else
+                    contype = "application/octet-stream"
+            End Select
+
+            '-- first clear the response, and then set the appropriate headers
+            HttpContext.Current.Response.Clear()
+            '-- the filename you give it will be the one that is shown
+            '   to the users by default when they save
+            HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename=" & objFile.Name)
+            HttpContext.Current.Response.AddHeader("Content-Length", objFile.Size)
+            HttpContext.Current.Response.ContentType = contype
+            objStream = HttpContext.Current.Server.CreateObject("ADODB.Stream")
+            objStream.Open()
+            '-- set as binary
+            objStream.Type = 1
+            HttpContext.Current.Response.Charset = "UTF-8"
+            '-- load into the stream the file
+            objStream.LoadFromFile(strAbsFile)
+            '-- send the stream in the response
+            HttpContext.Current.Response.BinaryWrite(objStream.Read)
+            objStream.Close()
+            objStream = Nothing
+            objFile = Nothing
+            DownloadFile = True
+        Else  'objFSO.FileExists(strAbsFile)
+            HttpContext.Current.Response.Clear()
+            DownloadFile = False
+        End If
+        objFSO = Nothing
+    End Function
+
+    Public Shared Function GetFileSize(ByVal fileName As String, ByVal sizeType As String) As String
+
+        Dim finfo As New System.IO.FileInfo(fileName)
+        Dim FileInBytes As Long = finfo.Length
+        Dim FileInKB As Long = finfo.Length / 1024
+
+        Select Case sizeType
+            Case "kb"
+                GetFileSize = FileInKB.ToString()
+            Case "bytes"
+                GetFileSize = FileInBytes.ToString()
+            Case Else
+                GetFileSize = ""
+        End Select
+
+    End Function
+
+    Public Shared Function GetFileType(ByVal fileName As String) As String
+
+        GetFileType = Replace(Path.GetExtension(fileName), ".", "")
+
+    End Function
+
+    Public Shared Function CheckFileExists(ByVal sFileName As String) As Boolean
+
+        Dim FileSystemObject As Object
+
+        FileSystemObject = HttpContext.Current.Server.CreateObject("Scripting.FileSystemObject")
+
+        If (FileSystemObject.FileExists(sFileName)) Then
+            CheckFileExists = True
+        Else
+            CheckFileExists = False
+        End If
+
+        FileSystemObject = Nothing
+
+    End Function
+
+    Public Shared Function ConvertSortDirectionToSql(ByVal sortDirection__1 As SortDirection) As String
+        Dim newSortDirection As String = [String].Empty
+
+        Select Case sortDirection__1
+            Case SortDirection.Ascending
+                newSortDirection = "ASC"
+                Exit Select
+
+            Case SortDirection.Descending
+                newSortDirection = "DESC"
+                Exit Select
+        End Select
+
+        Return newSortDirection
+    End Function
+
+    Public Shared Function RemoveBadCharacters(ByVal title As String) As String
+
+        RemoveBadCharacters = Replace(CStr(title), Chr(32), "")         ' Replace [space]
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(92), "")    ' Replace \
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(47), "")    ' Replace /
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(46), "")     ' Replace .
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(44), "")     ' Replace ,
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(58), "")     ' Replace :
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(42), "")     ' Replace *
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(63), "")     ' Replace ?
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(62), "")     ' Replace >	
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(60), "")     ' Replace <	
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(124), "")    ' Replace |	
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(34), "")     ' Replace "
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(39), "")     ' Replace '
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(96), "")     ' Replace `
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(43), "")    ' Replace +
+        RemoveBadCharacters = Replace(RemoveBadCharacters, Chr(38), "")  ' Replace &
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "’", "")  ' Replace ’
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "‘", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "…", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "€", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "£", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "$", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, ")", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "(", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "+", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "-", "")
+        RemoveBadCharacters = Replace(RemoveBadCharacters, "%", "")
+        RemoveBadCharacters = LCase(RemoveBadCharacters)
+
+    End Function
+
+    Public Shared Function StaticPageFormat(ByVal title As String) As String
+        StaticPageFormat = Replace(CStr(title), "-", "")
+        StaticPageFormat = Replace(StaticPageFormat, "–", "")
+        StaticPageFormat = Replace(StaticPageFormat, ")", "")
+        StaticPageFormat = Replace(StaticPageFormat, "(", "")
+        StaticPageFormat = Replace(StaticPageFormat, Chr(32), "-")    ' Replace [space]
+        StaticPageFormat = Replace(StaticPageFormat, Chr(92), "-")    ' Replace \
+        StaticPageFormat = Replace(StaticPageFormat, Chr(47), "-")    ' Replace /
+        StaticPageFormat = Replace(StaticPageFormat, Chr(46), "")     ' Replace .
+        StaticPageFormat = Replace(StaticPageFormat, Chr(44), "")     ' Replace ,
+        StaticPageFormat = Replace(StaticPageFormat, Chr(58), "")     ' Replace :
+        StaticPageFormat = Replace(StaticPageFormat, Chr(42), "")     ' Replace *
+        StaticPageFormat = Replace(StaticPageFormat, Chr(63), "")     ' Replace ?
+        StaticPageFormat = Replace(StaticPageFormat, Chr(62), "")     ' Replace >	
+        StaticPageFormat = Replace(StaticPageFormat, Chr(60), "")     ' Replace <	
+        StaticPageFormat = Replace(StaticPageFormat, Chr(124), "")    ' Replace |	
+        StaticPageFormat = Replace(StaticPageFormat, Chr(34), "")     ' Replace "
+        StaticPageFormat = Replace(StaticPageFormat, Chr(39), "")     ' Replace '
+        StaticPageFormat = Replace(StaticPageFormat, Chr(96), "")     ' Replace `
+        StaticPageFormat = Replace(StaticPageFormat, Chr(43), "-")    ' Replace +
+        StaticPageFormat = Replace(StaticPageFormat, Chr(38), "and")  ' Replace &
+        StaticPageFormat = Replace(StaticPageFormat, "’", "")  ' Replace ’
+        StaticPageFormat = Replace(StaticPageFormat, "‘", "")
+        StaticPageFormat = Replace(StaticPageFormat, "…", "-")
+        StaticPageFormat = Replace(StaticPageFormat, "€", "euro")
+        StaticPageFormat = Replace(StaticPageFormat, "£", "euro")
+        StaticPageFormat = Replace(StaticPageFormat, "$", "euro")
+        StaticPageFormat = StaticPageFormat
+    End Function
+
+ Public Shared Function nullToBool(ByVal dbRecord) As Boolean
+        If dbRecord Is DBNull.Value Then
+            Return False
+        Else
+            Return dbRecord
+        End If
+    End Function
+
+    Public Shared Function nullToInt(ByVal dbRecord) As Integer
+        If dbRecord Is DBNull.Value Then
+            Return 0
+        Else
+
+            Return dbRecord
+        End If
+    End Function
+
+    Public Shared Function nullToDecimal(ByVal dbRecord) As Decimal
+        If dbRecord Is DBNull.Value Then
+            Return 0
+        Else
+            Return dbRecord
+        End If
+    End Function
+
+    Public Shared Function nullToStr(ByVal dbRecord) As String
+        If dbRecord Is DBNull.Value Then
+            Return ""
+        Else
+            Return Trim(dbRecord.ToString)
+        End If
+    End Function
+
+    Public Shared Function nullToDate(ByVal dbRecord) As Date
+        If dbRecord Is DBNull.Value Then
+            Return Nothing
+        Else
+            'Return dbRecord.ToString
+            Return FormatDateTime(dbRecord, 2).ToString
+        End If
+    End Function
+
+    Public Shared Function boolToInt(ByVal dbRecord As Boolean) As Integer
+        If dbRecord = True Then
+            Return 1
+        Else
+            Return 0
+        End If
+    End Function
+
+    Public Shared Function inttoBool(ByVal dbRecord As Integer) As Integer
+        If dbRecord = 1 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Shared Sub CopyFile(ByVal originalpath As String, ByVal newpath As String)
+
+        System.IO.File.Copy(originalpath, newpath)
+
+    End Sub
+
+    Public Shared Function UploadFile(ByVal filectrl As FileUpload, ByVal sSavePath As String, Optional ByVal ofilename As String = "") As String
+
+        Dim strFileName As String = filectrl.PostedFile.FileName
+        Dim c As String = System.IO.Path.GetFileName(strFileName)
+        Dim nFileLen As Integer = filectrl.PostedFile.ContentLength
+
+
+        Dim newfilename As String
+
+        Dim actualname As String, extension As String
+        actualname = Replace(Left(c, InStrRev(c, ".") - 1), "%20", " ")
+        extension = Mid(StrReverse(Left(StrReverse(c), InStr(StrReverse(c), "."))), 2)
+
+        actualname = RemoveBadCharacters(actualname)
+
+        Dim i As Integer = 1
+        Do Until CheckFileExists(sSavePath & actualname & "_" & i & "." & extension) = False
+            i = i + 1
+        Loop
+        newfilename = actualname & "_" & i & "." & extension
+        c = newfilename
+
+        '// Upload the file
+        filectrl.PostedFile.SaveAs(sSavePath + c)
+
+        UploadFile = c
+
+    End Function
+
+    Public Shared Function UploadImage(ByVal filectrl As FileUpload, ByVal sSavePath As String, Optional ByVal ofilename As String = "") As String
+
+        Dim strFileName As String = filectrl.PostedFile.FileName
+        Dim c As String = System.IO.Path.GetFileName(strFileName)
+        Dim nFileLen As Integer = filectrl.PostedFile.ContentLength
+
+        Dim newfilename As String
+
+        Dim actualname As String, extension As String
+        actualname = Replace(Left(c, InStrRev(c, ".") - 1), "%20", " ")
+        extension = Mid(StrReverse(Left(StrReverse(c), InStr(StrReverse(c), "."))), 2)
+
+        If Not IsValidFile("jpeg,jpg,gif,tif,png", extension) Then
+            UploadImage = ofilename
+            Exit Function
+        End If
+
+        actualname = RemoveBadCharacters(actualname)
+
+        Dim i As Integer
+        i = 1
+        Do Until CheckFileExists(sSavePath & actualname & "_" & i & "." & extension) = False
+            i = i + 1
+        Loop
+        newfilename = actualname & "_" & i & "." & extension
+        c = newfilename
+
+        '// Upload the image
+        filectrl.PostedFile.SaveAs(sSavePath + c)
+
+        UploadImage = c
+
+    End Function
+
+    Public Shared Sub ResizeImage(ByVal opath As String, ByVal newpath As String, ByVal filename As String, ByVal maxwidth As Integer, ByVal maxheight As Integer)
+
+        If filename <> "" Then
+            Dim tempbitmap As Bitmap = New Bitmap(opath & filename)
+
+            Dim thisw As Integer = tempbitmap.Width
+            Dim thish As Integer = tempbitmap.Height
+
+            tempbitmap.Dispose()
+
+            If thisw > maxwidth Then
+                PhysicalImageResize(opath, newpath, filename, maxwidth, maxheight)
+            Else
+                PhysicalImageResize(opath, newpath, filename, thisw, maxheight)
+            End If
+        End If
+
+    End Sub
+
+    Public Shared Function FormatFeatureBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatStaticContentBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatFileBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatFaqBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatVideoBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatImageBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatPageBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?PageID=" & dtBreadcrumbRow("PageID") & """ title=""" & dtBreadcrumbRow("MenuTitle") & """>" & dtBreadcrumbRow("MenuTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatFormBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatCalendarBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatCarouselBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function FormatPollBreadcrumb(ByVal datatable As DataTable) As String
+
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""Default.aspx?CategoryID=" & dtBreadcrumbRow("CategoryID") & """ title=""" & dtBreadcrumbRow("DisplayTitle") & """>" & dtBreadcrumbRow("DisplayTitle") & " </a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+
+        Return strBreadcrumb
+
+    End Function
+
+    Public Shared Function DoPageBreadcrumb(ByVal datatable As DataTable) As String
+        '// front end version
+        Dim strBreadcrumb As String = ""
+        If datatable.Rows.Count > 0 Then
+            For Each dtBreadcrumbRow As DataRow In datatable.Rows
+                strBreadcrumb &= "<a href=""/page/" & dtBreadcrumbRow("PageID") & "/" & StaticPageFormat(dtBreadcrumbRow("MenuTitle")) & ".aspx"" title=""" & dtBreadcrumbRow("MenuTitle") & """>" & dtBreadcrumbRow("MenuTitle") & "</a> > "
+            Next
+            strBreadcrumb = Left(strBreadcrumb, Len(strBreadcrumb) - 2)
+        End If
+        Return strBreadcrumb
+    End Function
+
+    Public Shared Function GetSortdirection(ByVal sortdirection As String) As String
+        Select Case sortdirection
+            Case "ASC"
+                Return "DESC"
+            Case "DESC"
+                Return "ASC"
+            Case Else
+                Return "ASC"
+        End Select
+    End Function
+
+    Public Shared Function VideoPlayer(ByVal divPlayer As String, ByVal filepath As String, Optional ByVal width As Integer = 485, Optional ByVal height As Integer = 270) As String
+        Dim strJScript As String = ""
+        strJScript &= "<script type=""text/javascript"">"
+        strJScript &= "jwplayer(""" & divPlayer & """).setup({"
+        strJScript &= "flashplayer: ""/javascript/jwplayer/player.swf"","
+        'strJScript &= "screencolor: '#7270a5',"
+        strJScript &= "width: '" & width & "',"
+        strJScript &= "height: '" & height & "',"
+        strJScript &= "file: """ & filepath & """"
+        strJScript &= " });"
+        strJScript &= " </script>"
+        Return strJScript
+    End Function
+
+    Public Shared Function IsUniqueUsername(ByVal username As String) As Boolean
+        If username <> "" Then
+            If Membership.GetUser(username, False) Is Nothing Then
+                Return True
+            Else
+                Return False
+            End If
+        Else
+            Return False
+        End If
+    End Function
+
+End Class
+

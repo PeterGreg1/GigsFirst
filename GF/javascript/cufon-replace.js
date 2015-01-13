@@ -1,0 +1,1 @@
+Cufon.replace('#navigation li, #ticket-form strong, h2, h3', { fontFamily: 'Futura-Bold', hover: 'true' });

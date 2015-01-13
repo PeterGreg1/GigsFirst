@@ -1,0 +1,220 @@
+﻿Imports CommonFunctions
+Imports Authentication
+
+Partial Class Admin_Users_Default
+    Inherits System.Web.UI.Page
+    Private DBCalls As New DBCalls()
+
+    '// This overrides the viewstate to save it on the server side rather than the client side
+    Protected Overrides ReadOnly Property PageStatePersister() As PageStatePersister
+        Get
+            Return New SessionPageStatePersister(Me)
+        End Get
+    End Property
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            BindRoles()
+            UserGroupsSiteMap1.LoadGroups()
+            Dim strGroupID As String = Request.QueryString("GroupID")
+            If IsNumeric(strGroupID) Then
+                BindData(strGroupID)
+            Else
+                BindData(0)
+            End If
+        End If
+        If Not User.IsInRole("SuperAdmin") AndAlso Not User.IsInRole("Webmaster") Then
+            divCategories.Visible = False
+        End If
+    End Sub
+
+    Sub BindRoles()
+        Dim roleNames() As String = Roles.GetAllRoles()
+        For Each roleName As String In roleNames
+            Dim roleListItem As New ListItem
+            roleListItem.Text = roleName
+            ddlRoles.Items.Add(roleListItem)
+        Next
+    End Sub
+
+    Sub BindData(ByVal GroupID As Integer)
+        ViewState("GroupID") = GroupID
+        If GroupID = 0 Then
+            litGroup.Text = "All categories"
+        Else
+            Dim dtGroup As DataTable = DBCalls.GetGroup(GroupID)
+            If dtGroup.Rows.Count > 0 Then
+                litGroup.Text = dtGroup.Rows(0)("DisplayTitle")
+            End If
+        End If
+        Dim dtResults As DataSet = DBCalls.GetUsers(GroupID, ddlRoles.SelectedValue, Trim(tbKeywords.Text))
+        gvUsers.DataSource = dtResults
+        gvUsers.DataBind()
+        litResults.Text = dtResults.Tables(0).Rows.Count & " results "
+        ViewState("dtResults") = gvUsers.DataSource '// put into viewstate to allow sorting
+    End Sub
+
+    Protected Sub UserGroupsSiteMap1_SelectedNodeChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles UserGroupsSiteMap1.SelectedNodeChanged
+        BindData(UserGroupsSiteMap1.SelectedValue)
+    End Sub
+
+    Protected Sub gvUsers_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvUsers.RowCommand
+        Dim guidUserID As Guid
+        Dim userid As String = e.CommandArgument
+        If IsGuid(userid, guidUserID) Then
+            Dim MU As MembershipUser = Membership.GetUser(guidUserID)
+            Select Case e.CommandName
+                Case "editme"
+                    Response.Redirect("edit.aspx?userid=" & e.CommandArgument)
+                Case "unapprove"
+                    MU.IsApproved = False
+                    Membership.UpdateUser(MU)
+                    BindData(ViewState("GroupID"))
+                Case "approve"
+                    MU.IsApproved = True
+                    Membership.UpdateUser(MU)
+                    BindData(ViewState("GroupID"))
+                Case "unlock"
+                    MU.UnlockUser()
+                    Membership.UpdateUser(MU)
+                    BindData(ViewState("GroupID"))
+                Case "deleteme"
+                    Membership.DeleteUser(MU.UserName, False)
+                    BindData(ViewState("GroupID"))
+            End Select
+        End If
+    End Sub
+
+    Protected Sub gvUsers_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvUsers.RowDataBound
+        If e.Row.RowType = ListItemType.Item Or e.Row.RowType = ListItemType.AlternatingItem Then
+            Dim imgbtnUnlock As LinkButton = e.Row.FindControl("imgbtnunlock")
+            Dim litLockMsg As Literal = e.Row.FindControl("litLockMsg")
+            Dim imgbtnUnapprove As ImageButton = e.Row.FindControl("imgbtnunapprove")
+            Dim imgbtnApprove As ImageButton = e.Row.FindControl("imgbtnapprove")
+            Dim imgbtnDelete As ImageButton = e.Row.FindControl("imgbtndelete")
+            Dim MU As MembershipUser = Membership.GetUser(e.Row.DataItem("userid"))
+            If Not MU Is Nothing Then
+                If Not MU.IsApproved Then
+                    imgbtnUnapprove.Visible = False
+                    imgbtnApprove.Visible = True
+                Else
+                    imgbtnUnapprove.Visible = True
+                    imgbtnApprove.Visible = False
+                End If
+                If Not MU.IsLockedOut Then
+                    litLockMsg.Text = "no"
+                    imgbtnUnlock.Visible = False
+                Else
+                    litLockMsg.Text = "yes"
+                    imgbtnUnlock.Visible = True
+                End If
+            End If
+            Dim rptGroups As Repeater = e.Row.FindControl("rptGroups")
+            Dim drv As DataRowView = TryCast(e.Row.DataItem, DataRowView)
+            If Not IsNothing(rptGroups) Then
+                rptGroups.DataSource = drv.CreateChildView("groups")
+                rptGroups.DataBind()
+                If rptGroups.Items.Count = 0 Then
+                    rptGroups.Visible = False
+                End If
+            End If
+            Dim rptRoles As Repeater = e.Row.FindControl("rptRoles")
+            Dim drv2 As DataRowView = TryCast(e.Row.DataItem, DataRowView)
+            If Not IsNothing(rptGroups) Then
+                AddHandler rptRoles.ItemDataBound, AddressOf rptRoles_ItemDataBound
+                rptRoles.DataSource = drv2.CreateChildView("roles")
+                rptRoles.DataBind()
+                If rptRoles.Items.Count = 0 Then
+                    rptRoles.Visible = False
+                End If
+            End If
+            If UserID().ToString = e.Row.DataItem("userid").ToString Then
+                imgbtnUnlock.Enabled = False
+                imgbtnUnapprove.Enabled = False
+                imgbtnApprove.Enabled = False
+                imgbtnApprove.ImageUrl = "../../images/visibleicon0disabled.gif"
+                imgbtnUnapprove.ImageUrl = "../../images/visibleicon1disabled.gif"
+                imgbtnDelete.Enabled = False
+                imgbtnDelete.ImageUrl = "../../images/deleteicon0.gif"
+                e.Row.CssClass = "RowNoEdit"
+            End If
+        End If
+    End Sub
+
+    Protected Sub rptRoles_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs)
+        If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+            If User.IsInRole("SuperAdmin") Then
+                If e.Item.DataItem("RoleName") = "Webmaster" Then
+                    Dim imgbtnEdit As ImageButton = e.Item.NamingContainer.NamingContainer.FindControl("imgbtnedit")
+                    Dim imgbtnUnlock As LinkButton = e.Item.NamingContainer.NamingContainer.FindControl("imgbtnunlock")
+                    Dim imgbtnUnapprove As ImageButton = e.Item.NamingContainer.NamingContainer.FindControl("imgbtnunapprove")
+                    Dim imgbtnApprove As ImageButton = e.Item.NamingContainer.NamingContainer.FindControl("imgbtnapprove")
+                    Dim imgbtnDelete As ImageButton = e.Item.NamingContainer.NamingContainer.FindControl("imgbtndelete")
+                    Dim gvRow As GridViewRow = e.Item.NamingContainer.NamingContainer
+                    imgbtnEdit.Enabled = False
+                    imgbtnUnlock.Enabled = False
+                    imgbtnUnapprove.Enabled = False
+                    imgbtnApprove.Enabled = False
+                    imgbtnDelete.Enabled = False
+                    imgbtnEdit.ImageUrl = "../../images/editicon02.gif"
+                    imgbtnApprove.ImageUrl = "../../images/visibleicon0disabled.gif"
+                    imgbtnUnapprove.ImageUrl = "../../images/visibleicon1disabled.gif"
+                    imgbtnDelete.ImageUrl = "../../images/deleteicon0.gif"
+                    gvRow.CssClass = "RowNoEdit"
+                End If
+            End If
+        End If
+    End Sub
+
+    Protected Sub gvUsers_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvUsers.PageIndexChanging
+        gvUsers.PageIndex = e.NewPageIndex
+        DoSort(e.NewPageIndex, ViewState("sortcolumn"), ViewState("sortdirection"))
+    End Sub
+
+    Protected Sub gvUsers_Sorting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewSortEventArgs) Handles gvUsers.Sorting
+        ViewState("sortdirection") = GetSortdirection(ViewState("sortdirection"))
+        DoSort(0, e.SortExpression, ViewState("sortdirection"))
+    End Sub
+
+    Sub DoSort(ByVal intPage As Integer, ByVal strSortColumn As String, ByVal strSortDirection As String)
+        ViewState("sortcolumn") = strSortColumn
+        ViewState("sortdirection") = strSortDirection
+        Dim dtSearchResults As DataTable = ViewState("dtResults").Tables(0)
+        If dtSearchResults IsNot Nothing Then
+            Dim dataView As New DataView(dtSearchResults)
+            If ViewState("sortcolumn") <> "" Then
+                dataView.Sort = strSortColumn & " " & ViewState("sortdirection")
+            End If
+            gvUsers.PageIndex = intPage
+            gvUsers.DataSource = dataView
+            gvUsers.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        If rblSearchType.SelectedValue = 1 Then
+            BindData(ViewState("GroupID"))
+        Else
+            BindData(0)
+        End If
+    End Sub
+
+    Protected Sub btnClear_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnClear.Click
+        tbKeywords.Text = ""
+        ddlRoles.SelectedValue = ""
+        BindData(ViewState("GroupID"))
+    End Sub
+
+    Function IsGuid(ByVal candidate As String, ByRef output As Guid) As Boolean
+        Dim regexGuid As New Regex("^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled)
+        Dim isValid As Boolean = False
+        output = Guid.Empty
+        If candidate IsNot Nothing Then
+            If regexGuid.IsMatch(candidate) Then
+                output = New Guid(candidate)
+                isValid = True
+            End If
+        End If
+        Return isValid
+    End Function
+End Class

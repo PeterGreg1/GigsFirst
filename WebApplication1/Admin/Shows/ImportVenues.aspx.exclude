@@ -1,0 +1,71 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/admin/masterpages/MasterPage.master"
+    AutoEventWireup="false" CodeFile="ImportVenues.aspx.vb" Inherits="admin_events_ImportVenues" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+
+    <script type="text/javascript" src="/javascript/jquery-1.6.2.js"></script>
+
+    <script type="text/javascript">
+        function toggleChecked(status) {
+            $(".checkbox input").each(function() {
+                $(this).attr("checked", status);
+            })
+        }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cph_main" runat="Server">
+    <div>
+        <asp:TextBox runat="server" ID="tbKeywords" MaxLength="250"></asp:TextBox>
+        <asp:DropDownList runat="server" ID="ddlVendor">
+            <asp:ListItem Selected="True">SEE</asp:ListItem>
+            <asp:ListItem>TM</asp:ListItem>
+        </asp:DropDownList>
+        <asp:Button runat="server" ID="btnSearch" Text="Search" />
+        <br />
+        <br />
+        <asp:Literal runat="server" ID="litResults" />
+        <br />
+        <br />
+        <input type="checkbox" onclick="toggleChecked(this.checked)">
+        Select / Deselect All
+        <br />
+        <br />
+        <asp:GridView runat="server" ID="gvVenues" AutoGenerateColumns="false" AllowPaging="true"
+            PageSize="20" AllowSorting="true">
+            <Columns>
+                <asp:TemplateField HeaderText="Add">
+                    <ItemTemplate>
+                        <asp:HiddenField runat="server" ID="hfVendorVenueName" Value='<%#Eval("VendorVenue") %>' />
+                        <asp:HiddenField runat="server" ID="hfVendorTown" Value='<%#Eval("VendorTown") %>' />
+                        <asp:HiddenField runat="server" ID="hfVendorStreet" Value='<%#Eval("VendorStreet") %>' />
+                        <asp:HiddenField runat="server" ID="hfVendorPostcode" Value='<%#Eval("VendorPostcode") %>' />
+                        <asp:CheckBox runat="server" ID="cbAdd" CssClass="checkbox" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Town">
+                    <ItemTemplate>
+                        <asp:TextBox runat="server" ID="tbVendorTown" Text='<%#Eval("VendorTown") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Venue">
+                    <ItemTemplate>
+                        <asp:TextBox runat="server" ID="tbVendorVenue" Text='<%#Eval("VendorVenue") %>'></asp:TextBox>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="VendorPostcode" SortExpression="VendorPostcode" HeaderText="(Vendor) Postcode" />
+                <asp:TemplateField HeaderText="Map To Venue:">
+                    <ItemTemplate>
+                        <asp:Literal runat="server" ID="litSimilarVenuesCount" />
+                        <asp:DropDownList runat="server" ID="ddlVenue" AppendDataBoundItems="true">
+                            <asp:ListItem Value="0" Selected="True">Add As New Venue</asp:ListItem>
+                        </asp:DropDownList>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+        <br />
+        <br />
+        <asp:Button runat="server" ID="btnAddVenues" Text="Add Venues" />
+    </div>
+</asp:Content>

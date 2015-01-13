@@ -1,0 +1,68 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/admin/masterpages/MasterPage.master"
+    AutoEventWireup="false" CodeFile="EditEvent.aspx.vb" Inherits="admin_events_EditEvent" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cph_main" runat="Server">
+    <div>
+        Event ID
+        <asp:TextBox runat="server" ID="tbEventID" ReadOnly="true"></asp:TextBox>
+        <br />
+        <br />
+        Event Date
+        <asp:TextBox runat="server" ID="tbEventDate"></asp:TextBox>
+        <br />
+        <br />
+        Event Name
+        <asp:TextBox runat="server" ID="tbEventName"></asp:TextBox>
+        <br />
+        <br />
+        Venue
+        <asp:HiddenField runat="server" ID="hfVenueID" />
+        <asp:TextBox runat="server" ID="tbVenue"></asp:TextBox>
+        <br />
+        <br />
+        <asp:Button runat="server" ID="btnUpdate" Text="Update Event" />
+        <br />
+        <br />
+        Artists....<br />
+        Add New Artist:
+        <asp:HiddenField runat="server" ID="hfAddNewArtistID" />
+        <asp:TextBox runat="server" ID="tbAddNewArtist"></asp:TextBox>
+        <asp:Button runat="server" ID="btnAddNewArtist" Text="Add" />
+        <br />
+        <asp:GridView runat="server" ID="gvArtists" AutoGenerateColumns="false">
+            <Columns>
+                <asp:BoundField DataField="ArtistID" HeaderText="Artist ID" />
+                <asp:BoundField DataField="ArtistName" HeaderText="Artist Name" />
+                <asp:TemplateField HeaderText="Delete">
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" ID="lbtnDelete" Text="delete" CommandName="deleteme"
+                            CommandArgument='<%#Eval("EventArtistID") %>'></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+        <br />
+        <br />
+        Vendors ....<br />
+        Add New Vendor: Code:
+        <asp:TextBox runat="server" ID="tbAddNewVendorCode"></asp:TextBox>
+        Ref:
+        <asp:TextBox runat="server" ID="tbAddNewVendorRef"></asp:TextBox>
+        <asp:Button runat="server" ID="btnAddNewVendor" Text="Add" />
+        <br />
+        <asp:GridView runat="server" ID="gvVendors" AutoGenerateColumns="false">
+            <Columns>
+                <asp:BoundField DataField="VendorCode" HeaderText="Vendor Code" />
+                <asp:BoundField DataField="Reference" HeaderText="Reference" />
+                <asp:TemplateField HeaderText="Delete">
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" ID="lbtnDelete" Text="delete" CommandName="deleteme"
+                            CommandArgument='<%#Eval("EventVendorID") %>'></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+    </div>
+</asp:Content>

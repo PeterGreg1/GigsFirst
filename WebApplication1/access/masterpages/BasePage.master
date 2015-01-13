@@ -1,0 +1,88 @@
+﻿<%@ Master Language="VB" CodeFile="BasePage.master.vb" Inherits="master_Base" %>
+
+<%@ Register Src="~/access/controls/TopMenu.ascx" TagName="TopMenu" TagPrefix="uc" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link rel="icon" href="http://www.broadgateuk.com/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="http://www.broadgateuk.com/favicon.ico" type="image/x-icon" />
+    <title>
+        <%=_PageTitle%></title>
+    <meta http-equiv="Content-Type" runat="server" id="meta_contenttype" />
+    <meta name="keywords" runat="server" id="meta_keywords" />
+    <meta name="description" runat="server" id="meta_description" />
+    <meta name="author" content="emerald - www.emerald-design.co.uk" />
+    <link rel="stylesheet" type="text/css" href="/access/styles/base.css" />
+    <script type="text/javascript" src="/javascript/jquery-1.6.2.js"></script>
+    <script type="text/javascript" src="/javascript/jquery.cycle.all.js"></script>
+    <script type="text/javascript" src="/javascript/jwplayer/jwplayer.js"></script>
+    <script type="text/javascript" src="/javascript/jquery.showMessage.js"></script>
+    <script type="text/javascript" src="/access/javascript/common/setup.js"> </script>
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <asp:ContentPlaceHolder ID="cphHead" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <cc1:ToolkitScriptManager ID="tsm" runat="server" EnableScriptGlobalization="true"
+        EnableScriptLocalization="true">
+    </cc1:ToolkitScriptManager>
+    <!-- MASK FOR POPUPS -->
+    <div class="mask">
+    </div>
+    <!-- END MASK -->
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="header">
+            <a href="/access/default.aspx">
+                <img src="/access/images/logo.png" class="logo" title="gigs first" alt="gigs first" /></a>
+            <asp:Panel runat="server" ID="pnlSearch" class="search" DefaultButton="btnSearch">
+                <asp:TextBox runat="server" ID="TextBox1" CssClass="searchbox"></asp:TextBox>
+                <asp:Button runat="server" ID="btnSearch" CssClass="searchbutton" Text="SEARCH" CausesValidation="false" />
+            </asp:Panel>
+        </div>
+        <div class="topmenu">
+            <uc:TopMenu runat="server" ID="TopMenu1" />
+            <div class="break">
+            </div>
+        </div>
+        <asp:ContentPlaceHolder ID="cphBanner" runat="server">
+        </asp:ContentPlaceHolder>
+        <div class="innercontainer">
+            <asp:ContentPlaceHolder ID="cphMainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <div class="footer">
+                <ul class="list1">
+                    <li><a href="">HOME</a></li>
+                    <li><a href="">TERMS OF USE</a></li>
+                    <li><a href="">PRIVACY POLICY</a></li>
+                    <li><a href="">CONTACT US</a></li>
+                    <li class="highlight">&copy;
+                        <%=Year(DateTime.Now)%>
+                        GIGSFIRST.COM</li>
+                </ul>
+                <ul class="list2">
+                    <li>EMAIL</li>
+                    <li class="highlight">info@broadgateuk.com</li>
+                    <li>TELEPHONE</li>
+                    <li class="highlight">01494 725577</li>
+                </ul>
+                <ul class="list4">
+                    <li>CONNECT WITH US</li>
+                    <li class="highlight">Our social links</li>
+                    <li class="socialicons"><a href="" title="">
+                        <img src="/access/images/connecticon1.png" /></a> <a href="" title="">
+                            <img src="/access/images/connecticon2.png" /></a> <a href="" title="">
+                                <img src="/access/images/connecticon3.png" /></a> <a href="" title="">
+                                    <img src="/access/images/connecticon4.png" /></a> <a href="" title="">
+                                        <img src="/access/images/connecticon5.png" /></a> </li>
+                </ul>
+                <div class="break">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MAIN CONTENT -->
+    </form>
+</body>
+</html>

@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{73197DE4-6671-45B6-B418-E609D199C5AE}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebApplication1</RootNamespace>
+    <AssemblyName>WebApplication1</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="access\masterpages\BasePage.master" />
+    <Content Include="access\User\web.config" />
+    <Content Include="Admin\AuthenticateUser.aspx.exclude" />
+    <Content Include="Admin\AuthenticateUser.aspx.vb.exclude" />
+    <Content Include="Admin\Default.aspx.exclude" />
+    <Content Include="Admin\Default.aspx.vb.exclude" />
+    <Content Include="Admin\Logout.aspx.exclude" />
+    <Content Include="Admin\Logout.aspx.vb.exclude" />
+    <Content Include="Admin\masterpages\MasterPage.master" />
+    <Content Include="Admin\Shows\Artists.aspx.exclude" />
+    <Content Include="Admin\Shows\Artists.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\Default.aspx.exclude" />
+    <Content Include="Admin\Shows\Default.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\DuplicateEventsOnArtist.aspx.exclude" />
+    <Content Include="Admin\Shows\DuplicateEventsOnArtist.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\DuplicateEventsOnPostcode.aspx.exclude" />
+    <Content Include="Admin\Shows\DuplicateEventsOnPostcode.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\DuplicateEventsOnVenue.aspx.exclude" />
+    <Content Include="Admin\Shows\DuplicateEventsOnVenue.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\EditEvent.aspx.exclude" />
+    <Content Include="Admin\Shows\EditEvent.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\Events.aspx.exclude" />
+    <Content Include="Admin\Shows\Events.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\ImportArtists.aspx.exclude" />
+    <Content Include="Admin\Shows\ImportArtists.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\ImportVenues.aspx.exclude" />
+    <Content Include="Admin\Shows\ImportVenues.aspx.vb.exclude" />
+    <Content Include="Admin\Shows\Venues.aspx.exclude" />
+    <Content Include="Admin\Shows\Venues.aspx.vb.exclude" />
+    <Content Include="Admin\Users\controls\FormResults.ascx.exclude" />
+    <Content Include="Admin\Users\controls\FormResults.ascx.vb.exclude" />
+    <Content Include="Admin\Users\controls\PageComments.ascx.exclude" />
+    <Content Include="Admin\Users\controls\PageComments.ascx.vb.exclude" />
+    <Content Include="Admin\Users\controls\PagePermissions.ascx.exclude" />
+    <Content Include="Admin\Users\controls\PagePermissions.ascx.vb.exclude" />
+    <Content Include="Admin\Users\controls\PageTracking.ascx.exclude" />
+    <Content Include="Admin\Users\controls\PageTracking.ascx.vb.exclude" />
+    <Content Include="Admin\Users\Default.aspx.exclude" />
+    <Content Include="Admin\Users\Default.aspx.vb.exclude" />
+    <Content Include="Admin\Users\Membership\Default.aspx.exclude" />
+    <Content Include="Admin\Users\Membership\Default.aspx.vb.exclude" />
+    <Content Include="Admin\Users\Membership\Edit.aspx.exclude" />
+    <Content Include="Admin\Users\Membership\Edit.aspx.vb.exclude" />
+    <Content Include="Admin\Users\web.config" />
+    <Content Include="Admin\Web.config.exclude" />
+    <Content Include="App_Code\BasePage.vb.exclude" />
+    <Content Include="App_Code\Common.vb.exclude" />
+    <None Include="App_WebReferences\ticketmaster\Service.discomap" />
+    <None Include="App_WebReferences\ticketmaster\Service.wsdl" />
+    <Content Include="bin\de-DE.dic" />
+    <Content Include="bin\en-AU.dic" />
+    <Content Include="bin\en-CA.dic" />
+    <Content Include="bin\en-GB.dic" />
+    <Content Include="bin\en-UK.dic" />
+    <Content Include="bin\en-US.dic" />
+    <Content Include="bin\es-ES.dic" />
+    <Content Include="bin\es-MX.dic" />
+    <Content Include="bin\Facebook.dll.refresh" />
+    <Content Include="bin\Flan.Controls.dll.refresh" />
+    <Content Include="bin\fr-FR.dic" />
+    <Content Include="bin\it-IT.dic" />
+    <Content Include="bin\Recaptcha.dll.refresh" />
+    <Content Include="Hotels.aspx.exclude" />
+    <Content Include="Hotels.aspx.vb.exclude" />
+    <Content Include="packages.config" />
+    <Content Include="psds\social-connect.psd" />
+    <Content Include="test.aspx.exclude" />
+    <Content Include="test.aspx.vb.exclude" />
+    <Content Include="test2.aspx.exclude" />
+    <Content Include="test2.aspx.vb.exclude" />
+    <Content Include="uploads\d357bc84-ae9c-4626-889e-c6ba4839e75b" />
+    <Content Include="vwd.webinfo" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="Web.sitemap" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="access\COntrols\Banner.ascx" />
+    <Content Include="access\COntrols\Banner.ascx.vb" />
+    <Content Include="access\COntrols\FacebookLogin.ascx" />
+    <Content Include="access\COntrols\FacebookLogin.ascx.vb" />
+    <Content Include="access\COntrols\Login.ascx" />
+    <Content Include="access\COntrols\Login.ascx.vb" />
+    <Content Include="access\COntrols\TopMenu.ascx" />
+    <Content Include="access\COntrols\TopMenu.ascx.vb" />
+    <Content Include="access\Default.aspx" />
+    <Content Include="access\Default.aspx.vb" />
+    <Content Include="access\Hotel.aspx" />
+    <Content Include="access\Hotel.aspx.vb" />
+    <Content Include="access\Hotels.aspx" />
+    <Content Include="access\Hotels.aspx.vb" />
+    <Content Include="access\Images\arrow1.png" />
+    <Content Include="access\Images\background.jpg" />
+    <Content Include="access\Images\bannerleftarrow.png" />
+    <Content Include="access\Images\bannerleftarrowhl.png" />
+    <Content Include="access\Images\bannerrightarrow.png" />
+    <Content Include="access\Images\bannerrightarrowhl.png" />
+    <Content Include="access\Images\ConnectIcon1.png" />
+    <Content Include="access\Images\ConnectIcon1Over.png" />
+    <Content Include="access\Images\ConnectIcon2.png" />
+    <Content Include="access\Images\ConnectIcon2Over.png" />
+    <Content Include="access\Images\ConnectIcon3.png" />
+    <Content Include="access\Images\ConnectIcon3Over.png" />
+    <Content Include="access\Images\ConnectIcon4.png" />
+    <Content Include="access\Images\ConnectIcon4Over.png" />
+    <Content Include="access\Images\ConnectIcon5.png" />
+    <Content Include="access\Images\ConnectIcon5Over.png" />
+    <Content Include="access\Images\facebook-connect.png" />
+    <Content Include="access\Images\homepageboxmagnifyingglass.png" />
+    <Content Include="access\Images\homepageboxshadow.png" />
+    <Content Include="access\Images\homepageboxshadow2.png" />
+    <Content Include="access\Images\logo.png" />
+    <Content Include="access\Images\magnifyingglass.png" />
+    <Content Include="access\Images\magnifyingglassicon.png" />
+    <Content Include="access\Images\magnifyingglassiconover.png" />
+    <Content Include="access\Images\MoreInfoIcon.png" />
+    <Content Include="access\Images\MoreInfoIcon2.png" />
+    <Content Include="access\Images\ShareIcon.png" />
+    <Content Include="access\Images\spacer.png" />
+    <Content Include="access\Images\topmenubar.png" />
+    <Content Include="access\Images\topmenushadow.png" />
+    <Content Include="access\Images\twittericon.png" />
+    <Content Include="access\InitialiseFacebookLogin.aspx" />
+    <Content Include="access\InitialiseFacebookLogin.aspx.vb" />
+    <Content Include="access\javascript\commonsetup.js" />
+    <Content Include="access\javascript\common\setup.js" />
+    <Content Include="access\javascript\facebookconnect.js" />
+    <Content Include="access\Login.aspx" />
+    <Content Include="access\Login.aspx.vb" />
+    <Content Include="access\masterpages\BasePage.master.vb" />
+    <Content Include="access\Register.aspx" />
+    <Content Include="access\Register.aspx.vb" />
+    <Content Include="access\Search.aspx" />
+    <Content Include="access\Search.aspx.vb" />
+    <Content Include="access\Show.aspx" />
+    <Content Include="access\Show.aspx.vb" />
+    <Content Include="access\styles\base.css" />
+    <Content Include="access\styles\homepage.css" />
+    <Content Include="access\User\FindFriends.aspx" />
+    <Content Include="access\User\FindFriends.aspx.vb" />
+    <Content Include="access\User\Logout.aspx" />
+    <Content Include="access\User\Logout.aspx.vb" />
+    <Content Include="access\User\MyProfile.aspx" />
+    <Content Include="access\User\MyProfile.aspx.vb" />
+    <Content Include="Admin\Controls\_notes\dwsync.xml" />
+    <Content Include="Admin\Images\ajax-loader.gif" />
+    <Content Include="Admin\Images\applyfeaturetopages.png" />
+    <Content Include="Admin\Images\arrow-white.png" />
+    <Content Include="Admin\Images\arrow_down.gif" />
+    <Content Include="Admin\Images\arrow_down_disabled.gif" />
+    <Content Include="Admin\Images\arrow_up.gif" />
+    <Content Include="Admin\Images\arrow_up_disabled.gif" />
+    <Content Include="Admin\Images\asc.gif" />
+    <Content Include="Admin\Images\autoforward_icon-faded.gif" />
+    <Content Include="Admin\Images\autoforward_icon.gif" />
+    <Content Include="Admin\Images\barchart\bar.png" />
+    <Content Include="Admin\Images\barchart\bgfade.png" />
+    <Content Include="Admin\Images\barchart\gridline.gif" />
+    <Content Include="Admin\Images\barchart\_notes\dwsync.xml" />
+    <Content Include="Admin\Images\calendar_icon.png" />
+    <Content Include="Admin\Images\cancelicon.gif" />
+    <Content Include="Admin\Images\carouselbackground.png" />
+    <Content Include="Admin\Images\carouselbottom.png" />
+    <Content Include="Admin\Images\cloneicon0.gif" />
+    <Content Include="Admin\Images\cloneicon1.gif" />
+    <Content Include="Admin\Images\common\RowNoEdit.gif" />
+    <Content Include="Admin\Images\common\TableHeaderRepeat.jpg" />
+    <Content Include="Admin\Images\common\TopBg.jpg" />
+    <Content Include="Admin\Images\common\TopNavStretch.gif" />
+    <Content Include="Admin\Images\common\_notes\dwsync.xml" />
+    <Content Include="Admin\Images\Copy of editicon02.gif" />
+    <Content Include="Admin\Images\deletefeaturesfrompages.png" />
+    <Content Include="Admin\Images\deleteicon.gif" />
+    <Content Include="Admin\Images\deleteicon0.gif" />
+    <Content Include="Admin\Images\deleteicon00.gif" />
+    <Content Include="Admin\Images\deleteicon1.gif" />
+    <Content Include="Admin\Images\deleteicon10.gif" />
+    <Content Include="Admin\Images\deleteicon11.gif" />
+    <Content Include="Admin\Images\desc.gif" />
+    <Content Include="Admin\Images\displayicon.gif" />
+    <Content Include="Admin\Images\Drag-icon.gif" />
+    <Content Include="Admin\Images\duplicateicon.gif" />
+    <Content Include="Admin\Images\editicon.gif" />
+    <Content Include="Admin\Images\editicon01.gif" />
+    <Content Include="Admin\Images\editicon02.gif" />
+    <Content Include="Admin\Images\editicon1.gif" />
+    <Content Include="Admin\Images\editicon11.gif" />
+    <Content Include="Admin\Images\file.gif" />
+    <Content Include="Admin\Images\fileaddicon.gif" />
+    <Content Include="Admin\Images\fileaddiconsmall.gif" />
+    <Content Include="Admin\Images\fileicon.gif" />
+    <Content Include="Admin\Images\fileiconfaded.gif" />
+    <Content Include="Admin\Images\fileicontv.gif" />
+    <Content Include="Admin\Images\filelink.gif" />
+    <Content Include="Admin\Images\files.gif" />
+    <Content Include="Admin\Images\filetofoldericon20.gif" />
+    <Content Include="Admin\Images\filetofoldericon21.gif" />
+    <Content Include="Admin\Images\filetofoldericon22.gif" />
+    <Content Include="Admin\Images\filetofoldericon30.gif" />
+    <Content Include="Admin\Images\filetofoldericon31.gif" />
+    <Content Include="Admin\Images\file_download.gif" />
+    <Content Include="Admin\Images\folderaddicon.gif" />
+    <Content Include="Admin\Images\HeaderBackground.png" />
+    <Content Include="Admin\Images\hiddenicon-faded.gif" />
+    <Content Include="Admin\Images\icon_image.gif" />
+    <Content Include="Admin\Images\image.gif" />
+    <Content Include="Admin\Images\information.gif" />
+    <Content Include="Admin\Images\key.png" />
+    <Content Include="Admin\Images\news_icon-faded.gif" />
+    <Content Include="Admin\Images\news_icon.gif" />
+    <Content Include="Admin\Images\nodisplayicon.gif" />
+    <Content Include="Admin\Images\notepad_icon.png" />
+    <Content Include="Admin\Images\padlock.png" />
+    <Content Include="Admin\Images\padlockDisabled.png" />
+    <Content Include="Admin\Images\padlockFade.png" />
+    <Content Include="Admin\Images\padlockFadeDisabled.png" />
+    <Content Include="Admin\Images\reverticon.gif" />
+    <Content Include="Admin\Images\spacer.gif" />
+    <Content Include="Admin\Images\Spacer.png" />
+    <Content Include="Admin\Images\star.gif" />
+    <Content Include="Admin\Images\star_dull.gif" />
+    <Content Include="Admin\Images\statistics.gif" />
+    <Content Include="Admin\Images\updateicon.gif" />
+    <Content Include="Admin\Images\updateusericon.gif" />
+    <Content Include="Admin\Images\uploading.gif" />
+    <Content Include="Admin\Images\useradd_icon.gif" />
+    <Content Include="Admin\Images\useredit_icon.gif" />
+    <Content Include="Admin\Images\usergroupedit_icon.gif" />
+    <Content Include="Admin\Images\usergroup_icon.gif" />
+    <Content Include="Admin\Images\user_search.gif" />
+    <Content Include="Admin\Images\vdockbar-trans.gif" />
+    <Content Include="Admin\Images\vgrabber.gif" />
+    <Content Include="Admin\Images\video_camera.png" />
+    <Content Include="Admin\Images\visibleicon0.gif" />
+    <Content Include="Admin\Images\visibleicon0disabled.gif" />
+    <Content Include="Admin\Images\visibleicon1.gif" />
+    <Content Include="Admin\Images\visibleicon1disabled.gif" />
+    <Content Include="Admin\Images\web.gif" />
+    <Content Include="Admin\Images\_notes\dwsync.xml" />
+    <Content Include="Admin\Javascripts\Common.js" />
+    <Content Include="Admin\Javascripts\EditorFunctions.js" />
+    <Content Include="Admin\Javascripts\Noticeboard.js" />
+    <Content Include="Admin\Javascripts\_notes\dwsync.xml" />
+    <Content Include="Admin\masterpages\MasterPage.master.vb" />
+    <Content Include="Admin\masterpages\_notes\dwsync.xml" />
+    <Content Include="Admin\Shows\ImportEvents.aspx" />
+    <Content Include="Admin\Shows\ImportEvents.aspx.vb" />
+    <Content Include="Admin\Styles\editor.css" />
+    <Content Include="Admin\Styles\styles.css" />
+    <Content Include="Admin\Styles\tableordering.css" />
+    <Content Include="Admin\Styles\_notes\dwsync.xml" />
+    <Content Include="Admin\Users\controls\_notes\dwsync.xml" />
+    <Content Include="Admin\Users\Membership\_notes\dwsync.xml" />
+    <Content Include="Admin\Users\_notes\dwsync.xml" />
+    <Content Include="App_Code\Authentication.vb" />
+    <Content Include="App_Code\ControlOverrides\Controls.vb" />
+    <Content Include="App_Code\ControlOverrides\_notes\dwsync.xml" />
+    <Content Include="App_Code\Global.asax.vb" />
+    <Content Include="App_Data\Log.txt" />
+    <Content Include="bin\AjaxControlToolkit.dll" />
+    <Content Include="bin\AJAXExtensionsToolbox.dll" />
+    <Content Include="bin\App_Licenses.dll" />
+    <Content Include="bin\ar\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\ar\_notes\dwsync.xml" />
+    <Content Include="bin\BLL.dll" />
+    <Content Include="bin\BusinessLogic.dll" />
+    <Content Include="bin\BusinessLogic.pdb" />
+    <Content Include="bin\BusinessLogic.xml" />
+    <Content Include="bin\BusinessObject.dll" />
+    <Content Include="bin\BusinessObject.pdb" />
+    <Content Include="bin\BusinessObject.xml" />
+    <Content Include="bin\Common.dll" />
+    <Content Include="bin\Common.pdb" />
+    <Content Include="bin\Common.xml" />
+    <Content Include="bin\cs\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\cs\_notes\dwsync.xml" />
+    <Content Include="bin\DALayer.dll" />
+    <Content Include="bin\DALayer.pdb" />
+    <Content Include="bin\DALayer.xml" />
+    <Content Include="bin\DataAccess.dll" />
+    <Content Include="bin\DataAccess.pdb" />
+    <Content Include="bin\DataAccess.xml" />
+    <Content Include="bin\DataLogic.dll" />
+    <Content Include="bin\DataLogic.pdb" />
+    <Content Include="bin\DataLogic.xml" />
+    <Content Include="bin\DBLayer.dll" />
+    <Content Include="bin\DBLayer.pdb" />
+    <Content Include="bin\DBLayer.xml" />
+    <Content Include="bin\de\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\de\_notes\dwsync.xml" />
+    <Content Include="bin\es\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\es\_notes\dwsync.xml" />
+    <Content Include="bin\Facebook.dll" />
+    <Content Include="bin\Facebook.xml" />
+    <Content Include="bin\FiftyOne.Foundation.dll" />
+    <Content Include="bin\Flan.Controls.dll" />
+    <Content Include="bin\fr\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\fr\_notes\dwsync.xml" />
+    <Content Include="bin\he\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\he\_notes\dwsync.xml" />
+    <Content Include="bin\hi\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\hi\_notes\dwsync.xml" />
+    <Content Include="bin\it\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\it\_notes\dwsync.xml" />
+    <Content Include="bin\ja\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\ja\_notes\dwsync.xml" />
+    <Content Include="bin\Kailua.dll" />
+    <Content Include="bin\ko\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\ko\_notes\dwsync.xml" />
+    <Content Include="bin\NetSpell.SpellChecker.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\nl\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\nl\_notes\dwsync.xml" />
+    <Content Include="bin\pt\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\pt\_notes\dwsync.xml" />
+    <Content Include="bin\Recaptcha.dll" />
+    <Content Include="bin\ru\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\ru\_notes\dwsync.xml" />
+    <Content Include="bin\tnsPay.dll" />
+    <Content Include="bin\tnsPay.pdb" />
+    <Content Include="bin\tr-TR\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\tr-TR\_notes\dwsync.xml" />
+    <Content Include="bin\Twitterizer2.dll" />
+    <Content Include="bin\UrlRewritingNet.UrlRewriter.dll" />
+    <Content Include="bin\zh-CHS\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\zh-CHS\_notes\dwsync.xml" />
+    <Content Include="bin\zh-CHT\AjaxControlToolkit.resources.dll" />
+    <Content Include="bin\zh-CHT\Facebook %28.Net 4%29.dll" />
+    <Content Include="bin\zh-CHT\_notes\dwsync.xml" />
+    <Content Include="bin\_notes\dwsync.xml" />
+    <Content Include="Global.asax" />
+    <Content Include="javascript\ajaxupload.js" />
+    <Content Include="javascript\coolclock.js" />
+    <Content Include="javascript\cufon-replace.js" />
+    <Content Include="javascript\cufon-yui.js" />
+    <Content Include="javascript\excanvas.js" />
+    <Content Include="javascript\fileuploader.js" />
+    <Content Include="javascript\Futura-Bold_400.font.js" />
+    <Content Include="javascript\jquery-1.6.2.js" />
+    <Content Include="javascript\jquery.autogrow-textarea.js" />
+    <Content Include="javascript\jquery.cycle.all.js" />
+    <Content Include="javascript\jquery.jcarousel.js" />
+    <Content Include="javascript\jquery.showMessage.js" />
+    <Content Include="javascript\jquery.tablednd_0_5.js" />
+    <Content Include="javascript\jquery.ui.accordion.js" />
+    <Content Include="javascript\jquery.ui.core.js" />
+    <Content Include="javascript\jquery.ui.draggable.js" />
+    <Content Include="javascript\jquery.ui.droppable.js" />
+    <Content Include="javascript\jquery.ui.mouse.js" />
+    <Content Include="javascript\jquery.ui.position.js" />
+    <Content Include="javascript\jquery.ui.resizable.js" />
+    <Content Include="javascript\jquery.ui.sortable.js" />
+    <Content Include="javascript\jquery.ui.widget.js" />
+    <Content Include="javascript\jwplayer\jwplayer.js" />
+    <Content Include="javascript\jwplayer\player.swf" />
+    <Content Include="javascript\jwplayer\swfobject.js" />
+    <Content Include="javascript\jwplayer\_notes\dwsync.xml" />
+    <Content Include="javascript\LubalGraph_Bd_BT_400.font.js" />
+    <Content Include="javascript\LubalGraph_Bk_BT_400.font.js" />
+    <Content Include="javascript\LubalGraph_Md_BT_400.font.js" />
+    <Content Include="javascript\LubalGraph_XLt_BT_400.font.js" />
+    <Content Include="javascript\moreskins.js" />
+    <Content Include="javascript\_notes\dwsync.xml" />
+    <Content Include="sql.txt" />
+    <Content Include="test.aspx" />
+    <Content Include="test.aspx.vb" />
+    <Content Include="tm.aspx" />
+    <Content Include="tm.aspx.vb" />
+    <Content Include="uploads\00000000-0000-0000-0000-000000000000.jpg" />
+    <Content Include="uploads\41d82a52-8b5a-4823-a7be-95907cf9f508.jpg" />
+    <Content Include="uploads\5175f09f-b535-4c28-b0ce-e52ac0f6938b.jpg" />
+    <Content Include="uploads\593275175.jpg" />
+    <Content Include="uploads\936fec82-ad4d-4ced-b66e-878164201b42.jpg" />
+    <Content Include="uploads\af7be484-355a-44fd-860e-0feefad2c71d.jpg" />
+    <Content Include="uploads\banner\main\crowd.jpeg" />
+    <Content Include="uploads\banner\main\events_2.jpg" />
+    <Content Include="uploads\banner\main\homepagerepairs2_1.jpg" />
+    <Content Include="uploads\banner\main\homepagewebsitereview_2.jpg" />
+    <Content Include="uploads\banner\main\_notes\dwsync.xml" />
+    <Content Include="uploads\banner\original\_notes\dwsync.xml" />
+    <Content Include="uploads\fc6a82a9-0b03-4e9e-b73c-7c983a800447.jpg" />
+    <Content Include="uploads\images\main\hppic1.jpg" />
+    <Content Include="uploads\images\main\hppic2.jpg" />
+    <Content Include="uploads\images\main\hppic3.jpg" />
+    <Content Include="uploads\images\main\hppic4.jpg" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="uploads\carousel\main\" />
+    <Folder Include="uploads\carousel\original\" />
+    <Folder Include="uploads\forms\" />
+    <Folder Include="uploads\images\news\" />
+    <Folder Include="uploads\images\original\" />
+    <Folder Include="uploads\images\preview\" />
+    <Folder Include="uploads\images\thumb\" />
+    <Folder Include="uploads\news\main\" />
+    <Folder Include="uploads\news\original\" />
+    <Folder Include="uploads\profiles\main\" />
+    <Folder Include="uploads\profiles\original\" />
+    <Folder Include="uploads\resources\" />
+    <Folder Include="uploads\videos\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54434</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:54434/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

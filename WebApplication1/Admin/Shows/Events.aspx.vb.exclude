@@ -1,0 +1,79 @@
+﻿
+Partial Class admin_events_Events
+    Inherits System.Web.UI.Page
+    Private DBCallsEventsAdmin As New DBCallsEventsAdmin()
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            tbDateFrom.Text = FormatDateTime(DateTime.Now, DateFormat.ShortDate)
+            Dim strKeywords As String = Request.QueryString("keywords")
+            If Trim(strKeywords) <> "" Then
+                tbKeywords.Text = strKeywords
+            End If
+            Dim strVenueID As String = Request.QueryString("venueid")
+            If IsNumeric(strVenueID) Then
+                hfVenueID.Value = strVenueID
+                tbVenue.Text = strVenueID
+            End If
+            Dim strArtistID As String = Request.QueryString("artistid")
+            If IsNumeric(strArtistID) Then
+                hfArtistID.Value = strArtistID
+                tbArtist.Text = strArtistID
+            End If
+            Dim strDateFrom As String = Request.QueryString("datefrom")
+            If IsDate(strDateFrom) Then
+                tbDateFrom.Text = strDateFrom
+            End If
+            Dim strDateTo As String = Request.QueryString("dateto")
+            If IsDate(strDateTo) Then
+                tbDateTo.Text = strDateTo
+            End If
+        End If
+    End Sub
+
+    Sub BindEvents()
+        Dim dDateFrom As Date = Nothing
+        Dim dDateTo As Date = Nothing
+        If IsDate(tbDateFrom.Text) Then
+            dDateFrom = tbDateFrom.Text
+        End If
+        If IsDate(tbDateTo.Text) Then
+            dDateTo = tbDateTo.Text
+        End If
+        Dim dtEvents As DataTable = DBCallsEventsAdmin.GetEvents(tbKeywords.Text, , hfArtistID.Value, hfVenueID.Value, dDateFrom, dDateTo).Tables(0)
+        gvEvents.DataSource = dtEvents
+        gvEvents.DataBind()
+    End Sub
+
+    Protected Sub gvEvents_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvEvents.RowCommand
+        Select Case e.CommandName
+            Case "deleteme"
+                DBCallsEventsAdmin.DeleteEvent(e.CommandArgument)
+                BindEvents()
+        End Select
+    End Sub
+
+    Protected Sub gvEvents_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvEvents.RowDataBound
+        If e.Row.RowType = ListItemType.Item Or e.Row.RowType = ListItemType.AlternatingItem Then
+            Dim dvEvents As New DataView(ViewState("dtEvents"))
+            dvEvents.RowFilter = "EventID <> " & e.Row.DataItem("EventID")
+            Dim ddlEventMerge As DropDownList = e.Row.FindControl("ddlEventMerge")
+            ddlEventMerge.DataSource = dvEvents
+            ddlEventMerge.DataValueField = "EventID"
+            ddlEventMerge.DataTextField = "EventID"
+            ddlEventMerge.DataBind()
+            Dim rptArtists As Repeater = e.Row.FindControl("rptArtists")
+            Dim drvArtists As DataRowView = TryCast(e.Row.DataItem, DataRowView)
+            rptArtists.DataSource = drvArtists.CreateChildView("Artists")
+            rptArtists.DataBind()
+            Dim rptVendors As Repeater = e.Row.FindControl("rptVendors")
+            Dim drvVendors As DataRowView = TryCast(e.Row.DataItem, DataRowView)
+            rptVendors.DataSource = drvVendors.CreateChildView("Vendors")
+            rptVendors.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        BindEvents()
+    End Sub
+End Class

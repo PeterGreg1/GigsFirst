@@ -1,0 +1,51 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="Admin_MasterPages_MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title runat="server" id="metaTitle"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="/admin/styles/styles.css" />
+
+    <script type="text/javascript" src="/javascript/jquery-1.6.2.js"></script>
+
+    <script type="text/javascript" src="/javascript/slide.js"></script>
+
+    <asp:ContentPlaceHolder ID="cph_head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <asp:GridView runat="server" ID="gvTest"></asp:GridView>
+    <cc1:ToolkitScriptManager ID="tsm" runat="server" EnableScriptGlobalization="true"
+        EnableScriptLocalization="true">
+    </cc1:ToolkitScriptManager>
+    <div class="mask">
+    </div>
+    <div id="Header">
+        <div id="HeaderLeft">
+            <a href="/admin/">
+                <asp:Literal runat="server" ID="litCMSTitle"></asp:Literal></a>
+        </div>
+        <div id="HeaderRight">
+            You are logged in as:
+            <asp:Literal runat="server" ID="litUsername"></asp:Literal><br />
+        </div>
+    </div>
+    <div id="Breadcrumb">
+        <asp:SiteMapPath ID="SiteMapPath1" runat="server">
+        </asp:SiteMapPath>
+        <asp:ContentPlaceHolder ID="cph_title" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div id="mainContent">
+        <asp:ContentPlaceHolder ID="cph_main" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div class="break">
+    </div>
+    <br />
+    <br />
+    </form>
+</body>
+</html>

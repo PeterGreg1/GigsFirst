@@ -1,0 +1,52 @@
+﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="PagePermissions.ascx.vb"
+    Inherits="Admin_Controls_RelatedPages" %>
+<%@ Register TagPrefix="uc1" TagName="PageSitemap" Src="~/admin/controls/PageUserPermissionsSitemap.ascx" %>
+<asp:UpdatePanel ID="updpnlPagePermissions" runat="server">
+    <ContentTemplate>
+        <div runat="server" id="divLoading" visible="false" class="floatingpanel">
+       loading...
+        </div>
+        <div style="float: left; margin-right: 20px; width: 400px;">
+            <asp:GridView ID="gvRelatedPages" runat="server" Width="400px" AutoGenerateColumns="False"
+                BorderWidth="1px" BorderColor="#DFDFDF" CssClass="ListView" CellPadding="3" AllowPaging="true"
+                PageSize="10" GridLines="None">
+                <Columns>
+                    <asp:BoundField DataField="menutitle" ItemStyle-Width="170" SortExpression="menutitle"
+                        HeaderText="Display Name"></asp:BoundField>
+                    <asp:TemplateField HeaderText="add subs">
+                        <ItemStyle Width="25px" />
+                        <ItemTemplate>
+                            <asp:ImageButton ID="imgbtnAddSubs" runat="server" CommandName="addsubs" CommandArgument='<%#Eval("PageID") %>'
+                                ImageUrl="/admin/images/autoforward_icon.gif" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="del">
+                        <ItemStyle Width="25px" />
+                        <ItemTemplate>
+                            <asp:ImageButton ID="imgbtn_delete" runat="server" CommandName="deleteme" CommandArgument='<%# Container.DataItemIndex %>'
+                                ImageUrl="/admin/images/deleteicon.gif" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                <HeaderStyle CssClass="FormDesciptionBoxListings" />
+                <EmptyDataTemplate>
+                    No page permissions assigned to this group
+                </EmptyDataTemplate>
+            </asp:GridView>
+        </div>
+        <div style="float: left;">
+            <table border="0" cellpadding="5" cellspacing="1" width="430">
+                <tr>
+                    <td class="FormDesciptionBox" title="The title which will appear in the menu" style="width: 101px;">
+                        Add a new page:
+                    </td>
+                    <td class="FormContentBox" style="vertical-align: top;">
+                        <uc1:PageSitemap ID="PageSitemap1" runat="server" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="break">
+        </div>
+    </ContentTemplate>
+</asp:UpdatePanel>

@@ -1,0 +1,106 @@
+﻿Imports CommonFunctions
+Imports Authentication
+
+Namespace BasePagesVB
+    Public Class BasePage
+        Inherits Page
+
+        Private DBCalls As New DBCalls()
+
+        Public intPageID As Integer
+        Public intParentID As Integer
+        Public arrParentArray As Array
+        Public strPageTitle As String
+        Public strMenuTitle As String
+        Public strPageDescription As String
+        Public strKeywords As String
+        Public strDescription As String
+        Public strMetaPageTitle As String
+        Public booAllowPageComments As Boolean = False
+        Public booDisplaySubsInPage As Boolean = False
+        Public strDisplaySubsInPageType As String = ""
+        Public booIsNewsSubPage As Boolean = False
+        Public strReleaseDate As String
+
+        Sub GetPageValues(ByVal thiscmsPageID As String)
+            Dim strURLPrefix = ""
+            If InStr(Request.ServerVariables("URL"), "/mobile/") > 0 Then
+                strURLPrefix = "/mobile"
+            End If
+            If Not IsNumeric(thiscmsPageID) Or thiscmsPageID < 1 Then
+                Dim intHomepageID As Integer = DBCalls.GetHomepage
+                If intHomepageID = 0 Then
+                    Response.Redirect(strURLPrefix & "/lost.aspx")
+                Else
+                    thiscmsPageID = intHomepageID
+                End If
+            End If
+            If Not Integer.TryParse(thiscmsPageID, intPageID) Then
+                Response.Redirect(strURLPrefix & "/lost.aspx")
+            End If
+            Dim dtPageData As DataTable = DBCalls.GetPageData(intPageID, 1, 1, 1, 0, UserID.ToString, 1)
+            If dtPageData.Rows.Count > 0 Then
+                Dim dtRow As DataRow = dtPageData.Rows(0)
+                '// Check permissions if set
+                If dtRow("FrontEndPermissions") Then
+                    If dtRow("haspermission") = 0 Then
+                        If Request.QueryString("redirect") <> "true" Then
+                            Response.Redirect(strURLPrefix & "/login/" & intPageID & "/" & StaticPageFormat(nullToStr(dtRow("MenuTitle"))) & ".aspx")
+                        End If
+                    End If
+                End If
+                '// Check autoforward
+                If IsNumeric(nullToStr(dtRow("AutoForward"))) Then
+                    Dim dtPageDataForward As DataTable = DBCalls.GetPageData(dtRow("AutoForward"))
+                    If dtPageDataForward.Rows.Count > 0 Then
+                        Dim dtAutoForwardRow As DataRow = dtPageDataForward.Rows(0)
+                        Response.Redirect(strURLPrefix & "/page/" & dtAutoForwardRow("PageID") & "/" & StaticPageFormat(dtAutoForwardRow("MenuTitle")) & ".aspx", False)
+                    End If
+                End If
+                If Request.QueryString("redirect") <> "true" Then
+                    '// Check alternate URL - Transfer to appropiate page
+                    Dim strAlternateURL As String = Trim(nullToStr(dtRow("alternateurl")))
+                    If strAlternateURL <> "" Then
+                        If InStr(strAlternateURL, "?") > 0 Then
+                            Response.Redirect(strURLPrefix & "/custom/" & intPageID & "/" & dtRow("alternateurl"))
+                        Else
+                            Response.Redirect(strURLPrefix & "/custom/" & intPageID & "/" & dtRow("alternateurl"))
+                        End If
+                    End If
+                    '// If it's an area view transfer to different page as design differs from normal page
+                    If dtRow("DisplaySubsInPage") Then
+                        Select Case nullToStr(dtRow("DisplaySubsInPageType"))
+                            Case "Area"
+                                Response.Redirect(strURLPrefix & "/area/" & intPageID & "/" & StaticPageFormat(nullToStr(dtRow("MenuTitle"))) & ".aspx")
+                            Case "List"
+                                Response.Redirect(strURLPrefix & "/list/" & intPageID & "/" & StaticPageFormat(nullToStr(dtRow("MenuTitle"))) & ".aspx")
+                            Case "News"
+                                Response.Redirect(strURLPrefix & "/news/" & intPageID & "/" & StaticPageFormat(nullToStr(dtRow("MenuTitle"))) & ".aspx")
+                        End Select
+                    End If
+                End If
+                strPageTitle = FormatInvalidChars(nullToStr(dtRow("DisplayTitle")))
+                strMenuTitle = FormatInvalidChars(nullToStr(dtRow("MenuTitle")))
+                strPageDescription = FormatInvalidChars(nullToStr(dtRow("Description")))
+                intParentID = dtRow("parentid")
+                strKeywords = FormatInvalidChars(nullToStr(dtRow("metakeywords")))
+                strDescription = FormatInvalidChars(nullToStr(dtRow("metadescription")))
+                strMetaPageTitle = FormatInvalidChars(nullToStr("PageTitle"))
+                booAllowPageComments = dtRow("AllowComments")
+                booDisplaySubsInPage = dtRow("DisplaySubsInPage")
+                strDisplaySubsInPageType = nullToStr(dtRow("DisplaySubsInPageType"))
+                If dtRow("IsNewsSubPage") > 0 Then
+                    booIsNewsSubPage = True
+                Else
+                    booIsNewsSubPage = False
+                End If
+                strReleaseDate = nullToStr(dtRow("ReleaseDate"))
+            Else
+                Response.Redirect(strURLPrefix & "/lost.aspx")
+            End If
+            If Not Page.IsPostBack Then
+                'DBCalls.AddPageVisit(UserID, Request.QueryString("PageID"), IPAddress)
+            End If
+        End Sub
+    End Class
+End Namespace

@@ -1,0 +1,17 @@
+﻿Partial Class Admin_AuthenticateUser
+    Inherits System.Web.UI.Page
+    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        If Page.IsValid Then
+            If Membership.ValidateUser(tbUsername.Text, tbPassword.Text) Then
+                If cbKeepLoggedin.Checked Then
+                    FormsAuthentication.SetAuthCookie(tbUsername.Text, True)
+                Else
+                    FormsAuthentication.SetAuthCookie(tbUsername.Text, False)
+                End If
+                Response.Redirect("/admin/")
+            Else
+                litError.Text = "Invalid login credentials"
+            End If
+        End If
+    End Sub
+End Class

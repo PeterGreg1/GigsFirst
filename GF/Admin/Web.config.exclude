@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <!-- CMS SETTINGS -->
+    <add key="CMSTitle" value="B3Living Administration"/>
+    <add key="AuthenticationType" value="Membership"/>
+ <add key="PagesOrdering" value="True"/>
+    <add key="MultipleApps" value="False"/>
+<add key="PagesAdd" value="True"/>    
+<add key="PagesOptionsArea" value="False"/>
+    <add key="PagesOptionsNews" value="True"/>
+    <add key="PagesShowSubsInPagesList" value="News,List,Area"/>
+    <add key="PagesAddFromTemplate" value="True"/>
+    <add key="PagesTabRelatedFiles" value="True"/>
+    <add key="PagesTabRelatedPages" value="True"/>
+    <add key="PagesTabRelatedFeatures" value="True"/>
+    <add key="PagesTabAccessAdmin" value="True"/>
+    <add key="PagesTabAccessWeb" value="True"/>
+    <add key="PagesTabPreviousVersions" value="True"/>
+    <add key="PagesFieldRegion" value="False"/>
+    <add key="PagesFieldComments" value="True"/>
+    <add key="PagesFieldPreviewImage" value="True"/>
+    <add key="PageListShowRatings" value="False"/>
+    <add key="PageListShowVisits" value="False"/>
+<add key="PageLevels" value="4"/>
+<add key="PageShowStatistics" value="False"/>
+    <add key="PageParts" value="HTMLContent,Video,StaticContent,Form,Poll,Calendar,Carousel"/>
+<add key="FeatureParts" value="HTMLContent,Video,StaticContent,Form,Poll"/>
+    <add key="PagesRolesAccessToTopLevel" value="Webmaster,SuperAdmin,Admin,Publisher"/>
+    <add key="EditorButtonInternalLink" value="True"/>
+    <add key="EditorButtonFileLink" value="True"/>
+    <add key="EditorButtonSharedFileLink" value="False"/>
+    <add key="EditorButtonLocalDriveFileLink" value="False"/>
+    <add key="EditorEnableContextMenu" value="True"/>
+    <add key="EditorTemplateItemList" value="[FormatBlock,DropForeColor,Break,InsertParagraph,RemoveFormat],[Bold,Italic,Underline],[JustifyLeft,JustifyCenter,justifyRight],[Cut,Copy,Paste,Undo,Redo],[InsertOrderedList,InsertUnorderedList, InsertHorizontalRule,InsertChars],linebreak,[LinkTree],linebreak,[InsertLink,Unlink,insertAnchor],[ImageMap],[Table,InsertRowTop,InsertRowBottom, DeleteRow, InsertColumnLeft, InsertColumnRight, DeleteColumn],[netspell,CleanCode]"/>
+    <add key="PageEditorWidth" value="507"/>
+    <add key="PageEditorPadding" value="40"/>
+    <add key="CarouselImageWidth" value="191"/>
+    <add key="CarouselImageHeight" value="104"/>
+   <add key="EditorButtonGoogleMaps" value="True"/>
+    <add key="MediaImageMainWidth" value="528"/>
+    <add key="MediaImageMainHeight" value="0"/>
+    <add key="MediaImageThumbWidth" value="100"/>
+    <add key="MediaImageThumbHeight" value="100"/>
+    <add key="MediaImagePreviewWidth" value="201"/>
+    <add key="MediaImagePreviewHeight" value="127"/>
+    <add key="FeatureEditorWidth" value="227"/>
+    <add key="FeatureEditorPadding" value="0"/>
+    <add key="HomepagePartEditorWidth" value="353"/>
+    <add key="HomepagePartEditorPadding" value="20"/>
+    <!-- END CMS SETTINGS -->
+  </appSettings>
+    <system.web>
+        <authorization>
+            <allow roles="Publisher, Admin, SuperAdmin, Webmaster" />
+            <deny users="*"/>
+        </authorization>
+    </system.web>
+</configuration>

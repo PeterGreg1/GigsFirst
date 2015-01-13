@@ -1,0 +1,70 @@
+﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="PageTracking.ascx.vb"
+    Inherits="Admin_Users_controls_PageTracking" %>
+<asp:UpdatePanel runat="server" ID="updpnlPageHistory">
+    <ContentTemplate>
+        <div style="float: left; margin-right: 20px; width: 370px;">
+            <asp:Literal runat="server" ID="litResults"></asp:Literal><br />
+            <br />
+            <asp:GridView ID="gvPageHistory" runat="server" Width="370px" AutoGenerateColumns="False"
+                BorderWidth="1px" BorderColor="#DFDFDF" CssClass="ListView" CellPadding="3" AllowSorting="True"
+                AllowPaging="True" PageSize="20" GridLines="None">
+                <Columns>
+                    <asp:BoundField DataField="MenuTitle" HeaderText="Page title" ItemStyle-Width="150px"
+                        SortExpression="MenuTitle" />
+                    <asp:BoundField DataField="DateTimeVisited" HeaderText="date/time" ItemStyle-Width="150px"
+                        SortExpression="DateTimeVisited" />
+                </Columns>
+                <HeaderStyle CssClass="FormDesciptionBoxListings" />
+            </asp:GridView>
+        </div>
+        <div style="float: left;">
+            Date From:<br />
+            <asp:TextBox runat="server" ID="tbDateFrom" CssClass="FormFieldSingle" Width="190px"></asp:TextBox>
+            <cc1:CalendarExtender runat="server" ID="calextDateFrom" TargetControlID="tbDateFrom">
+            </cc1:CalendarExtender>
+            <br />
+            Date To:<br />
+            <asp:TextBox runat="server" ID="tbDateTo" CssClass="FormFieldSingle" Width="190px"></asp:TextBox>
+            <cc1:CalendarExtender runat="server" ID="calextDateTo" TargetControlID="tbDateTo">
+            </cc1:CalendarExtender>
+            <br />
+            <br />
+            <asp:Button runat="server" ID="btnClear" CssClass="FormButton" Text="Reset" />
+            <asp:Button runat="server" ID="btnSearch" CssClass="FormButton" Text="Search" />
+            <br />
+            <br />
+            <div class="poll">
+                <div class="pollResults">
+                    <asp:Repeater runat="server" ID="rptResults">
+                        <HeaderTemplate>
+                            <table>
+                                <tr>
+                                    <td class="hide">
+                                    </td>
+                                    <td class="hide">
+                                        <img src="/admin/images/spacer.png" alt=" " width="200" height="0" />
+                                    </td>
+                                </tr>
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <tr>
+                                <th>
+                                    <%#Eval("MenuTitle")%>
+                                </th>
+                                <td>
+                                    <img src="/admin/images/barchart/bar.png" runat="server" id="imgBar" />
+                                    <asp:Literal runat="server" ID="litResults"></asp:Literal>
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                        <FooterTemplate>
+                            </table>
+                        </FooterTemplate>
+                    </asp:Repeater>
+                </div>
+            </div>
+        </div>
+        <div class="break">
+        </div>
+    </ContentTemplate>
+</asp:UpdatePanel>

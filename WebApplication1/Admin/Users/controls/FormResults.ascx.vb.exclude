@@ -1,0 +1,88 @@
+﻿Imports CommonFunctions
+
+Partial Class Admin_Forms_Controls_Results
+    Inherits System.Web.UI.UserControl
+    Private DBCalls As New DBCalls()
+    Private _userid As Guid
+
+    Public WriteOnly Property UserID() As Guid
+        Set(ByVal value As Guid)
+            _userid = value
+        End Set
+    End Property
+
+    Sub LoadResults()
+        BindResults()
+    End Sub
+
+    Sub BindResults()
+        Dim dtResults As DataTable = DBCalls.GetUserFormResultSets(_userid)
+        gvResults.DataSource = dtResults
+        gvResults.DataBind()
+        litResults.Text = dtResults.Rows.Count & " results "
+        ViewState("dtResults") = gvResults.DataSource '// put into viewstate to allow sorting
+    End Sub
+
+    Protected Sub gvResults_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvResults.PageIndexChanging
+        gvResults.PageIndex = e.NewPageIndex
+        DoSort(e.NewPageIndex, ViewState("sortcolumn"), ViewState("sortdirection"))
+    End Sub
+
+    Protected Sub gvResults_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvResults.RowCommand
+        Select Case e.CommandName
+            Case "editme"
+                Dim dtFormResultSet As DataTable = DBCalls.GetFormResultSet(e.CommandArgument)
+                If dtFormResultSet.Rows.Count > 0 Then
+                    Dim dtRow As DataRow = dtFormResultSet.Rows(0)
+                    litUsername.Text = dtRow("username")
+                    litIPAddress.Text = dtRow("IPaddress")
+                    litDateTimeSent.Text = dtRow("SenddateTime")
+                    gvAnswers.DataSource = DBCalls.GetFormResultSetAnswers(e.CommandArgument)
+                    gvAnswers.DataBind()
+                    gvAnswers.Visible = True
+                    tblResultDetails.Visible = True
+                End If
+            Case "deleteme"
+                DBCalls.DeleteFormResultSet(e.CommandArgument)
+                LoadResults()
+                gvAnswers.Visible = False
+                tblResultDetails.Visible = False
+        End Select
+    End Sub
+
+    Protected Sub gvResults_Sorting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewSortEventArgs) Handles gvResults.Sorting
+        ViewState("sortdirection") = GetSortdirection(ViewState("sortdirection"))
+        DoSort(0, e.SortExpression, ViewState("sortdirection"))
+    End Sub
+
+    Sub DoSort(ByVal intPage As Integer, ByVal strSortColumn As String, ByVal strSortDirection As String)
+        ViewState("sortcolumn") = strSortColumn
+        ViewState("sortdirection") = strSortDirection
+        Dim dtSearchResults As DataTable = ViewState("dtResults")
+        If dtSearchResults IsNot Nothing Then
+            Dim dataView As New DataView(dtSearchResults)
+            If ViewState("sortcolumn") <> "" Then
+                dataView.Sort = strSortColumn & " " & ViewState("sortdirection")
+            End If
+            gvResults.PageIndex = intPage
+            gvResults.DataSource = dataView
+            gvResults.DataBind()
+        End If
+    End Sub
+
+    Protected Sub gvAnswers_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvAnswers.RowDataBound
+        If e.Row.RowType = ListItemType.Item Or e.Row.RowType = ListItemType.AlternatingItem Then
+            Dim litAnswer As Literal = e.Row.FindControl("litAnswer")
+            litAnswer.Text = e.Row.DataItem("Answer")
+            Dim gvAnswerOptions As GridView = e.Row.FindControl("gvAnswerOptions")
+            Dim drv As DataRowView = TryCast(e.Row.DataItem, DataRowView)
+            If Not IsNothing(gvAnswerOptions) Then
+                gvAnswerOptions.DataSource = drv.CreateChildView("options")
+                gvAnswerOptions.DataBind()
+                If gvAnswerOptions.Rows.Count = 0 Then
+                    gvAnswerOptions.Visible = False
+                End If
+            End If
+        End If
+    End Sub
+End Class

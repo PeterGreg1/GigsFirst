@@ -1,0 +1,296 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="../../MasterPages/MasterPage.master"
+    AutoEventWireup="false" CodeFile="Edit.aspx.vb" Inherits="Admin_User_Edit" MaintainScrollPositionOnPostback="true" %>
+
+<%@ Register TagPrefix="uc1" TagName="PagePermissions" Src="../controls/PagePermissions.ascx" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="cph_main" runat="Server">
+    <asp:HiddenField runat="server" ID="hfFilename" />
+    <div class="error">
+        <asp:Literal runat="server" ID="litError"></asp:Literal></div>
+    <asp:ValidationSummary ID="ValidationSummary1" HeaderText="You must enter a value in the following fields:"
+        DisplayMode="BulletList" EnableClientScript="true" runat="server" ValidationGroup="adduser" />
+    <ul id="tabmenu">
+        <li>
+            <asp:LinkButton runat="server" ID="lbtn1" Text="Basic Information" CssClass="tab active"></asp:LinkButton></li>
+        <li runat="server" id="liWebAccess" visible="false">
+            <asp:LinkButton runat="server" ID="lbtn2" Text="Web Access" CssClass="tab"></asp:LinkButton></li>
+        <li runat="server" id="liAdminAccess" visible="false">
+            <asp:LinkButton runat="server" ID="lbtn3" Text="Admin Access" CssClass="tab"></asp:LinkButton></li>
+    </ul>
+    <!-- TAB CONTENT 1 -->
+    <div class="tabcontent" id="divContent1" runat="server" visible="true">
+        <div class="inner">
+            <table width="100%" border="0" cellpadding="5" cellspacing="1">
+                <tr>
+                    <td class="FormDesciptionBox">
+                        username
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbUsername" CssClass="FormFieldSingle" MaxLength="50"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="tbUsername"
+                            ErrorMessage="Please enter a username" ValidationGroup="adduser"></asp:RequiredFieldValidator>
+                        <asp:CustomValidator ID="cvUsername" runat="server" ControlToValidate="tbUsername"
+                            Display="Dynamic" ErrorMessage="<br />This username has already been taken" ValidationGroup="adduser"></asp:CustomValidator>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Email
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbEmail" CssClass="FormFieldSingle"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="tbEmail"
+                            ErrorMessage="Please enter a password" Enabled="false" Display="Dynamic" ValidationGroup="adduser"></asp:RequiredFieldValidator>
+                        <asp:RegularExpressionValidator ID="regexEmail" runat="server" ControlToValidate="tbEmail"
+                            ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" ValidationGroup="adduser"
+                            ErrorMessage="Email">Invalid Email</asp:RegularExpressionValidator>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        roles
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:DropDownList runat="server" ID="ddlRoles" CssClass="FormFieldSingle" AutoPostBack="true">
+                        </asp:DropDownList>
+                        <br />
+                        <strong>User/Admin/Publisher</strong>: access rights are controlled by their group
+                        or individual privileges.
+                        <br />
+                        <strong>Webmaster/SuperAdmin</strong>: have full access rights (front and backend)
+                        regardless of their groups or individual privileges.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Groups
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:ListBox runat="server" ID="lbGroups" CssClass="FormFieldSingle" SelectionMode="Multiple"
+                            Rows="10"></asp:ListBox>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Region
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:DropDownList runat="server" ID="ddlRegion" CssClass="FormFieldSingle" AppendDataBoundItems="true">
+                            <asp:ListItem Value="0">All</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Firstname
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbFirstname" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Lastname
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbLastname" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Job Title
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbJobTitle" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        GPO Department
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbGPODepartment" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        GPO Department 2
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbGPODepartment2" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Telephone Number
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbTelephone" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Mobile Number
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbMobile" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Alias
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox runat="server" ID="tbAlias" CssClass="FormFieldSingle"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Location
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:DropDownList runat="server" ID="ddlLocation" CssClass="FormFieldSingle">
+                            <asp:ListItem Value="">Please Select</asp:ListItem>
+                            <asp:ListItem Value="URENCO Deutschland">URENCO Deutschland</asp:ListItem>
+                            <asp:ListItem Value="URENCO Nederland">URENCO Nederland</asp:ListItem>
+                            <asp:ListItem Value="URENCO UK">URENCO UK</asp:ListItem>
+                            <asp:ListItem Value="URENCO USA">URENCO USA</asp:ListItem>
+                            <asp:ListItem Value="URENCO Inc">URENCO Inc.</asp:ListItem>
+                            <asp:ListItem Value="Head Office (URENCO Court)">Head Office (URENCO Court)</asp:ListItem>
+                            <asp:ListItem Value="Head Office CTG">Head Office CTG</asp:ListItem>
+                            <asp:ListItem Value="Head Office (Other)">Head Office (Other)</asp:ListItem>
+                            <asp:ListItem Value="URENCO Chemplants">URENCO ChemPlants</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Areas Of Interest
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox ID="tbAreasOfInterest" runat="server" CssClass="FormFieldSingle" TextMode="MultiLine"
+                            Rows="5"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Specialisms
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox ID="tbSpecialisms" runat="server" CssClass="FormFieldSingle" TextMode="MultiLine"
+                            Rows="5"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Groups And Associations
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox ID="tbGroupsAndAssociations" runat="server" CssClass="FormFieldSingle"
+                            TextMode="MultiLine" Rows="5"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Profile
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox ID="tbProfile" runat="server" CssClass="FormFieldSingle" TextMode="MultiLine"
+                            Rows="5"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="FormDesciptionBox">
+                        Profile Picture
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:Literal runat="server" ID="litProfilePicture"></asp:Literal>
+                        <asp:Image runat="server" ID="imgProfile" />
+                        <br />
+                        <br />
+                        Upload / Change:
+                        <asp:FileUpload ID="myfile" runat="server" /><br />
+                        <asp:Button runat="server" ID="btnRemovePicture" Text="Remove Picture" CssClass="FormButton" />
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        User Has Updated Profile
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:RadioButtonList runat="server" ID="rblUserUpdated">
+                            <asp:ListItem Value="1">Yes</asp:ListItem>
+                            <asp:ListItem Value="0">No</asp:ListItem>
+                        </asp:RadioButtonList>
+                    </td>
+                </tr>
+                <tr runat="server" visible="false">
+                    <td class="FormDesciptionBox">
+                        Show In Directory
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:RadioButtonList runat="server" ID="rblShowInDirectory">
+                            <asp:ListItem Value="1">Yes</asp:ListItem>
+                            <asp:ListItem Value="0">No</asp:ListItem>
+                        </asp:RadioButtonList>
+                    </td>
+                </tr>
+                <tr runat="server" id="trUpdatePassword" visible="false">
+                    <td class="FormDesciptionBox">
+                        change password
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:CheckBox runat="server" ID="cbUpdatePassword" Text="Yes" AutoPostBack="true" />
+                    </td>
+                </tr>
+                <tr runat="server" id="trPassword">
+                    <td class="FormDesciptionBox">
+                        password
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox ID="tbPassword1" TextMode="password" CssClass="FormFieldSingle" runat="server" />
+                        <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="tbPassword1"
+                            ErrorMessage="Please enter a password" Enabled="false" Display="Dynamic" ValidationGroup="adduser"></asp:RequiredFieldValidator>
+                        <asp:RegularExpressionValidator ID="revPassword" runat="server" ErrorMessage="Invalid password"
+                            ControlToValidate="tbPassword1" ValidationExpression="^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$"
+                            Display="Dynamic" Enabled="true" ValidationGroup="adduser"></asp:RegularExpressionValidator>
+                        <br />
+                        Passwords must be a minimum of 8 characters and contain one numeric character and
+                        one upper case character.
+                    </td>
+                </tr>
+                <tr runat="server" id="trPasswordRepeat">
+                    <td class="FormDesciptionBox">
+                        repeat password
+                    </td>
+                    <td class="FormContentBox">
+                        <asp:TextBox ID="tbPassword2" TextMode="password" CssClass="FormFieldSingle" runat="server" />
+                        <asp:CompareValidator ControlToCompare="tbPassword1" ID="cvPassword2" runat="server"
+                            ControlToValidate="tbPassword2" ErrorMessage="Password does not match" Display="Dynamic"
+                            ValidationGroup="adduser"></asp:CompareValidator>
+                        <asp:RequiredFieldValidator ID="rfvPassword2" runat="server" ControlToValidate="tbPassword2"
+                            ErrorMessage="Please enter a password" Enabled="false" Display="Dynamic" ValidationGroup="adduser"></asp:RequiredFieldValidator>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- TAB CONTENT 6 -->
+    <div class="tabcontenthidden" id="divContent2" runat="server">
+        <div class="inner">
+            <uc1:PagePermissions ID="PagePermissions1" runat="server" />
+        </div>
+    </div>
+    <!-- END TAB CONTENT 6 -->
+    <!-- TAB CONTENT 7 -->
+    <div class="tabcontenthidden" id="divContent3" runat="server">
+        <div class="inner">
+            <uc1:PagePermissions ID="PagePermissions2" runat="server" />
+        </div>
+    </div>
+    <!-- END TAB CONTENT 7 -->
+    <br />
+    <asp:Button ID="btnAdd" OnClick="btnAdd_click" Text="Update User" CssClass="FormButton"
+        runat="server" ValidationGroup="adduser"></asp:Button>&nbsp;
+</asp:Content>

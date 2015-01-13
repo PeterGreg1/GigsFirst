@@ -1,0 +1,62 @@
+﻿SELECT     a.eventid, a.EventDate, b.VenueName, d.ArtistName
+FROM         dbo.GF_Events AS a INNER JOIN
+                      dbo.GF_Venues AS b ON a.VenueID = b.VenueID INNER JOIN
+                      GF_EventArtists AS c ON a.EventID = c.EventID INNER JOIN
+                      dbo.GF_Artists AS d ON c.ArtistID = d.ArtistID
+where artistname like '%carter%'
+ORDER BY d.ArtistName, a.EventDate
+
+
+
+
+
+
+
+
+// get venues without postcode GOG
+SELECT     a.VenueID, a.VenueName, a.AddressLine1, a.AddressLine2, a.Town, a.County, a.Postcode, a.Latitude, a.Longitude, a.Visible, a.Deleted
+FROM         dbo.GF_Venues AS a INNER JOIN
+                      dbo.GF_VenueAliases AS b ON a.VenueID = b.VenueID INNER JOIN
+                      dbo.gog_venuestbl AS c ON b.VenueName = c.name AND b.Town = c.town
+WHERE     (a.Postcode IS NULL) OR
+                      (LTRIM(RTRIM(a.Postcode)) = '') AND (c.postcode IS NOT NULL) AND (LTRIM(RTRIM(c.postcode)) <> '')
+                      
+// get venues without postcode TM               
+SELECT     a.VenueID, a.VenueName, a.AddressLine1, a.AddressLine2, a.Town, a.County, a.Postcode, a.Latitude, a.Longitude, a.Visible, a.Deleted
+FROM         dbo.GF_Venues AS a INNER JOIN
+                      dbo.GF_VenueAliases AS b ON a.VenueID = b.VenueID INNER JOIN
+                      dbo.tm_venuestbl AS c ON b.VenueName = c.product_name AND b.Town = c.city
+WHERE     (a.Postcode IS NULL) OR
+                      (LTRIM(RTRIM(a.Postcode)) = '') AND (c.postalcode IS NOT NULL) AND (LTRIM(RTRIM(c.postalcode)) <> '')
+                      
+
+                      
+                      
+                      
+                      
+  // update venues postcode from gog_venuestbl                    
+ UPDATE GF_Venues SET postcode = c.postcode
+FROM         dbo.GF_Venues AS a INNER JOIN
+                      dbo.GF_VenueAliases AS b ON a.VenueID = b.VenueID INNER JOIN
+                      dbo.gog_venuestbl AS c ON b.VenueName = c.name AND b.Town = c.town
+WHERE     ((a.Postcode IS NULL) OR
+                      (LTRIM(RTRIM(a.Postcode)) = '')) AND (c.postcode IS NOT NULL) AND (LTRIM(RTRIM(c.postcode)) <> '')
+                      
+     // update venues postcode from tm_venuestbl                    
+                      
+                       UPDATE GF_Venues SET postcode = c.postalcode
+FROM         dbo.GF_Venues AS a INNER JOIN
+                      dbo.GF_VenueAliases AS b ON a.VenueID = b.VenueID INNER JOIN
+                      dbo.tm_venuestbl AS c ON b.VenueName = c.product_name AND b.Town = c.town
+WHERE     ((a.Postcode IS NULL) OR
+                      (LTRIM(RTRIM(a.Postcode)) = '')) AND (c.postalcode IS NOT NULL) AND (LTRIM(RTRIM(c.postalcode)) <> '')
+
+
+
+
+
+					  UPDATE GF_Events
+SET EventName2 = 
+(SELECT TOP 1 a.ArtistName FROM GF_Artists a INNER JOIN
+GF_EventArtists b ON a.ArtistID = b.ArtistID WHERE b.EventID = GF_Events.EventID
+)

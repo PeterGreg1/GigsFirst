@@ -1,0 +1,13 @@
+﻿
+Partial Class Admin_Users_Default
+    Inherits System.Web.UI.Page
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Select Case System.Configuration.ConfigurationManager.AppSettings("AuthenticationType")
+            Case "Windows"
+                Response.Redirect("Windows/Default.aspx")
+            Case "Membership"
+                Response.Redirect("Membership/Default.aspx")
+        End Select
+    End Sub
+End Class

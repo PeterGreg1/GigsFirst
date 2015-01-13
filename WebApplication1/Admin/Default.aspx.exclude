@@ -1,0 +1,29 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="MasterPages/MasterPage.master" AutoEventWireup="false"
+    CodeFile="Default.aspx.vb" Inherits="Admin_Admin" %>
+
+<%@ MasterType VirtualPath="MasterPages/MasterPage.master" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="cph_head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cph_main" runat="Server">
+    <asp:Repeater runat="server" ID="rptAdminPermissions">
+        <HeaderTemplate>
+            <table cellspacing="1" cellpadding="5" border="0">
+        </HeaderTemplate>
+        <ItemTemplate>
+            <tr>
+                <td class="FormDesciptionBox" style="width: 200px">
+                    &gt;&gt; <a href="<%#Eval("url") %>">
+                        <%#Eval("title")%></a>
+                </td>
+                <td class="FormContentBox">
+                    <%#Eval("description")%>
+                    <asp:HiddenField runat="server" ID="hfKey" Value='<%#Eval("Key") %>' />
+                </td>
+            </tr>
+        </ItemTemplate>
+        <FooterTemplate>
+            </table>
+        </FooterTemplate>
+    </asp:Repeater>
+    <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" ShowStartingNode="false" />
+</asp:Content>

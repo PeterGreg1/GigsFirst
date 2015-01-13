@@ -1,0 +1,44 @@
+﻿Imports Facebook
+
+Partial Class test
+    Inherits System.Web.UI.Page
+    Implements IPostBackEventHandler
+
+    Public Sub RaisePostBackEvent1(ByVal eventArgument As String) Implements System.Web.UI.IPostBackEventHandler.RaisePostBackEvent
+        If eventArgument = "FacebookLogin" Then
+            Dim facebookApp As New Facebook.FacebookClient()
+            Response.Write(facebookApp.Get("token"))
+        End If
+    End Sub
+
+    Protected Overrides Sub OnPreRender(ByVal e As EventArgs)
+        MyBase.OnPreRender(e)
+
+        If Not Page.ClientScript.IsClientScriptBlockRegistered("facebook_api") Then
+            Page.ClientScript.RegisterClientScriptInclude("facebook_api", [String].Format("http://connect.facebook.net/{0}/all.js", "en_US"))
+        End If
+
+        If Not Page.ClientScript.IsStartupScriptRegistered("facebook_api_init") Then
+            Page.ClientScript.RegisterStartupScript(GetType(String), "facebook_api_init", [String].Format("FB.init({{appId: '{0}', status: true, cookie: true, xfbml: true, oauth: true }});", "280752975364018"), True)
+        End If
+
+        If Not Page.ClientScript.IsStartupScriptRegistered("facebook_login") Then
+            Dim facebookLogin As String = [String].Format("function fblogin() {{ FB.login(function(response) {{ if (response.authResponse) {{ {0} }} else {{ {1} }}}}, {{ scope: '{2}' }});}}", Me.Page.ClientScript.GetPostBackEventReference(Me.Page, "FacebookLogin", False), Me.Page.ClientScript.GetPostBackEventReference(Me.Page, "FacebookLogout", False), "publish_stream,email,user_birthday")
+            Page.ClientScript.RegisterStartupScript(GetType(String), "facebook_login", facebookLogin, True)
+        End If
+
+        If Not Page.ClientScript.IsStartupScriptRegistered("facebook_logout") Then
+            Dim facebookLogout As String = [String].Format("function fblogout() {{ FB.logout(function(response) {{ {0} }}); }}", Me.Page.ClientScript.GetPostBackEventReference(Me.Page, "FacebookLogout", False))
+            Page.ClientScript.RegisterStartupScript(GetType(String), "facebook_logout", facebookLogout, True)
+        End If
+
+    End Sub
+
+    '=======================================================
+    'Service provided by Telerik (www.telerik.com)
+    'Conversion powered by NRefactory.
+    'Twitter: @telerik, @toddanglin
+    'Facebook: facebook.com/telerik
+    '=======================================================
+
+End Class
