@@ -1,0 +1,116 @@
+﻿@model GigsFirstWebApp.Models.ViewModels.SearchViewModel
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container">
+   
+
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <legend>Filter Search</legend>
+                        <div class="form-group">
+                            <label for="select" class="col-lg-2 control-label">Year</label>
+                            <div class="col-lg-10">
+                                <select class="form-control" id="select">
+                                    <option>2015</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                                <br>
+                                <select multiple="" class="form-control">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        </fieldset>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-8">
+
+        <div class="well">
+        
+            <ul class="nav nav-pills">
+                <li><a href="#">Home <span class="badge">42</span></a></li>
+                <li><a href="#">Profile <span class="badge"></span></a></li>
+                <li><a href="#">Messages <span class="badge">3</span></a></li>
+            </ul>
+<br />
+        
+            <div id="shows">@Html.Partial("GetShows", this.Model.shows)</div>
+       
+       
+
+            <div class="alert alert-dismissable alert-success" id="loader">
+                Load More
+            </div>
+        
+        </div>
+      
+    </div>
+    </div>
+
+
+       
+
+
+
+        @section scripts {
+            <script>
+                $(document).ready(function () {
+                    var loading = false;
+
+                    $(window).scroll(function () {
+                        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                            if(loading==false) {
+                                $('#loader').show();
+                                GetNextShows();
+                            }
+                           
+                        }
+                    });
+
+                    var pageindex = @Model.searchModel.PageIndex;
+                    function GetNextShows() {
+                        loading = true;
+                        pageindex ++;
+                        $.ajax({
+                            url: '@Url.Content("~/Search/GetShows")',
+                            contentType: 'application/html; charset=utf-8',
+                            data: { Keyword: '@Model.searchModel.Keyword', FutureShows: '@Model.searchModel.FutureShows', Postcode: '@Model.searchModel.Postcode', Distance: @Model.searchModel.Distance, PageSize: @Model.searchModel.PageSize, PageIndex: pageindex },
+                            type: 'GET',
+                            dataType: 'html'
+
+                        })
+                        .success(function (result) {
+                            $('#shows').append(result);
+                            $('#loader').hide();
+                            loading = false;
+                        })
+                        .error(function (xhr, status) {
+                            alert(xhr.responseText);
+                        })
+                    }
+
+                })
+
+            </script>
+        }
+

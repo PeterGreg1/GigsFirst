@@ -1,0 +1,12 @@
+﻿body {
+}
+
+.header {
+    background-color:red;
+    padding:20px;
+}
+
+.searchPanel {
+    background-color:blue;
+    padding:10px;
+}

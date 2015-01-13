@@ -1,0 +1,15 @@
+﻿@model GigsFirstWebApp.Models.SearchModel
+
+
+    @using (Html.BeginForm("Index", "Search", FormMethod.Post, new { @class = "navbar-form navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+    <div class="form-group">
+        @Html.TextBoxFor(model => model.Keyword, new { @class = "form-control col-lg-8" })
+        &nbsp; <button type="submit" class="btn btn-default">Search</button>
+    </div>
+
+      
+    }

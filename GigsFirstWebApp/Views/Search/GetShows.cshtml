@@ -1,0 +1,33 @@
+﻿@model IEnumerable<GigsFirstDAL.Show>
+
+
+
+
+
+@foreach (var item in Model)
+{
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center small" style="padding:0.25em;">
+                @String.Format("{0:MMMM}", item.ShowDate).ToString().Substring(0, 3)</div>
+                <div class="panel-body text-center" style="padding:0.25em;">
+                    <h4 style="padding:0;margin:0;"> @Html.DisplayFor(modelItem => item.ShowDate.Day)</h4>
+                    <span class="text-info small"> @Html.DisplayFor(modelItem => item.ShowDate.Year)</span>
+                </div>
+             </div>
+
+           
+        </div>
+        <div class="col-md-8">
+            <h4 style="margin-top:0;">@Html.DisplayFor(modelItem => item.Name)</h4>
+            <h6>@Html.DisplayFor(modelItem => item.Venue.Name)</h6>
+            <span>@Html.ActionLink("Details", "Index", "Show", new { id = item.ShowID }, null)</span>
+        </div>
+
+      
+    </div>
+
+}
+
+

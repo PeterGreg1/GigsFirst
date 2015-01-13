@@ -1,0 +1,31 @@
+﻿@model GigsFirstWebApp.Models.ViewModels.ShowViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Show.Name</h2>
+<h3>@Model.Show.ShowDate</h3>
+
+<p>Artists</p>
+
+<ul>
+    @foreach (var show in Model.Show.ShowArtists)
+    {
+        <li>@show.Artist.Name</li>
+    }
+</ul>
+
+<p>Tickets</p>
+
+<ul>
+    @foreach (var vendor in Model.Show.ShowVendors)
+    {
+        <li>@vendor.Vendor.Name</li>
+    }
+</ul>
+
+<p>Hotels</p>
+
+<ul></ul>
