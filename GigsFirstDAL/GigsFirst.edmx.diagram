@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d3e03b09775442f0a33aed8edddd7766" Name="Diagram1">
+        <EntityTypeShape EntityType="GigsFirstModel.ArtistAlias" Width="1.5" PointX="5.25" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.Artist" Width="1.5" PointX="3" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.AttendanceType" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.ImportShow" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.ShowArtist" Width="1.5" PointX="5.25" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.ShowCategory" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.Show" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.ShowStatus" Width="1.5" PointX="0.75" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.ShowVendor" Width="1.5" PointX="8.25" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.UserProfile" Width="1.5" PointX="3" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.UserShow" Width="1.5" PointX="5.25" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.Vendor" Width="1.5" PointX="6" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.VenueAlias" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GigsFirstModel.Venue" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <AssociationConnector Association="GigsFirstModel.FK_ArtistAliases_Artists" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_ShowArtists_Artists" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_UserShows_AttendanceTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_ShowArtists_Shows" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_Shows_ShowCategories" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_Shows_ShowStatuses" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_Shows_Venues" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_ShowVendors_Shows1" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_UserShows_Shows" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_ShowVendors_Vendors" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_UserShows_UserProfile" ManuallyRouted="false" />
+        <AssociationConnector Association="GigsFirstModel.FK_VenueAliases_Venues" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
