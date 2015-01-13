@@ -17,15 +17,16 @@ namespace GigsFirstBLL
         int AddArtists();
         int UpdateVenues();
         int UpdateArtists();
-        int RetrieveNewShowsFromVendor();
+        IEnumerable<ImportShow> RetrieveNewShowsFromVendor();
         IQueryable<ImportShow> GetShowsAwaitingImport();
     }
 
     public abstract class ShowImporter : IShowImporter
     {
-
+        protected string vendor { get; set; }
         protected string apiurl { get; set; }
         protected int vendorid { get; set; }
+        protected IEnumerable<ImportShow>  ImportedShows {get;set;}
 
         private int _retrieveamount = 1000;
         public int RetrieveAmount
@@ -36,21 +37,20 @@ namespace GigsFirstBLL
 
         private GigsFirstEntities db = new GigsFirstEntities();
 
-        public virtual int RetrieveNewShowsFromVendor()
+        public void RetrieveNewShows()
         {
-            using (XmlReader reader = XmlReader.Create(apiurl))
-            {
-                List<ImportShow> importshows = (from u in reader.ImportShows() select u).ToList();
-                return ExtractNewShows(importshows);
-            }
+            ImportedShows = RetrieveNewShowsFromVendor();
+            ExtractNewShows(ImportedShows);
         }
+
+        public abstract IEnumerable<ImportShow> RetrieveNewShowsFromVendor();
 
         public IQueryable<ImportShow> GetShowsAwaitingImport()
         {
             return db.ImportShows.OrderBy(a => a.ShowDate).Where(a => a.VendorID == this.vendorid);
         }
 
-        protected int ExtractNewShows(List<ImportShow> newshows)
+        protected int ExtractNewShows(IEnumerable<ImportShow> newshows)
         {
             newshows = newshows.Where(p => !db.ImportShows.Any(p2 => p2.ShowVendorRef == p.ShowVendorRef && p2.VendorID == this.vendorid)).ToList();
 

@@ -5,9 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using GigsFirstBLL.com.productserve.ticketmaster;
 using GigsFirstDAL;
+using System.Xml;
 
 namespace GigsFirstBLL
 {
+    public interface ITicketmasterImporter : IShowImporter
+    {
+    }
+
     public class TicketmasterImporter : ShowImporter, ITicketmasterImporter
     {
     //API key: 4c869421b3db9beb86ca5650d2c2d039
@@ -15,9 +20,10 @@ namespace GigsFirstBLL
 
         public TicketmasterImporter() {
             this.vendorid = 3;
+            this.vendor = "ticketmaster";
         }
 
-        public override int RetrieveNewShowsFromVendor()
+        public override IEnumerable<ImportShow> RetrieveNewShowsFromVendor()
         {
             //http://ticketmaster.productserve.com/v2/UK/event?apiKey=4c869421b3db9beb86ca5650d2c2d039&filter.event.parentCategoryId=10001&filter.venue.city=London&filter.artist.categoryId=200&updatedSince=2011-01-23%2000:00:00&sort.field=eventDate&sort.order=ASC
 
@@ -35,7 +41,7 @@ namespace GigsFirstBLL
 
             var importshows = from u in tmresponse.ImportShows() select u;
 
-            return ExtractNewShows(importshows.ToList());
+            return importshows.ToList();
         }
     }
 }

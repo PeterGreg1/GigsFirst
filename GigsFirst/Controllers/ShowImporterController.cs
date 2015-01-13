@@ -20,14 +20,14 @@ namespace GigsFirst.Controllers
         public ActionResult ImportSeeTickets()
         {
             var importshows = new SeeTicketsImporter();
-            importshows.RetrieveNewShowsFromVendor();
+            importshows.RetrieveNewShows();
             return View("Index");
         }
 
         public ActionResult ImportTicketmaster()
         {
             var importshows = new TicketmasterImporter();
-            importshows.RetrieveNewShowsFromVendor();
+            importshows.RetrieveNewShows();
             return View("Index");
         }
 

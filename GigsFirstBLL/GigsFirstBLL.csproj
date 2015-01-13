@@ -63,8 +63,6 @@
     <Compile Include="Search\VenueSearch.cs" />
     <Compile Include="Venues\VenueExtensionMethods.cs" />
     <Compile Include="ImportShows\ImportShows.cs" />
-    <Compile Include="ImportShows\ISeeTicketsImport.cs" />
-    <Compile Include="ImportShows\ITicketmasterImport.cs" />
     <Compile Include="ImportShows\SeeTicketsImport.cs" />
     <Compile Include="ImportShows\TicketmasterImport.cs" />
     <Compile Include="Attendance\IAttendanceTypeRepos.cs" />
