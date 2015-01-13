@@ -55,11 +55,11 @@ namespace GigsFirstBLL
             newshows = newshows.Where(p => !db.ImportShows.Any(p2 => p2.ShowVendorRef == p.ShowVendorRef && p2.VendorID == this.vendorid)).ToList();
 
             var query =
-                from c in newshows
+                (from c in newshows
                 where !(from o in db.ShowVendors
                         select o.VendorRefCode)
                 .Contains(c.ShowVendorRef)
-                select c;
+                select c).ToList();
 
             foreach (var newshow in query)
             {

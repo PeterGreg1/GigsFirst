@@ -215,6 +215,7 @@
     <Compile Include="Controllers\ImportShowsController.cs" />
     <Compile Include="Controllers\ShowAdminController.cs" />
     <Compile Include="Controllers\ShowCategoryAdminController.cs" />
+    <Compile Include="Controllers\ShowImporterController.cs" />
     <Compile Include="Controllers\ShowStatusAdminController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\VendorAdmin.cs" />
@@ -1346,6 +1347,7 @@
     <Content Include="Views\ImportShows\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ArtistEditor.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\VenueEditor.cshtml" />
+    <Content Include="Views\ShowImporter\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
