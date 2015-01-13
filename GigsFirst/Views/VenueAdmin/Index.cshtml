@@ -1,0 +1,53 @@
+﻿@model IEnumerable<GigsFirst.Models.ViewModels.VenueAdminViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+<div id="clientsDb">
+    @(Html.Kendo().Grid(Model)
+        .Name("grid")
+        .EnableCustomBinding(true)
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.VenueID).Title("VenueID").Groupable(false);
+            columns.Bound(c => c.Name).Title("Name").Groupable(true);
+            columns.Bound(c => c.AddressLine1).Title("Address Line 1").Groupable(true);
+            columns.Bound(c => c.AddressLine2).Title("Address Line 2").Groupable(false);
+            columns.Bound(c => c.Town).Title("Town").Groupable(true);
+            columns.Bound(c => c.City).Title("City").Groupable(true);
+            columns.Bound(c => c.Postcode).Title("Postcode").Groupable(true);
+            columns.Bound(c => c.VenueID).Template(c => Html.ActionLink("Edit", "Edit", new { id = c.VenueID }))
+                .ClientTemplate("<a href='" + Url.Action("Edit", "VenueAdmin", new { id = "#= VenueID #" }) + "' class = 't-grid-action t-button t-state-default t-grid-edit' >Edit</a>");
+            columns.Bound(c => c.VenueID).Template(c => Html.ActionLink("Details", "Details", new { id = c.VenueID }))
+                .ClientTemplate("<a href='" + Url.Action("Details", "VenueAdmin", new { id = "#= VenueID #" }) + "' class = 't-grid-action t-button t-state-default t-grid-edit' >Details</a>");
+            columns.Bound(c => c.VenueID).Template(c => Html.ActionLink("Delete", "Delete", new { id = c.VenueID }))
+                .ClientTemplate("<a href='" + Url.Action("Delete", "VenueAdmin", new { id = "#= VenueID #" }) + "' class = 't-grid-action t-button t-state-default t-grid-edit' >Delete</a>");
+            columns.Bound(p => p.VenueID).Hidden(true);
+        })
+        .HtmlAttributes(new { style = "height: 600px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .ServerOperation(true)
+            .Total((int)ViewData["total"])
+            .Read(read => read.Action("KendoPageData", "VenueAdmin")
+            )
+        )
+    )
+</div>

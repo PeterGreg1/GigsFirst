@@ -1,0 +1,93 @@
+﻿@model IEnumerable<GigsFirstDAL.ImportShow>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Index</h2>
+
+ @Html.ActionLink("Import All Matches", "ImportMatches")<br />
+ @Html.ActionLink("Get New Shows From Vendor", "GetNewShowsFromVendor")<br />
+@Html.ActionLink("Add Artists", "AddArtists")<br />
+@Html.ActionLink("Add Venues", "AddVenues")<br />
+
+<div id="clientsDb">
+    @(Html.Kendo().Grid(Model)
+        .Name("grid")
+        .AutoBind(false)
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.ShowVendorRef).Title("Vendor Show ID").Groupable(false);
+            columns.Bound(c => c.Name).Title("Vendor Show Name").Groupable(false);
+            columns.Bound(c => c.ShowDate).Title("Vendor Show Date").Groupable(true);
+            columns.Bound(c => c.VenueName).Title("Vendor Venue Name").Groupable(true);
+            columns.Bound(c => c.GFVenueID).ClientTemplate("#=GFVenueID#").Title("Mapped Venue ID").Groupable(true);
+            columns.Bound(c => c.ArtistName).Title("Vendor Artist Name").Groupable(true);
+            columns.Bound(c => c.GFArtistID).ClientTemplate("#=GFArtistID#").Title("Mapped Artist ID").Groupable(true);
+            //columns.Bound(c => c.Artists.First().GFArtistID).Title("Artists").Groupable(false);
+            //columns.Bound(c => c.GFArtistID).Title("ArtistID").Groupable(true); 
+            //columns.Bound(c => c.Artists).Title("Artists");
+            //columns.Bound(c => c.Artists).ClientTemplate("#=generateTemplate(Artists)#");
+            //columns.Bound(p => p.Artists).ClientTemplate("#=Artists.GFArtistID#").Width(160);
+        })
+         .ToolBar(toolbar =>
+      {
+          toolbar.Save(); // The "save" command saves the changed data items
+      })
+        .HtmlAttributes(new { style = "height: 550px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+            .Editable(editable => editable.Mode(GridEditMode.InCell)) // Use in-cell editing mode
+             .DataSource(dataSource => dataSource
+            .Ajax()
+            .Events(events => events.Error("error_handler"))
+            .Batch(true)
+            .Model(model =>
+            {
+                model.Id(show => show.ShowVendorRef); // Specify the property which is the unique identifier of the model
+                model.Field(show => show.ShowVendorRef).Editable(false); // Make the ProductID property not editable
+            })
+            .Update(update => update.Action("ShowUpdate", "ImportShows"))  // Action method invoked when the user saves an updated data item
+            .PageSize(20)
+            .Read(read => read.Action("KendoPageData", "ImportShows")
+            )
+        ))
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#grid').data("kendoGrid").dataSource.read();
+    })
+
+
+    function generateTemplate(Artists) {
+        var template = "<ul>";
+        for (var i = 0; i < Artists.length; i++) {
+            template = template + "<li>" + Artists[i].Name + "</li>";
+        }
+
+        return template + "</ul>";
+    }
+
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

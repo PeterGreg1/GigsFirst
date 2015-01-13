@@ -1,0 +1,85 @@
+﻿@model GigsFirstDAL.Show
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Show</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Venue.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Venue.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ShowDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShowDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ShowTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShowTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ShowStatus.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShowStatus.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Active)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Active)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Deleted)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Deleted)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AddedOn)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AddedOn)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AddedBy)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AddedBy)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ShowCategory.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShowCategory.Name)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ShowID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+     @Styles.Render("~/Content/web/css")
+    @Styles.Render("~/Content/shared/css")
+    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/kendo-web")
+    @Scripts.Render("~/bundles/demo")
+
+    @* Include the JavaScript for the current culture *@
+    @{ var culture = System.Threading.Thread.CurrentThread.CurrentCulture.ToString(); }
+    <script src="@Url.Content("~/Scripts/cultures/kendo.culture." + culture + ".min.js")"></script>
+
+    @* Set the current culture *@
+    <script>
+        kendo.culture("@culture");
+    </script>
+     @RenderSection("head",false)
+</head>
+<body>
+    @RenderBody()
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,6 @@
+﻿@(Html.Kendo().DropDownList()
+    .Name("GFVenueID") // Name of the widget should be the same as the name of the property
+    .DataValueField("VenueID") // The value of the dropdown is taken from the VenueID property
+    .DataTextField("Name") // The text of the items is taken from the Name property
+    .BindTo((System.Collections.IEnumerable)ViewData["Venues"]) // A list of all venues which is populated in the controller
+)
