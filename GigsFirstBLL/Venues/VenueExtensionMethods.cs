@@ -7,13 +7,14 @@ using GigsFirstDAL;
 using System.Xml;
 using GigsFirstBLL.com.productserve.ticketmaster;
 using System.Device.Location;
-using System.Data.Spatial;
+using System.Data.Entity.Spatial;
+using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
     public static class VenueExtensionMethods
     {
-        public static IQueryable<GigsFirstDAL.Venue> FilterByLocation(this IQueryable<GigsFirstDAL.Venue> venues, double latitude, double longitude, double distanceMiles)
+        public static IQueryable<GigsFirstEntities.Venue> FilterByLocation(this IQueryable<GigsFirstEntities.Venue> venues, double latitude, double longitude, double distanceMiles)
         {
             var originPointString = string.Format("POINT({1} {0})",
             latitude.ToString(), longitude.ToString());

@@ -169,13 +169,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{63d650e2-8284-42d4-8c5c-e97911c422e7}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GigsFirstBLL\GigsFirstBLL.csproj">
       <Project>{3153eb24-42d0-42b3-be76-7a179977a2a9}</Project>
       <Name>GigsFirstBLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GigsFirstDAL\GigsFirstDAL.csproj">
-      <Project>{c6e0bbaf-2539-4a19-b78f-ec3e2b99cde7}</Project>
-      <Name>GigsFirstDAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

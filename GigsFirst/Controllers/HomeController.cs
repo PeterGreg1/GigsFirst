@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using GigsFirstDAL;
+using GigsFirstEntities;
 using GigsFirstBLL;
 using GigsFirst.Models.ViewModels;
 

@@ -24,13 +24,13 @@ namespace GigsFirstBLL
     {
         public DbContext Context { get; private set; }
         private DbSet<T> _dbSet;
-        public GigsFirstEntities db {get;set;}
+        public GigsFirstDbContext db { get; set; }
 
         public BasicCrud()
         {
-            Context = new GigsFirstEntities();
+            Context = new GigsFirstDbContext();
             _dbSet = Context.Set<T>();
-            db = new GigsFirstEntities();
+            db = new GigsFirstDbContext();
         }
 
         public T Insert(T entity)
@@ -66,7 +66,7 @@ namespace GigsFirstBLL
 
         public bool Update(T entity)
         {
-            Context.Entry(entity).State = EntityState.Modified;
+            Context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
             Context.SaveChanges();
 
             return true;

@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GigsFirstDAL;
-using System.Data.Spatial;
+using System.Data.Entity.Spatial;
+using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {

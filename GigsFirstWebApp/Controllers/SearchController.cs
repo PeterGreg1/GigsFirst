@@ -8,8 +8,9 @@ using GigsFirstBLL.Search;
 using GigsFirstWebApp.Models;
 using GigsFirstWebApp.Models.ViewModels;
 using System.Data;
-using GigsFirstDAL;
+using GigsFirstBLL;
 using PagedList;
+using GigsFirstEntities;
 
 namespace GigsFirstWebApp.Controllers
 {

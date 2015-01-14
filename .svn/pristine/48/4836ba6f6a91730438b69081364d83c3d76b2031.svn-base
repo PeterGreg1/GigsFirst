@@ -4,21 +4,85 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="GigsFirstModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GigsFirstModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="GigsFirstModelStoreContainer">
+          <EntitySet Name="ArtistAliases" EntityType="GigsFirstModel.Store.ArtistAliases" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Artists" EntityType="GigsFirstModel.Store.Artists" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AttendanceTypes" EntityType="GigsFirstModel.Store.AttendanceTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ImportShows" EntityType="GigsFirstModel.Store.ImportShows" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShowArtists" EntityType="GigsFirstModel.Store.ShowArtists" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShowCategories" EntityType="GigsFirstModel.Store.ShowCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Shows" EntityType="GigsFirstModel.Store.Shows" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShowStatuses" EntityType="GigsFirstModel.Store.ShowStatuses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShowVendors" EntityType="GigsFirstModel.Store.ShowVendors" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserProfile" EntityType="GigsFirstModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserShows" EntityType="GigsFirstModel.Store.UserShows" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Vendors" EntityType="GigsFirstModel.Store.Vendors" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="VenueAliases" EntityType="GigsFirstModel.Store.VenueAliases" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Venues" EntityType="GigsFirstModel.Store.Venues" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_ArtistAliases_Artists" Association="GigsFirstModel.Store.FK_ArtistAliases_Artists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="ArtistAliases" EntitySet="ArtistAliases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShowArtists_Artists" Association="GigsFirstModel.Store.FK_ShowArtists_Artists">
+            <End Role="Artists" EntitySet="Artists" />
+            <End Role="ShowArtists" EntitySet="ShowArtists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShowArtists_Shows" Association="GigsFirstModel.Store.FK_ShowArtists_Shows">
+            <End Role="Shows" EntitySet="Shows" />
+            <End Role="ShowArtists" EntitySet="ShowArtists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shows_ShowCategories" Association="GigsFirstModel.Store.FK_Shows_ShowCategories">
+            <End Role="ShowCategories" EntitySet="ShowCategories" />
+            <End Role="Shows" EntitySet="Shows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shows_ShowStatuses" Association="GigsFirstModel.Store.FK_Shows_ShowStatuses">
+            <End Role="ShowStatuses" EntitySet="ShowStatuses" />
+            <End Role="Shows" EntitySet="Shows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shows_Venues" Association="GigsFirstModel.Store.FK_Shows_Venues">
+            <End Role="Venues" EntitySet="Venues" />
+            <End Role="Shows" EntitySet="Shows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShowVendors_Shows1" Association="GigsFirstModel.Store.FK_ShowVendors_Shows1">
+            <End Role="Shows" EntitySet="Shows" />
+            <End Role="ShowVendors" EntitySet="ShowVendors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShowVendors_Vendors" Association="GigsFirstModel.Store.FK_ShowVendors_Vendors">
+            <End Role="Vendors" EntitySet="Vendors" />
+            <End Role="ShowVendors" EntitySet="ShowVendors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserShows_AttendanceTypes" Association="GigsFirstModel.Store.FK_UserShows_AttendanceTypes">
+            <End Role="AttendanceTypes" EntitySet="AttendanceTypes" />
+            <End Role="UserShows" EntitySet="UserShows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserShows_Shows" Association="GigsFirstModel.Store.FK_UserShows_Shows">
+            <End Role="Shows" EntitySet="Shows" />
+            <End Role="UserShows" EntitySet="UserShows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserShows_UserProfile" Association="GigsFirstModel.Store.FK_UserShows_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserShows" EntitySet="UserShows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VenueAliases_Venues" Association="GigsFirstModel.Store.FK_VenueAliases_Venues">
+            <End Role="Venues" EntitySet="Venues" />
+            <End Role="VenueAliases" EntitySet="VenueAliases" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="ArtistAliases">
           <Key>
             <PropertyRef Name="ArtistAliasID" />
           </Key>
-          <Property Name="ArtistAliasID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ArtistAliasID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ArtistID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="250" />
         </EntityType>
         <EntityType Name="Artists">
           <Key>
             <PropertyRef Name="ArtistID" />
           </Key>
-          <Property Name="ArtistID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="ArtistID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="250" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
@@ -26,14 +90,14 @@
           <Key>
             <PropertyRef Name="AttendanceTypeID" />
           </Key>
-          <Property Name="AttendanceTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AttendanceTypeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="ImportShows">
           <Key>
             <PropertyRef Name="ImportShowID" />
           </Key>
-          <Property Name="ImportShowID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ImportShowID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="VendorID" Type="int" />
           <Property Name="Name" Type="varchar" MaxLength="250" />
           <Property Name="ShowDate" Type="datetime" Nullable="false" />
@@ -52,7 +116,7 @@
           <Key>
             <PropertyRef Name="ShowArtistID" />
           </Key>
-          <Property Name="ShowArtistID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShowArtistID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ShowID" Type="int" Nullable="false" />
           <Property Name="ArtistID" Type="int" Nullable="false" />
           <Property Name="AddedOn" Type="datetime" Nullable="false" />
@@ -62,7 +126,7 @@
           <Key>
             <PropertyRef Name="ShowCategoryID" />
           </Key>
-          <Property Name="ShowCategoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShowCategoryID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
@@ -71,7 +135,7 @@
           <Key>
             <PropertyRef Name="ShowID" />
           </Key>
-          <Property Name="ShowID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShowID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="VenueID" Type="int" Nullable="false" />
           <Property Name="CategoryID" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="250" />
@@ -87,17 +151,17 @@
           <Key>
             <PropertyRef Name="StatusID" />
           </Key>
-          <Property Name="StatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StatusID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="ShowVendors">
           <Key>
             <PropertyRef Name="ShowVendorID" />
           </Key>
-          <Property Name="ShowVendorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShowVendorID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="VendorID" Type="int" Nullable="false" />
           <Property Name="ShowID" Type="int" Nullable="false" />
-          <Property Name="VendorRefCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="VendorRefCode" Type="varchar" Nullable="false" MaxLength="100" />
           <Property Name="Price" Type="varchar" MaxLength="50" />
           <Property Name="Status" Type="varchar" MaxLength="50" />
           <Property Name="AddedOn" Type="datetime" Nullable="false" />
@@ -107,14 +171,14 @@
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="56" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="56" />
         </EntityType>
         <EntityType Name="UserShows">
           <Key>
             <PropertyRef Name="UserShowID" />
           </Key>
-          <Property Name="UserShowID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserShowID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="ShowID" Type="int" Nullable="false" />
           <Property Name="AttendanceTypeID" Type="int" Nullable="false" />
@@ -123,8 +187,8 @@
           <Key>
             <PropertyRef Name="VendorID" />
           </Key>
-          <Property Name="VendorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="VendorID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
@@ -132,7 +196,7 @@
           <Key>
             <PropertyRef Name="VenueAliasID" />
           </Key>
-          <Property Name="VenueAliasID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VenueAliasID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="VenueID" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="250" />
           <Property Name="Town" Type="varchar" MaxLength="250" />
@@ -141,8 +205,8 @@
           <Key>
             <PropertyRef Name="VenueID" />
           </Key>
-          <Property Name="VenueID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="VenueID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="250" />
           <Property Name="AddressLine1" Type="varchar" MaxLength="100" />
           <Property Name="AddressLine2" Type="varchar" MaxLength="100" />
           <Property Name="Town" Type="varchar" MaxLength="50" />
@@ -153,11 +217,10 @@
           <Property Name="Longitude" Type="float" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
-          <Property Name="Geography" Type="geography" />
         </EntityType>
         <Association Name="FK_ArtistAliases_Artists">
-          <End Role="Artists" Type="Self.Artists" Multiplicity="1" />
-          <End Role="ArtistAliases" Type="Self.ArtistAliases" Multiplicity="*" />
+          <End Role="Artists" Type="GigsFirstModel.Store.Artists" Multiplicity="1" />
+          <End Role="ArtistAliases" Type="GigsFirstModel.Store.ArtistAliases" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Artists">
               <PropertyRef Name="ArtistID" />
@@ -168,8 +231,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ShowArtists_Artists">
-          <End Role="Artists" Type="Self.Artists" Multiplicity="1" />
-          <End Role="ShowArtists" Type="Self.ShowArtists" Multiplicity="*" />
+          <End Role="Artists" Type="GigsFirstModel.Store.Artists" Multiplicity="1" />
+          <End Role="ShowArtists" Type="GigsFirstModel.Store.ShowArtists" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Artists">
               <PropertyRef Name="ArtistID" />
@@ -180,8 +243,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ShowArtists_Shows">
-          <End Role="Shows" Type="Self.Shows" Multiplicity="1" />
-          <End Role="ShowArtists" Type="Self.ShowArtists" Multiplicity="*" />
+          <End Role="Shows" Type="GigsFirstModel.Store.Shows" Multiplicity="1" />
+          <End Role="ShowArtists" Type="GigsFirstModel.Store.ShowArtists" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Shows">
               <PropertyRef Name="ShowID" />
@@ -192,8 +255,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Shows_ShowCategories">
-          <End Role="ShowCategories" Type="Self.ShowCategories" Multiplicity="1" />
-          <End Role="Shows" Type="Self.Shows" Multiplicity="*" />
+          <End Role="ShowCategories" Type="GigsFirstModel.Store.ShowCategories" Multiplicity="1" />
+          <End Role="Shows" Type="GigsFirstModel.Store.Shows" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ShowCategories">
               <PropertyRef Name="ShowCategoryID" />
@@ -204,8 +267,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Shows_ShowStatuses">
-          <End Role="ShowStatuses" Type="Self.ShowStatuses" Multiplicity="1" />
-          <End Role="Shows" Type="Self.Shows" Multiplicity="*" />
+          <End Role="ShowStatuses" Type="GigsFirstModel.Store.ShowStatuses" Multiplicity="1" />
+          <End Role="Shows" Type="GigsFirstModel.Store.Shows" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ShowStatuses">
               <PropertyRef Name="StatusID" />
@@ -216,8 +279,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Shows_Venues">
-          <End Role="Venues" Type="Self.Venues" Multiplicity="1" />
-          <End Role="Shows" Type="Self.Shows" Multiplicity="*" />
+          <End Role="Venues" Type="GigsFirstModel.Store.Venues" Multiplicity="1" />
+          <End Role="Shows" Type="GigsFirstModel.Store.Shows" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Venues">
               <PropertyRef Name="VenueID" />
@@ -228,8 +291,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ShowVendors_Shows1">
-          <End Role="Shows" Type="Self.Shows" Multiplicity="1" />
-          <End Role="ShowVendors" Type="Self.ShowVendors" Multiplicity="*" />
+          <End Role="Shows" Type="GigsFirstModel.Store.Shows" Multiplicity="1" />
+          <End Role="ShowVendors" Type="GigsFirstModel.Store.ShowVendors" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Shows">
               <PropertyRef Name="ShowID" />
@@ -240,8 +303,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ShowVendors_Vendors">
-          <End Role="Vendors" Type="Self.Vendors" Multiplicity="1" />
-          <End Role="ShowVendors" Type="Self.ShowVendors" Multiplicity="*" />
+          <End Role="Vendors" Type="GigsFirstModel.Store.Vendors" Multiplicity="1" />
+          <End Role="ShowVendors" Type="GigsFirstModel.Store.ShowVendors" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Vendors">
               <PropertyRef Name="VendorID" />
@@ -252,8 +315,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserShows_AttendanceTypes">
-          <End Role="AttendanceTypes" Type="Self.AttendanceTypes" Multiplicity="1" />
-          <End Role="UserShows" Type="Self.UserShows" Multiplicity="*" />
+          <End Role="AttendanceTypes" Type="GigsFirstModel.Store.AttendanceTypes" Multiplicity="1" />
+          <End Role="UserShows" Type="GigsFirstModel.Store.UserShows" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AttendanceTypes">
               <PropertyRef Name="AttendanceTypeID" />
@@ -264,8 +327,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserShows_Shows">
-          <End Role="Shows" Type="Self.Shows" Multiplicity="1" />
-          <End Role="UserShows" Type="Self.UserShows" Multiplicity="*" />
+          <End Role="Shows" Type="GigsFirstModel.Store.Shows" Multiplicity="1" />
+          <End Role="UserShows" Type="GigsFirstModel.Store.UserShows" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Shows">
               <PropertyRef Name="ShowID" />
@@ -276,8 +339,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserShows_UserProfile">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="UserShows" Type="Self.UserShows" Multiplicity="*" />
+          <End Role="UserProfile" Type="GigsFirstModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="UserShows" Type="GigsFirstModel.Store.UserShows" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -288,8 +351,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_VenueAliases_Venues">
-          <End Role="Venues" Type="Self.Venues" Multiplicity="1" />
-          <End Role="VenueAliases" Type="Self.VenueAliases" Multiplicity="*" />
+          <End Role="Venues" Type="GigsFirstModel.Store.Venues" Multiplicity="1" />
+          <End Role="VenueAliases" Type="GigsFirstModel.Store.VenueAliases" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Venues">
               <PropertyRef Name="VenueID" />
@@ -299,70 +362,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="GigsFirstModelStoreContainer">
-          <EntitySet Name="ArtistAliases" EntityType="Self.ArtistAliases" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Artists" EntityType="Self.Artists" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AttendanceTypes" EntityType="Self.AttendanceTypes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ImportShows" EntityType="Self.ImportShows" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ShowArtists" EntityType="Self.ShowArtists" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ShowCategories" EntityType="Self.ShowCategories" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Shows" EntityType="Self.Shows" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ShowStatuses" EntityType="Self.ShowStatuses" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ShowVendors" EntityType="Self.ShowVendors" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserShows" EntityType="Self.UserShows" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Vendors" EntityType="Self.Vendors" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="VenueAliases" EntityType="Self.VenueAliases" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Venues" EntityType="Self.Venues" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_ArtistAliases_Artists" Association="Self.FK_ArtistAliases_Artists">
-            <End Role="Artists" EntitySet="Artists" />
-            <End Role="ArtistAliases" EntitySet="ArtistAliases" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ShowArtists_Artists" Association="Self.FK_ShowArtists_Artists">
-            <End Role="Artists" EntitySet="Artists" />
-            <End Role="ShowArtists" EntitySet="ShowArtists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ShowArtists_Shows" Association="Self.FK_ShowArtists_Shows">
-            <End Role="Shows" EntitySet="Shows" />
-            <End Role="ShowArtists" EntitySet="ShowArtists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Shows_ShowCategories" Association="Self.FK_Shows_ShowCategories">
-            <End Role="ShowCategories" EntitySet="ShowCategories" />
-            <End Role="Shows" EntitySet="Shows" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Shows_ShowStatuses" Association="Self.FK_Shows_ShowStatuses">
-            <End Role="ShowStatuses" EntitySet="ShowStatuses" />
-            <End Role="Shows" EntitySet="Shows" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Shows_Venues" Association="Self.FK_Shows_Venues">
-            <End Role="Venues" EntitySet="Venues" />
-            <End Role="Shows" EntitySet="Shows" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ShowVendors_Shows1" Association="Self.FK_ShowVendors_Shows1">
-            <End Role="Shows" EntitySet="Shows" />
-            <End Role="ShowVendors" EntitySet="ShowVendors" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ShowVendors_Vendors" Association="Self.FK_ShowVendors_Vendors">
-            <End Role="Vendors" EntitySet="Vendors" />
-            <End Role="ShowVendors" EntitySet="ShowVendors" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserShows_AttendanceTypes" Association="Self.FK_UserShows_AttendanceTypes">
-            <End Role="AttendanceTypes" EntitySet="AttendanceTypes" />
-            <End Role="UserShows" EntitySet="UserShows" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserShows_Shows" Association="Self.FK_UserShows_Shows">
-            <End Role="Shows" EntitySet="Shows" />
-            <End Role="UserShows" EntitySet="UserShows" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserShows_UserProfile" Association="Self.FK_UserShows_UserProfile">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="UserShows" EntitySet="UserShows" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VenueAliases_Venues" Association="Self.FK_VenueAliases_Venues">
-            <End Role="Venues" EntitySet="Venues" />
-            <End Role="VenueAliases" EntitySet="VenueAliases" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -603,7 +602,6 @@
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Shows" Relationship="GigsFirstModel.FK_Shows_Venues" FromRole="Venues" ToRole="Shows" />
           <NavigationProperty Name="VenueAliases" Relationship="GigsFirstModel.FK_VenueAliases_Venues" FromRole="Venues" ToRole="VenueAliases" />
-          <Property Name="Geography" Type="Geography" />
         </EntityType>
         <Association Name="FK_ArtistAliases_Artists">
           <End Role="Artists" Type="GigsFirstModel.Artist" Multiplicity="1" />
@@ -903,7 +901,6 @@
           <EntitySetMapping Name="Venues">
             <EntityTypeMapping TypeName="GigsFirstModel.Venue">
               <MappingFragment StoreEntitySet="Venues">
-                <ScalarProperty Name="Geography" ColumnName="Geography" />
                 <ScalarProperty Name="VenueID" ColumnName="VenueID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
@@ -936,7 +933,6 @@
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

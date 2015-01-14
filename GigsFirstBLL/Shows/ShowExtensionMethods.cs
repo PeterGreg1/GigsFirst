@@ -7,7 +7,8 @@ using GigsFirstDAL;
 using System.Xml;
 using GigsFirstBLL.com.productserve.ticketmaster;
 using System.Device.Location;
-using System.Data.Spatial;
+using System.Data.Entity.Spatial;
+using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {

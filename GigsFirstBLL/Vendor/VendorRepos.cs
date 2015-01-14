@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GigsFirstDAL;
+using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
     public class VendorRepos : BasicCrud<Vendor>, IVendorRepos
     {
-        GigsFirstEntities db = new GigsFirstEntities();
-
         public List<Vendor> GetShowVendorsByShowID(int showid)
         {
             List<Vendor> vendors = new List<Vendor>();

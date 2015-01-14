@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GigsFirstDAL;
+using GigsFirstEntities;
 using System.Device.Location;
+using GigsFirstDAL;
 
 namespace GigsFirstBLL
 {
     public class ShowRepos : BasicCrud<Show>, IShowRepos
     {
-        GigsFirstEntities db = new GigsFirstEntities();
-
         public IQueryable<Show> GetShowsByArtistID(int ArtistID)
         {
             var shows = (from s in db.ShowArtists where s.ArtistID == ArtistID select s.Show);

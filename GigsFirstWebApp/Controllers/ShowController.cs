@@ -7,7 +7,6 @@ using GigsFirstBLL;
 using GigsFirstWebApp.Models;
 using GigsFirstWebApp.Models.ViewModels;
 using System.Data;
-using GigsFirstDAL;
 using PagedList;
 
 namespace GigsFirstWebApp.Controllers

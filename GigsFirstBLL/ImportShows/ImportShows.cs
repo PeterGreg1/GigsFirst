@@ -7,6 +7,7 @@ using System.Xml;
 using GigsFirstDAL;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
+using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
@@ -35,7 +36,7 @@ namespace GigsFirstBLL
             set { _retrieveamount = value; }
         }
 
-        private GigsFirstEntities db = new GigsFirstEntities();
+        private GigsFirstDbContext db = new GigsFirstDbContext();
 
         public void RetrieveNewShows()
         {

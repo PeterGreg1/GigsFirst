@@ -32,7 +32,6 @@ namespace GigsFirstDAL
         public Nullable<double> Longitude { get; set; }
         public bool Active { get; set; }
         public bool Deleted { get; set; }
-        public System.Data.Spatial.DbGeography Geography { get; set; }
     
         public virtual ICollection<Show> Shows { get; set; }
         public virtual ICollection<VenueAlias> VenueAliases { get; set; }

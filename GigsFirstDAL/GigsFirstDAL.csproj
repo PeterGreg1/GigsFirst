@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C6E0BBAF-2539-4A19-B78F-EC3E2B99CDE7}</ProjectGuid>
+    <ProjectGuid>{D4BD4F19-2276-49AE-AFE9-2A00AA19620D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GigsFirstDAL</RootNamespace>
-    <AssemblyName>GigsFirstDAL</AssemblyName>
+    <RootNamespace>gfdatabase</RootNamespace>
+    <AssemblyName>gfdatabase</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,14 +31,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,88 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Artist.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ArtistAlias.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AttendanceType.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GigsFirst.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GigsFirst.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GigsFirst.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GigsFirst.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GigsFirst.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="ImportShow.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
+    <Compile Include="GigsFirstEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Show.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ShowArtist.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ShowCategory.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ShowStatus.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ShowVendor.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UserProfile.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UserShow.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Vendor.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Venue.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
-    <Compile Include="VenueAlias.cs">
-      <DependentUpon>GigsFirst.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
-    <EntityDeploy Include="GigsFirst.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>GigsFirst.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="GigsFirst.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GigsFirst.edmx</DependentUpon>
-      <LastGenOutput>GigsFirst.Context.cs</LastGenOutput>
-    </None>
-    <None Include="GigsFirst.edmx.diagram">
-      <DependentUpon>GigsFirst.edmx</DependentUpon>
-    </None>
-    <None Include="GigsFirst.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GigsFirst.edmx</DependentUpon>
-      <LastGenOutput>GigsFirst.cs</LastGenOutput>
-    </None>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{63d650e2-8284-42d4-8c5c-e97911c422e7}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

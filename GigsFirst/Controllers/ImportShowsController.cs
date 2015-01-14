@@ -8,7 +8,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using PagedList;
 using GigsFirst.Models.ViewModels;
-using GigsFirstDAL;
+using GigsFirstEntities;
 
 namespace GigsFirst.Controllers
 {

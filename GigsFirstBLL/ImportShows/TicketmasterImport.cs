@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GigsFirstBLL.com.productserve.ticketmaster;
 using GigsFirstDAL;
 using System.Xml;
+using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
