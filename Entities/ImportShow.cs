@@ -28,11 +28,13 @@ namespace GigsFirstEntities
         public string ArtistName { get; set; }
     }
 
+    [NotMapped]
     public class SeeTicketsImportShow : ImportShow
     {
     
     }
 
+    [NotMapped]
     public class TicketmasterImportShow : ImportShow
     {
 

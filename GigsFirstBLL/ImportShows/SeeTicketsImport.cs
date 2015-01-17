@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using GigsFirstBLL.Shows;
 using GigsFirstEntities;
 
@@ -16,7 +17,7 @@ namespace GigsFirstBLL.ImportShows
 
         public SeeTicketsImporter()
         {
-            this.Apiurl = "https://api.seetickets.com/1/shows/all?key=a441bcf816e24f5aac22349440a89d7f&max=50&page=1";
+            this.Apiurl = "https://api.seetickets.com/1/shows/all?key=a441bcf816e24f5aac22349440a89d7f&max=1&page=1";
             this.Vendorid = 2;
             this.Vendor = "seetickets";
         }
@@ -30,7 +31,7 @@ namespace GigsFirstBLL.ImportShows
 
         public override IEnumerable<SeeTicketsImportShow> RetrieveNewShowsFromVendor()
         {
-            using (var reader = XmlReader.Create(Apiurl))
+            using (var reader = new XmlTextReader(Apiurl))
             {
                 var importshows = (from u in reader.ImportShows() select u).ToList();
                 return importshows;
