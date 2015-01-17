@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("ImportShows")]
-    public class ImportShow
+    public class ImportShow : GigsFirstEntity
     {
         [Key]
         public int ImportShowID { get; set; }
@@ -26,5 +26,15 @@ namespace GigsFirstEntities
         public string VenueLong { get; set; }
         public Nullable<int> GFArtistID { get; set; }
         public string ArtistName { get; set; }
+    }
+
+    public class SeeTicketsImportShow : ImportShow
+    {
+    
+    }
+
+    public class TicketmasterImportShow : ImportShow
+    {
+
     }
 }

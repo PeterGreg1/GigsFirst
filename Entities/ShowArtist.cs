@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("ShowArtists")]
-    public class ShowArtist
+    public class ShowArtist : GigsFirstEntity
     {
         [Key]
         public int ShowArtistID { get; set; }

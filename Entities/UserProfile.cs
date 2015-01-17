@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("USerProfiles")]
-    public class UserProfile
+    public class UserProfile : GigsFirstEntity
     {
         public UserProfile()
         {

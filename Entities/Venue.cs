@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("Venues")]
-    public class Venue
+    public class Venue : GigsFirstEntity
     {
         public Venue()
         {

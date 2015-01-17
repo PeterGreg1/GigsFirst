@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Entity.Spatial;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstDAL;
-using System.Xml;
-using GigsFirstBLL.com.productserve.ticketmaster;
-using System.Device.Location;
-using System.Data.Entity.Spatial;
 using GigsFirstEntities;
 
-namespace GigsFirstBLL
+namespace GigsFirstBLL.Venues
 {
     public static class VenueExtensionMethods
     {
-        public static IQueryable<GigsFirstEntities.Venue> FilterByLocation(this IQueryable<GigsFirstEntities.Venue> venues, double latitude, double longitude, double distanceMiles)
+        public static IQueryable<Venue> FilterByLocation(this IQueryable<Venue> venues, double latitude, double longitude, double distanceMiles)
         {
             var originPointString = string.Format("POINT({1} {0})",
-            latitude.ToString(), longitude.ToString());
+            latitude, longitude);
 
             var origin = DbGeography.FromText(originPointString);
 

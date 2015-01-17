@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using GigsFirstBLL;
 using GigsFirstBLL.Search;
+using GigsFirstBLL.Shows;
+using GigsFirstBLL.Venues;
+using GigsFirstEntities;
 using GigsFirstWebApp.Models;
 using GigsFirstWebApp.Models.ViewModels;
-using System.Data;
-using GigsFirstBLL;
 using PagedList;
-using GigsFirstEntities;
 
 namespace GigsFirstWebApp.Controllers
 {

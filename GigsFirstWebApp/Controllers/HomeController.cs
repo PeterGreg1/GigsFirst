@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using GigsFirstBLL;
 using GigsFirstWebApp.Models.ViewModels;
 using System.Data;
+using GigsFirstBLL.Shows;
 
 namespace GigsFirstWebApp.Controllers
 {

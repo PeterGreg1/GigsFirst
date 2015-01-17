@@ -1,48 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstBLL.com.productserve.ticketmaster;
-using GigsFirstDAL;
-using System.Xml;
+﻿using System.Collections.Generic;
+using GigsFirstBLL.ImportShows;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
-    public interface ITicketmasterImporter : IShowImporter
+    public interface ITicketmasterImporter : IShowImporter<TicketmasterImportShow>
     {
     }
 
-    public class TicketmasterImporter : ShowImporter, ITicketmasterImporter
+    public class TicketmasterImporter : ShowImporter<TicketmasterImportShow>, ITicketmasterImporter
     {
-    //API key: 4c869421b3db9beb86ca5650d2c2d039
-    //WSDL: http://ticketmaster.productserve.com/v2/soap.php?wsdl
 
         public TicketmasterImporter() {
-            this.vendorid = 3;
-            this.vendor = "ticketmaster";
+            this.Vendorid = 3;
+            this.Vendor = "ticketmaster";
         }
 
-        public override IEnumerable<ImportShow> RetrieveNewShowsFromVendor()
+        public override IEnumerable<TicketmasterImportShow> RetrieveNewShowsFromVendor()
         {
             //http://ticketmaster.productserve.com/v2/UK/event?apiKey=4c869421b3db9beb86ca5650d2c2d039&filter.event.parentCategoryId=10001&filter.venue.city=London&filter.artist.categoryId=200&updatedSince=2011-01-23%2000:00:00&sort.field=eventDate&sort.order=ASC
 
+            //var tmrequest = new Request
+            //{
+            //    apiKey = "4c869421b3db9beb86ca5650d2c2d039",
+            //    updatedSince = "2015-01-15 00:00:00",
+            //    country = "UK",
+            //    resultsPerPage = 50,
+            //    currentPage = 1
+            //};
 
-            Request tmrequest = new Request();
-            tmrequest.apiKey = "4c869421b3db9beb86ca5650d2c2d039";
-            tmrequest.updatedSince = "2012-10-28 13:42:27";
-            tmrequest.country = "UK";
-            tmrequest.resultsPerPage = 100;
+            //var tmservice = new ServiceService();
+            //var tmresponse = tmservice.findEvents(tmrequest);
 
-            ServiceService tmservice = new ServiceService();
-            Response tmresponse = tmservice.findEvents(tmrequest);
+            //var count = tmresponse.details.totalResults;
 
-            int? count = tmresponse.details.totalResults;
+            //var importshows = from u in tmresponse.ImportShows() select u;
 
-            var importshows = from u in tmresponse.ImportShows() select u;
+            //return importshows.ToList();
 
-            return importshows.ToList();
+            return new List<TicketmasterImportShow>();
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using GigsFirst.Models.ViewModels;
 using GigsFirstBLL;
-using Kendo.Mvc.Extensions;
+using GigsFirstBLL.ImportShows;
+using GigsFirstEntities;
 using Kendo.Mvc.UI;
 using PagedList;
-using GigsFirst.Models.ViewModels;
-using GigsFirstEntities;
 
 namespace GigsFirst.Controllers
 {
@@ -18,7 +16,7 @@ namespace GigsFirst.Controllers
         ArtistEditorViewModel artistviewmodel = new ArtistEditorViewModel();
         IVenueRepos venueRepos = new VenueRepos();
         IArtistRepos artistRepos = new ArtistRepos();
-        IShowImporter importshows = new SeeTicketsImporter();
+        IShowImporter<SeeTicketsImportShow> importshows = new SeeTicketsImporter();
         
         //
         // GET: /ImportShows/
@@ -34,7 +32,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult ImportMatches()
         {
-            importshows.AddShowsToGF();
+            importshows.AddShowsToGf();
             importshows.RetrieveNewShowsFromVendor();
             return View("Index");
         }

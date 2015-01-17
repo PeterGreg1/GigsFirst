@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("Vendors")]
-    public class Vendor
+    public class Vendor : GigsFirstEntity
     {
         public Vendor()
         {

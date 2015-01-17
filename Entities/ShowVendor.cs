@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("ShowVendors")]
-    public partial class ShowVendor
+    public partial class ShowVendor : GigsFirstEntity
     {
         [Key]
         public int ShowVendorID { get; set; }

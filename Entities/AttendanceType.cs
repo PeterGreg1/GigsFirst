@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GigsFirstEntities
 {
     [Table("AttendanceTypes")]
-    public class AttendanceType
+    public class AttendanceType : GigsFirstEntity
     {
         public AttendanceType()
         {

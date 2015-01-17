@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using GigsFirstEntities;
-using GigsFirstBLL;
 using GigsFirst.Models.ViewModels;
+using GigsFirstBLL;
+using GigsFirstBLL.Shows;
 
 namespace GigsFirst.Controllers
 {

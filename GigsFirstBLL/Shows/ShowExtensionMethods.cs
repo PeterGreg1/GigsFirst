@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstDAL;
-using System.Xml;
-using GigsFirstBLL.com.productserve.ticketmaster;
-using System.Device.Location;
 using System.Data.Entity.Spatial;
+using System.Linq;
+using System.Xml;
 using GigsFirstEntities;
 
-namespace GigsFirstBLL
+namespace GigsFirstBLL.Shows
 {
     public static class ShowExtensionMethods
     {
@@ -18,7 +13,7 @@ namespace GigsFirstBLL
         public static IQueryable<Show> FilterByLocation(this IQueryable<Show> shows, double latitude, double longitude, double distanceMiles)
         {
             var originPointString = string.Format("POINT({1} {0})",
-            latitude.ToString(), longitude.ToString());
+            latitude, longitude);
 
             var origin = DbGeography.FromText(originPointString);
 
@@ -51,13 +46,13 @@ namespace GigsFirstBLL
             return shows;
         }
 
-        public static IEnumerable<ImportShow> ImportShows(this XmlReader source)
+        public static IEnumerable<SeeTicketsImportShow> ImportShows(this XmlReader source)
         {
             while (source.Read())
             {
                 source.ReadToFollowing("Show");
 
-                ImportShow show = new ImportShow();
+                var show = new SeeTicketsImportShow();
 
                 var ele = source;
 
@@ -98,28 +93,28 @@ namespace GigsFirstBLL
             }
         }
 
-        public static IEnumerable<ImportShow> ImportShows(this Response source)
-        {
-            foreach (var tmevent in source.results)
-            {
-                ImportShow show = new ImportShow();
-                show.Name = tmevent.name;
-                show.ShowVendorRef = tmevent.eventId.ToString();
-                DateTime temp;
-                if (DateTime.TryParse(tmevent.eventDate, out temp))
-                    show.ShowDate = temp;
-                show.VenueName = tmevent.venue.name;
-                show.VenueTown = tmevent.venue.city;
-                show.VenueVendorID = tmevent.venue.venueId.ToString();
-                show.VenuePostcode = tmevent.venue.postcode;
-                foreach (var tmartist in tmevent.artists)
-                {
-                    show.ArtistName = tmartist.name;
-                    // show.Artists.Add(new ImportShowArtist { Name = tmartist.name, ArtistVendorID = tmartist.artistId });
-                }
-                yield return show;
-            }
-        }
+        //public static IEnumerable<ImportShow> ImportShows(this Response source)
+        //{
+        //    foreach (var tmevent in source.results)
+        //    {
+        //        ImportShow show = new ImportShow();
+        //        show.Name = tmevent.name;
+        //        show.ShowVendorRef = tmevent.eventId.ToString();
+        //        DateTime temp;
+        //        if (DateTime.TryParse(tmevent.eventDate, out temp))
+        //            show.ShowDate = temp;
+        //        show.VenueName = tmevent.venue.name;
+        //        show.VenueTown = tmevent.venue.city;
+        //        show.VenueVendorID = tmevent.venue.venueId.ToString();
+        //        show.VenuePostcode = tmevent.venue.postcode;
+        //        foreach (var tmartist in tmevent.artists)
+        //        {
+        //            show.ArtistName = tmartist.name;
+        //            // show.Artists.Add(new ImportShowArtist { Name = tmartist.name, ArtistVendorID = tmartist.artistId });
+        //        }
+        //        yield return show;
+        //    }
+        //}
 
     }
 }
