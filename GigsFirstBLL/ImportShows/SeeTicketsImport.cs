@@ -31,7 +31,7 @@ namespace GigsFirstBLL.ImportShows
 
         public override IEnumerable<SeeTicketsImportShow> RetrieveNewShowsFromVendor()
         {
-            using (var reader = new XmlTextReader(Apiurl))
+            using (var reader = XmlReader.Create(Apiurl))
             {
                 var importshows = (from u in reader.ImportShows() select u).ToList();
                 return importshows;
