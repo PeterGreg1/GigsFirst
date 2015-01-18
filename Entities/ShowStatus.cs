@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GigsFirstEntities
 {
@@ -17,7 +13,7 @@ namespace GigsFirstEntities
         }
 
         [Key]
-        public int StatusID { get; set; }
+        public int StatusId { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Show> Shows { get; set; }

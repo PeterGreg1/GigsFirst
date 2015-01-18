@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Data;
 using System.Data.Entity;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq.Expressions;
 using GigsFirstDAL;
 
@@ -24,13 +20,13 @@ namespace GigsFirstBLL
     {
         public DbContext Context { get; private set; }
         private DbSet<T> _dbSet;
-        public GigsFirstDbContext db { get; set; }
+        public GigsFirstDbContext Db { get; set; }
 
         public BasicCrud()
         {
             Context = new GigsFirstDbContext();
             _dbSet = Context.Set<T>();
-            db = new GigsFirstDbContext();
+            Db = new GigsFirstDbContext();
         }
 
         public T Insert(T entity)
@@ -66,7 +62,7 @@ namespace GigsFirstBLL
 
         public bool Update(T entity)
         {
-            Context.Entry(entity).State = System.Data.Entity.EntityState.Modified;
+            Context.Entry(entity).State = EntityState.Modified;
             Context.SaveChanges();
 
             return true;

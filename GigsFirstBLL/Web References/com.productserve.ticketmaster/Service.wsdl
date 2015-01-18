@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ticketmaster.productserve.com/v3/soap.php" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="Service" targetNamespace="http://ticketmaster.productserve.com/v3/soap.php" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://ticketmaster.productserve.com/v3/soap.php">
+      <xsd:complexType name="FindEventsRequest_Sort">
+        <xsd:all>
+          <xsd:element name="field" type="xsd:string" />
+          <xsd:element name="order" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfFindEventsRequest_Filter">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soap-enc:Array">
+            <xsd:attribute wsdl:arrayType="tns:FindEventsRequest_Filter[]" ref="soap-enc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="FindEventsRequest_Filter">
+        <xsd:all>
+          <xsd:element name="object" type="xsd:string" />
+          <xsd:element name="field" type="xsd:string" />
+          <xsd:element name="values" type="soap-enc:Array" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="FindEventsRequest">
+        <xsd:all>
+          <xsd:element name="resultsPerPage" nillable="true" type="xsd:int" />
+          <xsd:element name="currentPage" nillable="true" type="xsd:int" />
+          <xsd:element name="sort" nillable="true" type="tns:FindEventsRequest_Sort" />
+          <xsd:element name="filters" nillable="true" type="tns:ArrayOfFindEventsRequest_Filter" />
+          <xsd:element name="updatedSince" nillable="true" type="xsd:string" />
+          <xsd:element name="apiKey" type="xsd:string" />
+          <xsd:element name="country" nillable="true" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="Details">
+        <xsd:all>
+          <xsd:element name="totalResults" nillable="true" type="xsd:int" />
+          <xsd:element name="totalPages" nillable="true" type="xsd:int" />
+          <xsd:element name="currentPage" nillable="true" type="xsd:int" />
+          <xsd:element name="resultsPerPage" nillable="true" type="xsd:int" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfEvent">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soap-enc:Array">
+            <xsd:attribute wsdl:arrayType="tns:Event[]" ref="soap-enc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfArtist">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soap-enc:Array">
+            <xsd:attribute wsdl:arrayType="tns:Artist[]" ref="soap-enc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Artist">
+        <xsd:all>
+          <xsd:element name="artistId" nillable="true" type="xsd:int" />
+          <xsd:element name="ticketmasterArtistId" nillable="true" type="xsd:int" />
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="url" nillable="true" type="xsd:string" />
+          <xsd:element name="imageUrl" nillable="true" type="xsd:string" />
+          <xsd:element name="category" nillable="true" type="xsd:string" />
+          <xsd:element name="categoryId" nillable="true" type="xsd:int" />
+          <xsd:element name="parentCategory" nillable="true" type="xsd:string" />
+          <xsd:element name="parentCategoryId" nillable="true" type="xsd:int" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="Venue">
+        <xsd:all>
+          <xsd:element name="venueId" nillable="true" type="xsd:int" />
+          <xsd:element name="ticketmasterVenueId" nillable="true" type="xsd:int" />
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="street" nillable="true" type="xsd:string" />
+          <xsd:element name="city" nillable="true" type="xsd:string" />
+          <xsd:element name="country" nillable="true" type="xsd:string" />
+          <xsd:element name="postcode" nillable="true" type="xsd:string" />
+          <xsd:element name="url" nillable="true" type="xsd:string" />
+          <xsd:element name="imageUrl" nillable="true" type="xsd:string" />
+          <xsd:element name="state" nillable="true" type="xsd:string" />
+          <xsd:element name="longitude" nillable="true" type="xsd:float" />
+          <xsd:element name="latitude" nillable="true" type="xsd:float" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="Event">
+        <xsd:all>
+          <xsd:element name="eventId" nillable="true" type="xsd:int" />
+          <xsd:element name="ticketmasterEventId" nillable="true" type="xsd:string" />
+          <xsd:element name="status" nillable="true" type="xsd:string" />
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="url" nillable="true" type="xsd:string" />
+          <xsd:element name="eventDate" nillable="true" type="xsd:string" />
+          <xsd:element name="onSaleDate" nillable="true" type="xsd:string" />
+          <xsd:element name="preSaleDate" nillable="true" type="xsd:string" />
+          <xsd:element name="category" nillable="true" type="xsd:string" />
+          <xsd:element name="categoryId" nillable="true" type="xsd:int" />
+          <xsd:element name="parentCategory" nillable="true" type="xsd:string" />
+          <xsd:element name="parentCategoryId" nillable="true" type="xsd:int" />
+          <xsd:element name="minPrice" nillable="true" type="xsd:float" />
+          <xsd:element name="maxPrice" nillable="true" type="xsd:float" />
+          <xsd:element name="currency" nillable="true" type="xsd:string" />
+          <xsd:element name="description" nillable="true" type="xsd:string" />
+          <xsd:element name="artists" nillable="true" type="tns:ArrayOfArtist" />
+          <xsd:element name="venue" nillable="true" type="tns:Venue" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="FindEventsResponse">
+        <xsd:all>
+          <xsd:element name="details" nillable="true" type="tns:Details" />
+          <xsd:element name="results" nillable="true" type="tns:ArrayOfEvent" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="GetCategoriesRequest">
+        <xsd:all>
+          <xsd:element name="apiKey" type="xsd:string" />
+          <xsd:element name="country" nillable="true" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfParentCategory">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soap-enc:Array">
+            <xsd:attribute wsdl:arrayType="tns:ParentCategory[]" ref="soap-enc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCategory">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soap-enc:Array">
+            <xsd:attribute wsdl:arrayType="tns:Category[]" ref="soap-enc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Category">
+        <xsd:all>
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="categoryId" nillable="true" type="xsd:int" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ParentCategory">
+        <xsd:all>
+          <xsd:element name="name" nillable="true" type="xsd:string" />
+          <xsd:element name="categoryId" nillable="true" type="xsd:int" />
+          <xsd:element name="categories" nillable="true" type="tns:ArrayOfCategory" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="GetCategoriesResponse">
+        <xsd:all>
+          <xsd:element name="parentCategory" nillable="true" type="tns:ArrayOfParentCategory" />
+        </xsd:all>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="findEventsIn">
+    <wsdl:part name="request" type="tns:FindEventsRequest" />
+  </wsdl:message>
+  <wsdl:message name="findEventsOut">
+    <wsdl:part name="return" type="tns:FindEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCategoriesIn">
+    <wsdl:part name="request" type="tns:GetCategoriesRequest" />
+  </wsdl:message>
+  <wsdl:message name="getCategoriesOut">
+    <wsdl:part name="return" type="tns:GetCategoriesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ServicePort">
+    <wsdl:operation name="findEvents">
+      <documentation>@param FindEventsRequest $request</documentation>
+      <wsdl:input message="tns:findEventsIn" />
+      <wsdl:output message="tns:findEventsOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCategories">
+      <documentation>Get the category tree</documentation>
+      <wsdl:input message="tns:getCategoriesIn" />
+      <wsdl:output message="tns:getCategoriesOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceBinding" type="tns:ServicePort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="findEvents">
+      <soap:operation soapAction="http://ticketmaster.productserve.com/v3/soap.php#findEvents" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://ticketmaster.productserve.com/v3/soap.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://ticketmaster.productserve.com/v3/soap.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCategories">
+      <soap:operation soapAction="http://ticketmaster.productserve.com/v3/soap.php#getCategories" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://ticketmaster.productserve.com/v3/soap.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://ticketmaster.productserve.com/v3/soap.php" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServiceService">
+    <wsdl:port name="ServicePort" binding="tns:ServiceBinding">
+      <soap:address location="http://ticketmaster.productserve.com/v3/soap.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

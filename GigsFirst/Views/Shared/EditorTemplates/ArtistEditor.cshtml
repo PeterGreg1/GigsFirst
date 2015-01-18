@@ -1,6 +1,7 @@
-﻿@(Html.Kendo().DropDownList()
+﻿@using System.Collections
+@(Html.Kendo().DropDownList()
     .Name("GFArtistID") // Name of the widget should be the same as the name of the property
     .DataValueField("ArtistID") // The value of the dropdown is taken from the ArtistID property
     .DataTextField("Name") // The text of the items is taken from the Name property
-    .BindTo((System.Collections.IEnumerable)ViewData["Artists"]) // A list of all artists which is populated in the controller
+    .BindTo((IEnumerable)ViewData["Artists"]) // A list of all artists which is populated in the controller
 )

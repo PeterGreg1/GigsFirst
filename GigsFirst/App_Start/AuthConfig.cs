@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Web.WebPages.OAuth;
-using GigsFirst.Models;
-
-namespace GigsFirst
+﻿namespace GigsFirst
 {
     public static class AuthConfig
     {

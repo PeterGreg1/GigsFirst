@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Xml;
+using GigsFirstBLL.com.productserve.ticketmaster;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL.Shows
@@ -46,13 +47,13 @@ namespace GigsFirstBLL.Shows
             return shows;
         }
 
-        public static IEnumerable<SeeTicketsImportShow> ImportShows(this XmlReader source)
+        public static IEnumerable<ImportShow> ImportShows(this XmlReader source)
         {
             while (source.Read())
             {
                 source.ReadToFollowing("Show");
 
-                var show = new SeeTicketsImportShow();
+                var show = new ImportShow();
 
                 var ele = source;
 
@@ -93,75 +94,26 @@ namespace GigsFirstBLL.Shows
             }
         }
 
-        public static IEnumerable<TicketmasterImportShow> ImportTmShows(this XmlReader source)
+        public static IEnumerable<ImportShow> ImportShows(this FindEventsResponse source)
         {
-            while (source.Read())
+            foreach (var tmevent in source.results)
             {
-                source.ReadToFollowing("Show");
-
-                var show = new TicketmasterImportShow();
-
-                var ele = source;
-
-                // source.NodeType == XmlNodeType.Text
-
-                if (source.NodeType == XmlNodeType.Element &&
-                    source.Name == "Show")
+                var show = new ImportShow() {Name = tmevent.name, ShowVendorRef = tmevent.eventId.ToString()};
+                DateTime temp;
+                if (DateTime.TryParse(tmevent.eventDate, out temp))
+                    show.ShowDate = temp;
+                show.VenueName = tmevent.venue.name;
+                show.VenueTown = tmevent.venue.city;
+                show.VenueVendorId = tmevent.venue.venueId.ToString();
+                show.VenuePostcode = tmevent.venue.postcode;
+                foreach (var tmartist in tmevent.artists)
                 {
-                    try
-                    {
-                        show.ShowVendorRef = source.GetAttribute("Code");
-                        source.ReadToDescendant("Name");
-                        show.Name = source.ReadElementContentAsString();
-                        source.ReadToFollowing("Artist");
-                        show.ArtistName = source.ReadElementContentAsString();
-                        // show.Artists.Add(new ImportShowArtist { Name = source.ReadElementContentAsString() });
-                        source.ReadToFollowing("Starts");
-                        show.ShowDate = DateTimeOffset.Parse(source.ReadElementContentAsString()).UtcDateTime;
-                        source.ReadToFollowing("Venue");
-                        source.ReadToDescendant("Name");
-                        show.VenueName = source.ReadElementContentAsString();
-                        source.ReadToFollowing("Town");
-                        show.VenueTown = source.ReadElementContentAsString();
-                        source.ReadToFollowing("Latitude");
-                        show.VenueLat = source.ReadElementContentAsString();
-                        source.ReadToFollowing("Longitude");
-                        show.VenueLong = source.ReadElementContentAsString();
-                        source.ReadToFollowing("Postcode");
-                        show.VenuePostcode = source.ReadElementContentAsString();
-                    }
-                    catch (Exception e)
-                    {
-                        //Console.WriteLine("{0} Exception caught.", e);
-                    }
-
+                    show.ArtistName = tmartist.name;
+                    // show.Artists.Add(new ImportShowArtist { Name = tmartist.name, ArtistVendorID = tmartist.artistId });
                 }
                 yield return show;
             }
         }
-
-        //public static IEnumerable<ImportShow> ImportShows(this Response source)
-        //{
-        //    foreach (var tmevent in source.results)
-        //    {
-        //        ImportShow show = new ImportShow();
-        //        show.Name = tmevent.name;
-        //        show.ShowVendorRef = tmevent.eventId.ToString();
-        //        DateTime temp;
-        //        if (DateTime.TryParse(tmevent.eventDate, out temp))
-        //            show.ShowDate = temp;
-        //        show.VenueName = tmevent.venue.name;
-        //        show.VenueTown = tmevent.venue.city;
-        //        show.VenueVendorID = tmevent.venue.venueId.ToString();
-        //        show.VenuePostcode = tmevent.venue.postcode;
-        //        foreach (var tmartist in tmevent.artists)
-        //        {
-        //            show.ArtistName = tmartist.name;
-        //            // show.Artists.Add(new ImportShowArtist { Name = tmartist.name, ArtistVendorID = tmartist.artistId });
-        //        }
-        //        yield return show;
-        //    }
-        //}
 
     }
 }

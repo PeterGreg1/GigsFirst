@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Threading
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -13,7 +14,7 @@
     @Scripts.Render("~/bundles/demo")
 
     @* Include the JavaScript for the current culture *@
-    @{ var culture = System.Threading.Thread.CurrentThread.CurrentCulture.ToString(); }
+    @{ var culture = Thread.CurrentThread.CurrentCulture.ToString(); }
     <script src="@Url.Content("~/Scripts/cultures/kendo.culture." + culture + ".min.js")"></script>
 
     @* Set the current culture *@

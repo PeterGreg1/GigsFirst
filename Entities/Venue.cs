@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
 
 namespace GigsFirstEntities
 {
@@ -19,7 +15,7 @@ namespace GigsFirstEntities
         }
 
         [Key]
-        public int VenueID { get; set; }
+        public int VenueId { get; set; }
         public string Name { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
@@ -27,11 +23,11 @@ namespace GigsFirstEntities
         public string City { get; set; }
         public string County { get; set; }
         public string Postcode { get; set; }
-        public Nullable<double> Latitude { get; set; }
-        public Nullable<double> Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         public bool Active { get; set; }
         public bool Deleted { get; set; }
-        public System.Data.Entity.Spatial.DbGeography Geography { get; set; }
+        public DbGeography Geography { get; set; }
 
         public virtual ICollection<Show> Shows { get; set; }
         public virtual ICollection<VenueAlias> VenueAliases { get; set; }

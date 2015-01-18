@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace GigsFirstEntities
 {
@@ -12,10 +7,10 @@ namespace GigsFirstEntities
     public class UserShow : GigsFirstEntity
     {
         [Key]
-        public int UserShowID { get; set; }
-        public int UserID { get; set; }
-        public int ShowID { get; set; }
-        public int AttendanceTypeID { get; set; }
+        public int UserShowId { get; set; }
+        public int UserId { get; set; }
+        public int ShowId { get; set; }
+        public int AttendanceTypeId { get; set; }
 
         public virtual AttendanceType AttendanceType { get; set; }
         public virtual Show Show { get; set; }

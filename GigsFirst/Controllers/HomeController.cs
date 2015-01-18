@@ -8,7 +8,7 @@ namespace GigsFirst.Controllers
 {
     public class HomeController : Controller
     {
-        IShowRepos repos = new ShowRepos();
+        IShowRepos _repos = new ShowRepos();
 
         //
         // GET: /Home/
@@ -16,7 +16,7 @@ namespace GigsFirst.Controllers
         public ActionResult Index()
         {
             HomeViewModel model = new HomeViewModel(); 
-            model.shows = repos.GetAll().FilterActiveNotDeletedAndFutureShowsExt().ToList();
+            model.Shows = _repos.GetAll().FilterActiveNotDeletedAndFutureShowsExt().ToList();
 
             return View(model);
         }

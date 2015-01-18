@@ -9,24 +9,24 @@
 <table>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.shows[0].Venue.Name)
+            @Html.DisplayNameFor(model => model.Shows[0].Venue.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.shows[0].Name)
+            @Html.DisplayNameFor(model => model.Shows[0].Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.shows[0].ShowDate)
+            @Html.DisplayNameFor(model => model.Shows[0].ShowDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.shows[0].ShowTime)
+            @Html.DisplayNameFor(model => model.Shows[0].ShowTime)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.shows[0].StatusID)
+            @Html.DisplayNameFor(model => model.Shows[0].StatusId)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model.shows) {
+@foreach (var item in Model.Shows) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Venue.Name)
@@ -41,10 +41,10 @@
             @Html.DisplayFor(modelItem => item.ShowTime)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.StatusID)
+            @Html.DisplayFor(modelItem => item.StatusId)
         </td>
         <td>
-            @Html.ActionLink("View", "View", new { id=item.ShowID })
+            @Html.ActionLink("View", "View", new { id=item.ShowId })
         </td>
     </tr>
 }

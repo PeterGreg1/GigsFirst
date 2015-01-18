@@ -1,21 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Xml;
+using GigsFirstBLL.com.productserve.ticketmaster;
 using GigsFirstBLL.ImportShows;
 using GigsFirstBLL.Shows;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
-    public interface ITicketmasterImporter : IShowImporter<TicketmasterImportShow>
+    public interface ITicketmasterImporter : IShowImporter
     {
     }
 
-    public class TicketmasterImporter : ShowImporter<TicketmasterImportShow>, ITicketmasterImporter
+    public class TicketmasterImporter : ShowImporter, ITicketmasterImporter
     {
 
         public TicketmasterImporter() {
@@ -24,16 +20,31 @@ namespace GigsFirstBLL
             this.Vendor = "ticketmaster";
         }
 
-        public override IEnumerable<TicketmasterImportShow> RetrieveNewShowsFromVendor()
-        {//XmlReader.Create(New MemoryStream(client.UploadValues(url,Items)))
-
-            var client = new WebClient();
-
-            using (var reader = XmlReader.Create(new MemoryStream(client.UploadValues(Apiurl, new NameValueCollection()))))
+        public override IEnumerable<ImportShow> RetrieveNewShowsFromVendor()
+        {
+            var tmrequest = new FindEventsRequest()
             {
-                var importshows = (from u in reader.ImportTmShows() select u).ToList();
-                return importshows;
-            }
+                apiKey = "4c869421b3db9beb86ca5650d2c2d039",
+                updatedSince = "2015-01-15 00:00:00",
+                country = "UK",
+                resultsPerPage = 50,
+                currentPage = 1
+            };
+
+            var tmservice = new ServiceService();
+            var tmresponse = tmservice.findEvents(tmrequest);
+
+            var count = tmresponse.details.totalResults;
+
+            var importshows = from u in tmresponse.ImportShows() select u;
+
+            return importshows.ToList();
+
+            //using (var reader = XmlReader.Create(Apiurl))
+            //{
+            //    var importshows = (from u in reader.ImportTmShows() select u).ToList();
+            //    return importshows;
+            //}
         }
     }
 }

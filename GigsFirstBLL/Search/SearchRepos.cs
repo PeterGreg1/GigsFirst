@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GigsFirstBLL.Search
 {
@@ -18,7 +15,7 @@ namespace GigsFirstBLL.Search
 
             foreach (var item in list)
             {
-                item.keyword = keyword;
+                item.Keyword = keyword;
                SearchItems.AddRange(item.GetSearchItems());
             }
         }
@@ -29,7 +26,7 @@ namespace GigsFirstBLL.Search
 
         public List<SearchItem> SearchItems;
 
-        public String keyword { get; set; }
+        public String Keyword { get; set; }
 
         protected abstract List<SearchItem> DoSearch();
 

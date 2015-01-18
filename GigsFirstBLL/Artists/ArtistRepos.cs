@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstDAL;
+﻿using System.Linq;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL
@@ -12,13 +7,13 @@ namespace GigsFirstBLL
     {
         public bool MergeArtists(Artist artisttodelete, Artist artisttokeep)
         {
-            var shows = from a in db.Shows where a.VenueID == artisttodelete.ArtistID select a;
+            var shows = from a in Db.Shows where a.VenueId == artisttodelete.ArtistId select a;
             foreach (var show in shows)
             {
-                show.VenueID = artisttokeep.ArtistID;
+                show.VenueId = artisttokeep.ArtistId;
             }
             artisttodelete.Deleted = true;
-            db.SaveChanges();
+            Db.SaveChanges();
             return true;
         }
     }

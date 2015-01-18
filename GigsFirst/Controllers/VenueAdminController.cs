@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using GigsFirstEntities;
-using GigsFirstBLL;
-using PagedList;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
 using GigsFirst.Models.ViewModels;
+using GigsFirstBLL;
+using GigsFirstEntities;
+using Kendo.Mvc.UI;
+using PagedList;
 
 namespace GigsFirst.Controllers
 {
     public class VenueAdminController : Controller
     {
-        IVenueRepos repos = new VenueRepos();
-        VenueAdminViewModel viewmodel = new VenueAdminViewModel();
+        IVenueRepos _repos = new VenueRepos();
+        VenueAdminViewModel _viewmodel = new VenueAdminViewModel();
         private int _pageSize = 20;
 
         //
@@ -25,10 +19,10 @@ namespace GigsFirst.Controllers
 
         public ActionResult Index([DataSourceRequest]DataSourceRequest request)
         {
-            int total = repos.GetAll().Count();
+            int total = _repos.GetAll().Count();
             request.PageSize = total;
             ViewData["total"] = total;
-            return View(viewmodel.ConvertCollectionToViewModel(repos.GetAll().OrderBy(s => s.Name).ToPagedList(1, _pageSize)));
+            return View(_viewmodel.ConvertCollectionToViewModel(_repos.GetAll().OrderBy(s => s.Name).ToPagedList(1, _pageSize)));
         }
 
         //
@@ -36,7 +30,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Venue venue = repos.GetSingle(id);
+            Venue venue = _repos.GetSingle(id);
             if (venue == null)
             {
                 return HttpNotFound();
@@ -61,7 +55,7 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                repos.Insert(venue); 
+                _repos.Insert(venue); 
                 return RedirectToAction("Index");
             }
 
@@ -73,7 +67,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Venue venue = repos.GetSingle(id);
+            Venue venue = _repos.GetSingle(id);
             if (venue == null)
             {
                 return HttpNotFound();
@@ -90,7 +84,7 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                repos.Update(venue);
+                _repos.Update(venue);
                 return RedirectToAction("Index");
             }
             return View(venue);
@@ -101,7 +95,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            Venue venue = repos.GetSingle(id);
+            Venue venue = _repos.GetSingle(id);
             if (venue == null)
             {
                 return HttpNotFound();
@@ -116,7 +110,7 @@ namespace GigsFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            repos.Delete(id);
+            _repos.Delete(id);
             return RedirectToAction("Index");
         }
 
@@ -124,11 +118,11 @@ namespace GigsFirst.Controllers
         // /ShowAdmin/KendoPageData/
         public ActionResult KendoPageData([DataSourceRequest]DataSourceRequest request)
         {
-            int total = repos.GetAll().Count();
+            int total = _repos.GetAll().Count();
 
             var result = new DataSourceResult()
             {
-                Data = viewmodel.ConvertCollectionToViewModel(repos.GetAll().OrderBy(s => s.Name).ToPagedList(request.Page, _pageSize)), // Process data (paging and sorting applied)
+                Data = _viewmodel.ConvertCollectionToViewModel(_repos.GetAll().OrderBy(s => s.Name).ToPagedList(request.Page, _pageSize)), // Process data (paging and sorting applied)
                 Total = total // Total number of records
             };
 

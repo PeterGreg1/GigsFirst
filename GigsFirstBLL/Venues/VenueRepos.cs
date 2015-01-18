@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Entity.Spatial;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstDAL;
-using System.Data.Entity.Spatial;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL
@@ -13,19 +8,19 @@ namespace GigsFirstBLL
     {
         public bool MergeVenues(Venue venuetodelete, Venue venuetokeep)
         {
-            var shows = from a in db.Shows where a.VenueID == venuetodelete.VenueID select a;
+            var shows = from a in Db.Shows where a.VenueId == venuetodelete.VenueId select a;
             foreach (var show in shows)
             {
-                show.VenueID = venuetokeep.VenueID;
+                show.VenueId = venuetokeep.VenueId;
             }
             venuetodelete.Deleted = true;
-            db.SaveChanges();
+            Db.SaveChanges();
             return true;           
         }
 
         public void UpdateGeographyFieldOnVenues()
         {
-            var venues = db.Venues.Where(a => a.Latitude != null && a.Longitude != null).ToList();
+            var venues = Db.Venues.Where(a => a.Latitude != null && a.Longitude != null).ToList();
             foreach (var venue in venues)
             {
                 var latitude = venue.Latitude;
@@ -38,7 +33,7 @@ namespace GigsFirstBLL
                 venue.Geography = location;
                 
             }
-            db.SaveChanges();
+            Db.SaveChanges();
         }
     }
 }

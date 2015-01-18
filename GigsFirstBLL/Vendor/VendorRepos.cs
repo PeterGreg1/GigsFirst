@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstDAL;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
     public class VendorRepos : BasicCrud<Vendor>, IVendorRepos
     {
-        public List<Vendor> GetShowVendorsByShowID(int showid)
+        public List<Vendor> GetShowVendorsByShowId(int showid)
         {
             List<Vendor> vendors = new List<Vendor>();
 
-            vendors = (List<Vendor>)(from s in db.ShowVendors where s.ShowID == showid select s.Vendor).ToList();
+            vendors = (List<Vendor>)(from s in Db.ShowVendors where s.ShowId == showid select s.Vendor).ToList();
 
             return FilterActiveAndNotDeleted(vendors);
         }

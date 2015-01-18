@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GigsFirstEntities
 {
@@ -19,18 +16,18 @@ namespace GigsFirstEntities
         }
 
         [Key]
-        public int ShowID { get; set; }
-        public int VenueID { get; set; }
+        public int ShowId { get; set; }
+        public int VenueId { get; set; }
         [ForeignKey("ShowCategory")]
-        public int CategoryID { get; set; }
+        public int CategoryId { get; set; }
         public string Name { get; set; }
-        public System.DateTime ShowDate { get; set; }
+        public DateTime ShowDate { get; set; }
         public string ShowTime { get; set; }
-        public int StatusID { get; set; }
+        public int StatusId { get; set; }
         public bool Active { get; set; }
         public bool Deleted { get; set; }
-        public System.DateTime AddedOn { get; set; }
-        public Nullable<System.Guid> AddedBy { get; set; }
+        public DateTime AddedOn { get; set; }
+        public Guid? AddedBy { get; set; }
 
         public virtual ICollection<ShowArtist> ShowArtists { get; set; }
         public virtual ShowCategory ShowCategory { get; set; }

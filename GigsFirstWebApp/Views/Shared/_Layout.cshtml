@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using GigsFirstWebApp.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -48,7 +49,7 @@
                     </ul>
                 </li>
             </ul>
-            @Html.Partial("~/Views/Shared/_SearchPanel.cshtml", new GigsFirstWebApp.Models.SearchModel())
+            @Html.Partial("~/Views/Shared/_SearchPanel.cshtml", new SearchModel())
 
             
         </div>

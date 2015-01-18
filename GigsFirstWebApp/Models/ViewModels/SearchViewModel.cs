@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using GigsFirstBLL.Search;
 using GigsFirstEntities;
 
@@ -9,17 +6,17 @@ namespace GigsFirstWebApp.Models.ViewModels
 {
     public class SearchViewModel : BaseViewModel
     {
-        public SearchModel searchModel { get; set; }
-        public IEnumerable<Show> shows {get;set;}
-        public IEnumerable<Venue> venues { get; set; }
-        public IEnumerable<Search> searchResults { get; set; }
+        public SearchModel SearchModel { get; set; }
+        public IEnumerable<Show> Shows {get;set;}
+        public IEnumerable<Venue> Venues { get; set; }
+        public IEnumerable<Search> SearchResults { get; set; }
 
         public SearchViewModel()
         {
-            searchModel = new SearchModel();
-            shows = new List<Show>();
-            venues = new List<Venue>();
-            searchResults = new List<Search>();
+            SearchModel = new SearchModel();
+            Shows = new List<Show>();
+            Venues = new List<Venue>();
+            SearchResults = new List<Search>();
         }
     }
 

@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using GigsFirstEntities;
+﻿using System.Web.Mvc;
 using GigsFirstBLL;
+using GigsFirstEntities;
 
 namespace GigsFirst.Controllers
 {
     public class ArtistAdminController : Controller
     {
-        IArtistRepos repos = new ArtistRepos();
+        IArtistRepos _repos = new ArtistRepos();
 
         //
         // GET: /ArtistAdmin/
 
         public ActionResult Index()
         {
-            return View(repos.GetAll());
+            return View(_repos.GetAll());
         }
 
         //
@@ -27,7 +21,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Artist artist = repos.GetSingle(id);
+            Artist artist = _repos.GetSingle(id);
             if (artist == null)
             {
                 return HttpNotFound();
@@ -52,7 +46,7 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                repos.Insert(artist);
+                _repos.Insert(artist);
                 return RedirectToAction("Index");
             }
 
@@ -64,7 +58,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Artist artist = repos.GetSingle(id);
+            Artist artist = _repos.GetSingle(id);
             if (artist == null)
             {
                 return HttpNotFound();
@@ -81,7 +75,7 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                repos.Update(artist);
+                _repos.Update(artist);
                 return RedirectToAction("Index");
             }
             return View(artist);
@@ -92,7 +86,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            Artist artist = repos.GetSingle(id);
+            Artist artist = _repos.GetSingle(id);
             if (artist == null)
             {
                 return HttpNotFound();
@@ -107,7 +101,7 @@ namespace GigsFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            repos.Delete(id);
+            _repos.Delete(id);
             return RedirectToAction("Index");
         }
     }

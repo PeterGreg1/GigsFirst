@@ -12,48 +12,48 @@ namespace GigsFirst.Controllers
 {
     public class ImportShowsController : Controller
     {
-        VenueEditorViewModel venueviewmodel = new VenueEditorViewModel();
-        ArtistEditorViewModel artistviewmodel = new ArtistEditorViewModel();
-        IVenueRepos venueRepos = new VenueRepos();
-        IArtistRepos artistRepos = new ArtistRepos();
-        IShowImporter<SeeTicketsImportShow> importshows = new SeeTicketsImporter();
+        readonly VenueEditorViewModel _venueviewmodel = new VenueEditorViewModel();
+        readonly ArtistEditorViewModel _artistviewmodel = new ArtistEditorViewModel();
+        readonly IVenueRepos _venueRepos = new VenueRepos();
+        readonly IArtistRepos _artistRepos = new ArtistRepos();
+        readonly IShowImporter _importshows = new SeeTicketsImporter();
         
         //
         // GET: /ImportShows/
 
         public ActionResult Index()
         {
-            importshows.UpdateArtists();
-            importshows.UpdateVenues();
-            ViewData["Venues"] = venueviewmodel.ConvertCollectionToViewModel(venueRepos.GetAll());
-            ViewData["Artists"] = artistviewmodel.ConvertCollectionToViewModel(artistRepos.GetAll());
+            _importshows.UpdateArtists();
+            _importshows.UpdateVenues();
+            ViewData["Venues"] = _venueviewmodel.ConvertCollectionToViewModel(_venueRepos.GetAll());
+            ViewData["Artists"] = _artistviewmodel.ConvertCollectionToViewModel(_artistRepos.GetAll());
             return View();
         }
 
         public ActionResult ImportMatches()
         {
-            importshows.AddShowsToGf();
-            importshows.RetrieveNewShowsFromVendor();
+            _importshows.AddShowsToGf();
+            _importshows.RetrieveNewShowsFromVendor();
             return View("Index");
         }
 
         public ActionResult AddVenues()
         {
-            importshows.AddVenues();
-            importshows.RetrieveNewShowsFromVendor();
+            _importshows.AddVenues();
+            _importshows.RetrieveNewShowsFromVendor();
             return View("Index");
         }
 
         public ActionResult AddArtists()
         {
-            importshows.AddArtists();
-            importshows.RetrieveNewShowsFromVendor();
+            _importshows.AddArtists();
+            _importshows.RetrieveNewShowsFromVendor();
             return View("Index");
         }
 
         public ActionResult GetNewShowsFromVendor()
         {
-            importshows.RetrieveNewShowsFromVendor();
+            _importshows.RetrieveNewShowsFromVendor();
             return View("Index");
         }
 
@@ -61,7 +61,7 @@ namespace GigsFirst.Controllers
         // /ImportShows/KendoPageData/
         public ActionResult KendoPageData([DataSourceRequest]DataSourceRequest request)
         {     
-            var shows = importshows.GetShowsAwaitingImport();
+            var shows = _importshows.GetShowsAwaitingImport();
             var result = new DataSourceResult()
             {
                 Data = shows.ToPagedList(request.Page, 20), // Process data (paging and sorting applied)

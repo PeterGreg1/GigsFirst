@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using GigsFirstEntities;
 
 namespace GigsFirst.Models.ViewModels
@@ -15,7 +12,7 @@ namespace GigsFirst.Models.ViewModels
 
         public ShowAdminViewModel(Show show)
         {
-            this.ShowID = show.ShowID;
+            this.ShowId = show.ShowId;
             this.VenueName = show.Venue.Name;
             this.Name = show.Name;
             this.ShowDate = show.ShowDate;
@@ -27,7 +24,7 @@ namespace GigsFirst.Models.ViewModels
             this.CategoryName = show.ShowCategory.Name;    
         }
 
-        public int ShowID { get; set; }
+        public int ShowId { get; set; }
         public string VenueName { get; set; }
         public string Name { get; set; }
         public DateTime ShowDate { get; set; }

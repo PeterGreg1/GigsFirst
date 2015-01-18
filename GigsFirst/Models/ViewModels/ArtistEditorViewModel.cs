@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using GigsFirstEntities;
+﻿using GigsFirstEntities;
 
 namespace GigsFirst.Models.ViewModels
 {
@@ -15,11 +11,11 @@ namespace GigsFirst.Models.ViewModels
 
         public ArtistEditorViewModel(Artist artist)
         {
-            this.ArtistID = artist.ArtistID;
+            this.ArtistId = artist.ArtistId;
             this.Name = artist.Name;
         }
 
-        public int ArtistID { get; set; }
+        public int ArtistId { get; set; }
         public string Name { get; set; }
     }
 }

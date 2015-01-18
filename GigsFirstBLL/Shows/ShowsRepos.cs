@@ -1,43 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GigsFirstEntities;
-using System.Device.Location;
-using GigsFirstDAL;
 
 namespace GigsFirstBLL
 {
     public class ShowRepos : BasicCrud<Show>, IShowRepos
     {
-        public IQueryable<Show> GetShowsByArtistID(int ArtistID)
+        public IQueryable<Show> GetShowsByArtistId(int artistId)
         {
-            var shows = (from s in db.ShowArtists where s.ArtistID == ArtistID select s.Show);
+            var shows = (from s in Db.ShowArtists where s.ArtistId == artistId select s.Show);
             return shows;
         }
 
-        public IQueryable<Show> GetShowsByVenueID(int VenueID)
+        public IQueryable<Show> GetShowsByVenueId(int venueId)
         {
-            var shows = (from s in db.Shows where s.VenueID == VenueID select s);
+            var shows = (from s in Db.Shows where s.VenueId == venueId select s);
             return shows;
         }
 
-        public IQueryable<Show> GetShowsByUserID(int UserID)
+        public IQueryable<Show> GetShowsByUserId(int userId)
         {
-            var shows = (from s in db.UserShows where s.UserID == UserID select s.Show);
+            var shows = (from s in Db.UserShows where s.UserId == userId select s.Show);
             return shows;
         }
 
-        public IQueryable<UserShow> GetUserShowsByUserID(int UserID)
+        public IQueryable<UserShow> GetUserShowsByUserId(int userId)
         {
-            var usershows = (from s in db.UserShows where s.UserID == UserID select s);
+            var usershows = (from s in Db.UserShows where s.UserId == userId select s);
             return usershows;
         }
 
-        public IQueryable<Show> GetShowsByDateRange(DateTime StartDate, DateTime EndDate)
+        public IQueryable<Show> GetShowsByDateRange(DateTime startDate, DateTime endDate)
         {
-            var shows = (from s in db.Shows where s.ShowDate >= StartDate && s.ShowDate <= EndDate select s);
+            var shows = (from s in Db.Shows where s.ShowDate >= startDate && s.ShowDate <= endDate select s);
             return shows;
         }
     }

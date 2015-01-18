@@ -7,23 +7,24 @@ using GigsFirstEntities;
 
 namespace GigsFirstBLL.ImportShows
 {
-    public interface IShowImporter<out T> where T:ImportShow
+    public interface IShowImporter
     {
         int AddShowsToGf();
         int AddVenues();
         int AddArtists();
         int UpdateVenues();
         int UpdateArtists();
-        IEnumerable<T> RetrieveNewShowsFromVendor();
+        IEnumerable<ImportShow> RetrieveNewShowsFromVendor();
         IQueryable<ImportShow> GetShowsAwaitingImport();
+        void MapImportShows();
     }
 
-    public abstract class ShowImporter<T> : IShowImporter<T> where T:ImportShow
+    public abstract class ShowImporter
     {
         protected string Vendor { get; set; }
         protected string Apiurl { get; set; }
         protected int Vendorid { get; set; }
-        protected IEnumerable<T>  ImportedShows {get;set;}
+        protected IEnumerable<ImportShow>  ImportedShows {get;set;}
 
         private int _retrieveamount = 1000;
         public int RetrieveAmount
@@ -40,16 +41,16 @@ namespace GigsFirstBLL.ImportShows
             ExtractNewShows(ImportedShows);
         }
 
-        public abstract IEnumerable<T> RetrieveNewShowsFromVendor();
+        public abstract IEnumerable<ImportShow> RetrieveNewShowsFromVendor();
 
         public IQueryable<ImportShow> GetShowsAwaitingImport()
         {
-            return _db.ImportShows.OrderBy(a => a.ShowDate).Where(a => a.VendorID == this.Vendorid);
+            return _db.ImportShows.OrderBy(a => a.ShowDate).Where(a => a.VendorId == this.Vendorid);
         }
 
-        protected int ExtractNewShows(IEnumerable<T> newshows)
+        protected int ExtractNewShows(IEnumerable<ImportShow> newshows)
         {
-            newshows = newshows.Where(p => !_db.ImportShows.Any(p2 => p2.ShowVendorRef == p.ShowVendorRef && p2.VendorID == this.Vendorid)).ToList();
+            newshows = newshows.Where(p => !_db.ImportShows.Any(p2 => p2.ShowVendorRef == p.ShowVendorRef && p2.VendorId == this.Vendorid)).ToList();
 
             var query =
                 (from c in newshows
@@ -60,9 +61,7 @@ namespace GigsFirstBLL.ImportShows
 
             foreach (var newshow in query)
             {
-                newshow.VendorID = Vendorid;
-                newshow.GFArtistID = (from a in _db.ArtistAliases where a.Name == newshow.ArtistName select a.ArtistID).FirstOrDefault();
-                newshow.GFVenueID = (from v in _db.VenueAliases where v.Name == newshow.VenueName && (v.Venue.Postcode == newshow.VenuePostcode | v.Venue.Name == newshow.VenueName) select v.VenueID).FirstOrDefault();
+                newshow.VendorId = Vendorid;
                 _db.ImportShows.Add(newshow);
             }
 
@@ -71,51 +70,52 @@ namespace GigsFirstBLL.ImportShows
             return newshows.Count();
         }
 
-        public int UpdateVenues()
+        public void MapImportShows()
         {
-            foreach (var newshow in _db.ImportShows.Where(a => a.VendorID == this.Vendorid && a.GFVenueID == 0).ToList())
+            foreach (var importShow in _db.ImportShows)
             {
-                newshow.GFVenueID = _db.VenueAliases.Where(a => a.Name == newshow.VenueName && (a.Venue.Postcode == newshow.VenuePostcode || a.Venue.Name == newshow.VenueName)).Select(a => a.VenueID).FirstOrDefault();
+                importShow.VendorId = Vendorid;
+                importShow.GfArtistId = _db.ArtistAliases.Where(a => a.Name == importShow.ArtistName && importShow.GfArtistId == 0).Select(a => a.ArtistId).FirstOrDefault();
+                importShow.GfVenueId =
+                    _db.VenueAliases.Where(
+                        a => importShow.GfVenueId == 0 && 
+                            a.Name == importShow.ArtistName &&
+                            (a.Venue.Postcode == importShow.VenuePostcode | a.Venue.Name == importShow.VenueName))
+                        .Select(a => a.VenueId)
+                        .FirstOrDefault();
+                //importShow.GfShowId = _db.Shows.Where(a => a.ShowDate == show.ShowDate && a.VenueId == show.GfVenueId && a.ShowArtists.Select(b => b.ArtistId).Contains(show.GfArtistId));
+                _db.ImportShows.Add(importShow);
             }
 
-            _db.SaveChanges();
+        }
 
+        public int UpdateVenues()
+        {
+            _db.Database.ExecuteSqlCommand("UPDATE ImportShows SET GFVenueID = (SELECT TOP 1 VenueID FROM VenueAliases WHERE VenueAliases.Name = ImportShows.VenueName) WHERE ImportShows.GFVenueID = 0 OR ImportShows.GFVenueID IS NULL");
             return 0;
         }
 
         public int UpdateArtists()
         {
-            foreach (var newshow in _db.ImportShows.Where(a => a.VendorID == this.Vendorid && a.GFArtistID == 0).ToList())
-            {
-                newshow.GFArtistID = _db.ArtistAliases.Where(a => a.Name == newshow.ArtistName).Select(a => a.ArtistID).FirstOrDefault();
-            }
-
-            _db.SaveChanges();
-
+            _db.Database.ExecuteSqlCommand("UPDATE ImportShows SET GFArtistID = (SELECT TOP 1 ArtistID FROM ArtistAliases WHERE ArtistAliases.Name = ImportShows.ArtistName) WHERE ImportShows.GFArtistID = 0 OR ImportShows.GFVenueID IS NULL");
             return 0;
         }
 
         public int AddVenues()
-        {      
-            var importshows = _db.ImportShows.Where(a => a.GFVenueID == 0 && a.VendorID == this.Vendorid).ToList();
-            // this is to check if any have been added previous to the last update
-            foreach (var newshow in importshows)
+        {
+            UpdateVenues();
+            var importshows = _db.ImportShows.Where(a => a.GfVenueId == 0 && a.VendorId == this.Vendorid).ToList();
+            foreach (var importshow in importshows)
             {
-                newshow.GFVenueID = _db.VenueAliases.Where(a => a.Name == newshow.VenueName && (a.Venue.Postcode == newshow.VenuePostcode || a.Venue.Name == newshow.VenueName)).Select(a => a.VenueID).FirstOrDefault();
-            }
-            _db.SaveChanges();
-            importshows = _db.ImportShows.Where(a => a.GFVenueID == 0 && a.VendorID == this.Vendorid).ToList();
-            foreach (var dsdsd in importshows)
-            {
-                var venue = new Venue { Name = dsdsd.VenueName, Postcode = dsdsd.VenuePostcode, Town = dsdsd.VenueTown };
+                var venue = new Venue { Name = importshow.VenueName, Postcode = importshow.VenuePostcode, Town = importshow.VenueTown };
                 _db.Venues.Add(venue);
-                var alias = new VenueAlias { Name = dsdsd.VenueName, Town = dsdsd.VenueTown, VenueID = venue.VenueID };
+                var alias = new VenueAlias { Name = importshow.VenueName, Town = importshow.VenueTown, VenueId = venue.VenueId };
                 _db.VenueAliases.Add(alias);
                 _db.SaveChanges();
             }
             foreach (var newshow in importshows)
             {
-                newshow.GFVenueID = (from v in _db.VenueAliases where v.Name == newshow.VenueName && (v.Venue.Postcode == newshow.VenuePostcode | v.Venue.Town == newshow.VenueTown) select v.VenueID).FirstOrDefault();
+                newshow.GfVenueId = (from v in _db.VenueAliases where v.Name == newshow.VenueName && (v.Venue.Postcode == newshow.VenuePostcode | v.Venue.Town == newshow.VenueTown) select v.VenueId).FirstOrDefault();
             }
             _db.SaveChanges();
 
@@ -124,25 +124,21 @@ namespace GigsFirstBLL.ImportShows
 
         public int AddArtists()
         {
-            var importshow = _db.ImportShows.Where(a => a.ArtistName != null && a.ArtistName != "" && a.GFArtistID == 0 && a.VendorID == this.Vendorid).ToList();
             // this is to check if any have been added previous to the last update
-            foreach (var newshow in importshow)
+            UpdateArtists();
+
+            var importshows = _db.ImportShows.Where(a => a.ArtistName != null && a.ArtistName != "" && a.GfArtistId == 0 && a.VendorId == this.Vendorid).ToList();
+            foreach (var importshow in importshows)
             {
-                newshow.GFArtistID = (from a in _db.ArtistAliases where a.Name == newshow.ArtistName select a.ArtistID).FirstOrDefault();
-            }
-            _db.SaveChanges();
-            importshow = _db.ImportShows.Where(a => a.ArtistName != null && a.ArtistName != "" && a.GFArtistID == 0 && a.VendorID == this.Vendorid).ToList();
-            foreach (var dsdsd in importshow)
-            {
-                var artist = new Artist { Name = dsdsd.ArtistName, Active = true, Deleted = false };
+                var artist = new Artist { Name = importshow.ArtistName, Active = true, Deleted = false };
                 _db.Artists.Add(artist);
-                var alias = new ArtistAlias { Name = dsdsd.ArtistName, ArtistID = artist.ArtistID };
+                var alias = new ArtistAlias { Name = importshow.ArtistName, ArtistId = artist.ArtistId };
                 _db.ArtistAliases.Add(alias);
                 _db.SaveChanges();
             }
-            foreach (var newshow in importshow)
+            foreach (var newshow in importshows)
             {
-                newshow.GFArtistID = (from a in _db.ArtistAliases where a.Name == newshow.ArtistName select a.ArtistID).FirstOrDefault();
+                newshow.GfArtistId = (from a in _db.ArtistAliases where a.Name == newshow.ArtistName select a.ArtistId).FirstOrDefault();
             }
             _db.SaveChanges();
 
@@ -153,26 +149,26 @@ namespace GigsFirstBLL.ImportShows
         {
             var showstoremove = new List<ImportShow>();
 
-            var showsreadytoimport = _db.ImportShows.Where(a => a.VenueName != null && a.VenueName != "" && a.VendorID == this.Vendorid)
-                .Where(a => a.GFArtistID > 0 && a.GFVenueID >  0).ToList();
+            var showsreadytoimport = _db.ImportShows.Where(a => a.VenueName != null && a.VenueName != "" && a.VendorId == this.Vendorid)
+                .Where(a => a.GfArtistId > 0 && a.GfVenueId >  0).ToList();
 
             foreach (var importshow in showsreadytoimport)
             {
           
                     // check if a show exists on this date at this venue with this artist
                     var exists = _db.Shows.FirstOrDefault(c => c.ShowDate == importshow.ShowDate &&
-                                                              c.VenueID == importshow.GFVenueID &&
-                                                              c.ShowArtists.Any(z => z.ArtistID == importshow.GFArtistID));
+                                                              c.VenueId == importshow.GfVenueId &&
+                                                              c.ShowArtists.Any(z => z.ArtistId == importshow.GfArtistId));
 
                     if (exists != null)
                     {
                         // we know the show/venue/artist exists, so we need to just add the show vendor
                         var showvendor = new ShowVendor
                         {
-                            VendorID = Vendorid,
+                            VendorId = Vendorid,
                             AddedOn = DateTime.Now,
                             VendorRefCode = importshow.ShowVendorRef,
-                            ShowID = exists.ShowID
+                            ShowId = exists.ShowId
                         };
                         _db.ShowVendors.Add(showvendor);
                         _db.SaveChanges();
@@ -183,25 +179,25 @@ namespace GigsFirstBLL.ImportShows
 
                     // check if a show exists on this date at this venue (we now know the artist doesnt exist)
                     exists = _db.Shows.FirstOrDefault(c => c.ShowDate == importshow.ShowDate &&
-                                                          c.VenueID == importshow.GFVenueID);
+                                                          c.VenueId == importshow.GfVenueId);
 
                     if (exists != null)
                     {
                         // we know the show/venue exists, so we need to add the artist & show vendor
                         var showartist = new ShowArtist
                         {
-                            ArtistID = importshow.GFArtistID.HasValue ? (int)importshow.GFArtistID : 0,
-                            ShowID = exists.ShowID,
+                            ArtistId = importshow.GfArtistId.HasValue ? (int)importshow.GfArtistId : 0,
+                            ShowId = exists.ShowId,
                             AddedOn = DateTime.Now
                         };
                         _db.ShowArtists.Add(showartist);
 
                         var showvendor = new ShowVendor
                         {
-                            VendorID = Vendorid,
+                            VendorId = Vendorid,
                             AddedOn = DateTime.Now,
                             VendorRefCode = importshow.ShowVendorRef,
-                            ShowID = exists.ShowID
+                            ShowId = exists.ShowId
                         };
                         _db.ShowVendors.Add(showvendor);
                      
@@ -219,27 +215,27 @@ namespace GigsFirstBLL.ImportShows
                         {
                             Name = importshow.Name,
                             ShowDate = importshow.ShowDate,
-                            VenueID = importshow.GFVenueID ?? 0,
+                            VenueId = importshow.GfVenueId ?? 0,
                             AddedOn = DateTime.Now,
-                            CategoryID = 2,
-                            StatusID = 3
+                            CategoryId = 2,
+                            StatusId = 3
                         };
                         _db.Shows.Add(show);
 
                         var showartist = new ShowArtist
                         {
-                            ArtistID = importshow.GFArtistID ?? 0,
-                            ShowID = show.ShowID,
+                            ArtistId = importshow.GfArtistId ?? 0,
+                            ShowId = show.ShowId,
                             AddedOn = DateTime.Now
                         };
                         _db.ShowArtists.Add(showartist);
 
                         var showvendor = new ShowVendor
                         {
-                            VendorID = this.Vendorid,
+                            VendorId = this.Vendorid,
                             AddedOn = DateTime.Now,
                             VendorRefCode = importshow.ShowVendorRef,
-                            ShowID = show.ShowID
+                            ShowId = show.ShowId
                         };
                         _db.ShowVendors.Add(showvendor);
 

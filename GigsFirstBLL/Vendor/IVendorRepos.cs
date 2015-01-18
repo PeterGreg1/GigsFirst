@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GigsFirstDAL;
+﻿using System.Collections.Generic;
 using GigsFirstEntities;
 
 namespace GigsFirstBLL
 {
     public interface IVendorRepos : IBasicCrud<Vendor>
     {
-        List<Vendor> GetShowVendorsByShowID(int showid);
+        List<Vendor> GetShowVendorsByShowId(int showid);
     }
 }

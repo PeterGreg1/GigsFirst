@@ -81,14 +81,14 @@
                         if ($(window).scrollTop() == $(document).height() - $(window).height()) {
                             if(loading==false) {
                                 $('#loader').show();
-                                GetNextShows();
+                                getNextShows();
                             }
                            
                         }
                     });
 
                     var pageindex = @Model.searchModel.PageIndex;
-                    function GetNextShows() {
+                    function getNextShows() {
                         loading = true;
                         pageindex ++;
                         $.ajax({

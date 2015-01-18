@@ -15,9 +15,9 @@ namespace GigsFirstWebApp.Controllers
 {
     public class SearchController : BaseContoller
     {
-        IShowRepos showRepos = new ShowRepos();
-        IVenueRepos venueRepos = new VenueRepos();
-        SearchRepos searchRepos = new SearchRepos();
+        IShowRepos _showRepos = new ShowRepos();
+        IVenueRepos _venueRepos = new VenueRepos();
+        SearchRepos _searchRepos = new SearchRepos();
 
         public ActionResult Index(SearchModel searchModel)
         {
@@ -28,10 +28,10 @@ namespace GigsFirstWebApp.Controllers
                 return View(viewmodel);
             }
 
-            viewmodel.shows = DoShowSearch(searchModel);
-            viewmodel.venues = DoVenueSearch(searchModel);
+            viewmodel.Shows = DoShowSearch(searchModel);
+            viewmodel.Venues = DoVenueSearch(searchModel);
            // viewmodel.searchResults = searchRepos.SearchItems;
-            viewmodel.searchModel = searchModel;
+            viewmodel.SearchModel = searchModel;
 
             return View(viewmodel);
         }
@@ -45,7 +45,7 @@ namespace GigsFirstWebApp.Controllers
 
         private IEnumerable<Show> DoShowSearch(SearchModel searchModel)
         {
-            var shows = showRepos.Search(a => a.Name.Contains(searchModel.Keyword));
+            var shows = _showRepos.Search(a => a.Name.Contains(searchModel.Keyword));
 
             if (searchModel.FutureShows)
             {
@@ -63,7 +63,7 @@ namespace GigsFirstWebApp.Controllers
 
         private IEnumerable<Venue> DoVenueSearch(SearchModel searchModel)
         {
-            var venues = venueRepos.Search(a => a.Name.Contains(searchModel.Keyword));
+            var venues = _venueRepos.Search(a => a.Name.Contains(searchModel.Keyword));
 
             if (!String.IsNullOrEmpty(searchModel.Postcode))
             {

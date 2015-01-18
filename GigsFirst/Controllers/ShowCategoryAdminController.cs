@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using GigsFirstEntities;
+﻿using System.Web.Mvc;
 using GigsFirstBLL;
+using GigsFirstEntities;
 
 namespace GigsFirst.Controllers
 {
     public class ShowCategoryAdminController : Controller
     {
-        IShowCategoryRepos repos = new ShowCategoryRepos();
+        IShowCategoryRepos _repos = new ShowCategoryRepos();
 
         //
         // GET: /ShowCategoryAdmin/
 
         public ActionResult Index()
         {
-            return View(repos.GetAll());
+            return View(_repos.GetAll());
         }
 
         //
@@ -27,7 +21,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            ShowCategory showcategory = repos.GetSingle(id);
+            ShowCategory showcategory = _repos.GetSingle(id);
             if (showcategory == null)
             {
                 return HttpNotFound();
@@ -52,7 +46,7 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                repos.Insert(showcategory);
+                _repos.Insert(showcategory);
                 return RedirectToAction("Index");
             }
 
@@ -64,7 +58,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            ShowCategory showcategory = repos.GetSingle(id);
+            ShowCategory showcategory = _repos.GetSingle(id);
             if (showcategory == null)
             {
                 return HttpNotFound();
@@ -81,7 +75,7 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                repos.Update(showcategory);
+                _repos.Update(showcategory);
                 return RedirectToAction("Index");
             }
             return View(showcategory);
@@ -92,7 +86,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            ShowCategory showcategory = repos.GetSingle(id);
+            ShowCategory showcategory = _repos.GetSingle(id);
             if (showcategory == null)
             {
                 return HttpNotFound();
@@ -107,7 +101,7 @@ namespace GigsFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            repos.Delete(id);
+            _repos.Delete(id);
             return RedirectToAction("Index");
         }
     }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GigsFirstDAL.ImportShow>
+﻿@model IEnumerable<Entities.ImportShow>
 
 @{
     ViewBag.Title = "Index";
@@ -67,10 +67,10 @@
     })
 
 
-    function generateTemplate(Artists) {
+    function generateTemplate(artists) {
         var template = "<ul>";
-        for (var i = 0; i < Artists.length; i++) {
-            template = template + "<li>" + Artists[i].Name + "</li>";
+        for (var i = 0; i < artists.length; i++) {
+            template = template + "<li>" + artists[i].Name + "</li>";
         }
 
         return template + "</ul>";

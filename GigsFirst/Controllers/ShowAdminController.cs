@@ -1,38 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using GigsFirstEntities;
-using GigsFirstBLL;
-using PagedList;
-using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
 using GigsFirst.Models.ViewModels;
+using GigsFirstBLL;
+using GigsFirstEntities;
+using Kendo.Mvc.UI;
+using PagedList;
 
 namespace GigsFirst.Controllers
 {
     public class ShowAdminController : Controller
     {
-        IShowRepos showrepos = new ShowRepos();
-        IVenueRepos venuerepos = new VenueRepos();
-        IShowStatusRepos showstatusrepos = new ShowStatusRepos();
-        IShowCategoryRepos showcategoryrepos = new ShowCategoryRepos();
-        ShowAdminViewModel viewmodel = new ShowAdminViewModel();
+        IShowRepos _showrepos = new ShowRepos();
+        IVenueRepos _venuerepos = new VenueRepos();
+        IShowStatusRepos _showstatusrepos = new ShowStatusRepos();
+        IShowCategoryRepos _showcategoryrepos = new ShowCategoryRepos();
+        ShowAdminViewModel _viewmodel = new ShowAdminViewModel();
 
-        private int _PageSize = 20;
+        private int _pageSize = 20;
 
         //
         // GET: /ShowAdmin/
 
         public ActionResult Index([DataSourceRequest]DataSourceRequest request)
         {
-            int total = showrepos.GetAll().Count();
+            int total = _showrepos.GetAll().Count();
             request.PageSize = total;
             ViewData["total"] = total;
-            return View(viewmodel.ConvertCollectionToViewModel(showrepos.GetAll().OrderBy(s => s.ShowDate).ToPagedList(1, _PageSize)));
+            return View(_viewmodel.ConvertCollectionToViewModel(_showrepos.GetAll().OrderBy(s => s.ShowDate).ToPagedList(1, _pageSize)));
         }
 
         //
@@ -40,7 +34,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Show show = showrepos.GetSingle(id);
+            Show show = _showrepos.GetSingle(id);
             if (show == null)
             {
                 return HttpNotFound();
@@ -53,9 +47,9 @@ namespace GigsFirst.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.VenueID = new SelectList(venuerepos.GetAll(), "VenueID", "Name");
-            ViewBag.CategoryID = new SelectList(showcategoryrepos.GetAll(), "ShowCategoryID", "Name");
-            ViewBag.StatusID = new SelectList(showstatusrepos.GetAll(), "StatusID", "Name");
+            ViewBag.VenueID = new SelectList(_venuerepos.GetAll(), "VenueID", "Name");
+            ViewBag.CategoryID = new SelectList(_showcategoryrepos.GetAll(), "ShowCategoryID", "Name");
+            ViewBag.StatusID = new SelectList(_showstatusrepos.GetAll(), "StatusID", "Name");
             return View();
         }
 
@@ -68,13 +62,13 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                showrepos.Insert(show);
+                _showrepos.Insert(show);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.VenueID = new SelectList(venuerepos.GetAll(), "VenueID", "Name", show.VenueID);
-            ViewBag.CategoryID = new SelectList(showcategoryrepos.GetAll(), "ShowCategoryID", "Name", show.CategoryID);
-            ViewBag.StatusID = new SelectList(showstatusrepos.GetAll(), "StatusID", "Name", show.StatusID);
+            ViewBag.VenueID = new SelectList(_venuerepos.GetAll(), "VenueID", "Name", show.VenueId);
+            ViewBag.CategoryID = new SelectList(_showcategoryrepos.GetAll(), "ShowCategoryID", "Name", show.CategoryId);
+            ViewBag.StatusID = new SelectList(_showstatusrepos.GetAll(), "StatusID", "Name", show.StatusId);
             return View(show);
         }
 
@@ -83,14 +77,14 @@ namespace GigsFirst.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Show show = showrepos.GetSingle(id);
+            Show show = _showrepos.GetSingle(id);
             if (show == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.VenueID = new SelectList(venuerepos.GetAll(), "VenueID", "Name", show.VenueID);
-            ViewBag.CategoryID = new SelectList(showcategoryrepos.GetAll(), "ShowCategoryID", "Name", show.CategoryID);
-            ViewBag.StatusID = new SelectList(showstatusrepos.GetAll(), "StatusID", "Name", show.StatusID);
+            ViewBag.VenueID = new SelectList(_venuerepos.GetAll(), "VenueID", "Name", show.VenueId);
+            ViewBag.CategoryID = new SelectList(_showcategoryrepos.GetAll(), "ShowCategoryID", "Name", show.CategoryId);
+            ViewBag.StatusID = new SelectList(_showstatusrepos.GetAll(), "StatusID", "Name", show.StatusId);
             return View(show);
         }
 
@@ -103,12 +97,12 @@ namespace GigsFirst.Controllers
         {
             if (ModelState.IsValid)
             {
-                showrepos.Update(show);
+                _showrepos.Update(show);
                 return RedirectToAction("Index");
             }
-            ViewBag.VenueID = new SelectList(venuerepos.GetAll(), "VenueID", "Name", show.VenueID);
-            ViewBag.CategoryID = new SelectList(showcategoryrepos.GetAll(), "ShowCategoryID", "Name", show.CategoryID);
-            ViewBag.StatusID = new SelectList(showstatusrepos.GetAll(), "StatusID", "Name", show.StatusID);
+            ViewBag.VenueID = new SelectList(_venuerepos.GetAll(), "VenueID", "Name", show.VenueId);
+            ViewBag.CategoryID = new SelectList(_showcategoryrepos.GetAll(), "ShowCategoryID", "Name", show.CategoryId);
+            ViewBag.StatusID = new SelectList(_showstatusrepos.GetAll(), "StatusID", "Name", show.StatusId);
             return View(show);
         }
 
@@ -117,7 +111,7 @@ namespace GigsFirst.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            Show show = showrepos.GetSingle(id);
+            Show show = _showrepos.GetSingle(id);
             if (show == null)
             {
                 return HttpNotFound();
@@ -132,7 +126,7 @@ namespace GigsFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            showrepos.Delete(id);
+            _showrepos.Delete(id);
             return RedirectToAction("Index");
         }
 
@@ -140,8 +134,8 @@ namespace GigsFirst.Controllers
         // /ShowAdmin/KendoPageData/
         public ActionResult KendoPageData([DataSourceRequest]DataSourceRequest request)
         {
-            int total = showrepos.GetAll().Count();
-            var returnViewModel = viewmodel.ConvertCollectionToViewModel(showrepos.GetAll().OrderBy(s => s.ShowDate).ToPagedList(request.Page, _PageSize));
+            int total = _showrepos.GetAll().Count();
+            var returnViewModel = _viewmodel.ConvertCollectionToViewModel(_showrepos.GetAll().OrderBy(s => s.ShowDate).ToPagedList(request.Page, _pageSize));
      
             var result = new DataSourceResult()
             {

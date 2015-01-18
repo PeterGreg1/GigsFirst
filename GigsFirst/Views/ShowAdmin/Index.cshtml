@@ -18,19 +18,19 @@
         .EnableCustomBinding(true)
         .Columns(columns =>
         {
-            columns.Bound(c => c.ShowID).Title("ShowID").Groupable(false);
+            columns.Bound(c => c.ShowId).Title("ShowID").Groupable(false);
             columns.Bound(c => c.Name).Title("Name").Groupable(false);
             columns.Bound(c => c.VenueName).Title("Venue Name").Groupable(true);
             columns.Bound(c => c.ShowDate).Title("Show Date").Groupable(true);
             columns.Bound(c => c.CategoryName).Title("Category Name").Groupable(true);
             columns.Bound(c => c.ShowStatus).Title("Status").Groupable(false);
-            columns.Bound(c => c.ShowID).Template(c => Html.ActionLink("Edit", "Edit", new { id = c.ShowID }))
+            columns.Bound(c => c.ShowId).Template(c => Html.ActionLink("Edit", "Edit", new { id = c.ShowId }))
                 .ClientTemplate("<a href='" + Url.Action("Edit", "ShowAdmin", new { id = "#= ShowID #" }) + "' class = 't-grid-action t-button t-state-default t-grid-edit' >Edit</a>");
-            columns.Bound(c => c.ShowID).Template(c => Html.ActionLink("Details", "Details", new { id = c.ShowID }))
+            columns.Bound(c => c.ShowId).Template(c => Html.ActionLink("Details", "Details", new { id = c.ShowId }))
                 .ClientTemplate("<a href='" + Url.Action("Details", "ShowAdmin", new { id = "#= ShowID #" }) + "' class = 't-grid-action t-button t-state-default t-grid-edit' >Details</a>");
-            columns.Bound(c => c.ShowID).Template(c => Html.ActionLink("Delete", "Delete", new { id = c.ShowID }))
+            columns.Bound(c => c.ShowId).Template(c => Html.ActionLink("Delete", "Delete", new { id = c.ShowId }))
                 .ClientTemplate("<a href='" + Url.Action("Delete", "ShowAdmin", new { id = "#= ShowID #" }) + "' class = 't-grid-action t-button t-state-default t-grid-edit' >Delete</a>");
-            columns.Bound(p => p.ShowID).Hidden(true);
+            columns.Bound(p => p.ShowId).Hidden(true);
         })
         .HtmlAttributes(new { style = "height: 600px;" })
         .Scrollable()

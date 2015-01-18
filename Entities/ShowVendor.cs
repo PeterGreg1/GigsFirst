@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GigsFirstEntities
 {
@@ -12,14 +8,14 @@ namespace GigsFirstEntities
     public partial class ShowVendor : GigsFirstEntity
     {
         [Key]
-        public int ShowVendorID { get; set; }
-        public int VendorID { get; set; }
-        public int ShowID { get; set; }
+        public int ShowVendorId { get; set; }
+        public int VendorId { get; set; }
+        public int ShowId { get; set; }
         public string VendorRefCode { get; set; }
         public string Price { get; set; }
         public string Status { get; set; }
-        public System.DateTime AddedOn { get; set; }
-        public Nullable<System.Guid> AddedBy { get; set; }
+        public DateTime AddedOn { get; set; }
+        public Guid? AddedBy { get; set; }
 
         public virtual Show Show { get; set; }
         public virtual Vendor Vendor { get; set; }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using GigsFirstEntities;
+﻿using GigsFirstEntities;
 
 namespace GigsFirst.Models.ViewModels
 {
@@ -15,7 +11,7 @@ namespace GigsFirst.Models.ViewModels
 
         public VenueEditorViewModel(Venue venue)
         {
-            this.VenueID = venue.VenueID;
+            this.VenueId = venue.VenueId;
             this.Name = venue.Name;
             this.AddressLine1 = venue.AddressLine1;
             this.AddressLine2 = venue.AddressLine2;
@@ -25,7 +21,7 @@ namespace GigsFirst.Models.ViewModels
             this.Postcode = venue.Postcode;
         }
 
-        public int VenueID { get; set; }
+        public int VenueId { get; set; }
         public string Name { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }

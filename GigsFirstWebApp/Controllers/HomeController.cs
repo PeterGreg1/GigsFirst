@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using GigsFirstBLL;
-using GigsFirstWebApp.Models.ViewModels;
-using System.Data;
 using GigsFirstBLL.Shows;
+using GigsFirstWebApp.Models.ViewModels;
 
 namespace GigsFirstWebApp.Controllers
 {
     public class HomeController : BaseContoller
     {
-        IShowRepos repos = new ShowRepos();
-        IVenueRepos venuerepos = new VenueRepos();
+        IShowRepos _repos = new ShowRepos();
+        IVenueRepos _venuerepos = new VenueRepos();
 
         //
         // GET: /Home/
@@ -21,7 +17,7 @@ namespace GigsFirstWebApp.Controllers
         public ActionResult Index()
         {
             HomeViewModel model = new HomeViewModel();
-            model.shows = repos.GetAll().FilterByLocation(53.5546, -2.6491, 10).ToList();
+            model.Shows = _repos.GetAll().FilterByLocation(53.5546, -2.6491, 10).ToList();
 
 
          //   venuerepos.UpdateGeographyFieldOnVenues();

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace GigsFirstEntities
 {
@@ -12,8 +7,8 @@ namespace GigsFirstEntities
     public class ArtistAlias : GigsFirstEntity
     {
          [Key]
-        public int ArtistAliasID { get; set; }
-        public int ArtistID { get; set; }
+        public int ArtistAliasId { get; set; }
+        public int ArtistId { get; set; }
         public string Name { get; set; }
 
         public virtual Artist Artist { get; set; }

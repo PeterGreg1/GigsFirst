@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using GigsFirstEntities;
 
 namespace GigsFirstWebApp.Models.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-        public List<Show> shows { get; set; }
+        public List<Show> Shows { get; set; }
     }
 }
